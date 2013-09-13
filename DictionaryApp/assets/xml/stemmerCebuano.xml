@@ -1,0 +1,99 @@
+<stemmer language="ceb">
+    
+    <constant name="letter" value="[a-z]" />
+    <constant name="vowel" value="[aeiou]" />
+    <constant name="consonant" value="[bcdfghjklmnpqrstvwxyz]" />
+
+    <affix form="ga-" label="PROG">
+        <pattern pattern="ga({letter}+)" root="$1" />
+    </affix>   
+      
+    <affix form="gika-" label="PAS.PERF">
+        <pattern pattern="gika({letter}+)" root="$1" />
+    </affix>  
+ 
+    <affix form="gina-" label="PAS.PERF">
+        <pattern pattern="gina({letter}+)" root="$1" />
+    </affix>  
+
+    <affix form="gipa-" label="PAS.PERF">
+        <pattern pattern="gipa({letter}+)" root="$1" />
+    </affix>
+    
+    <affix form="gi-" label="NFUT">
+        <pattern pattern="gi({letter}+)" root="$1" />
+    </affix>   
+    
+    <!--  hiN- group: N + d|s|t : n; N + k : ng; N + b : m -->
+    <affix form="hiN-" label="FONDNESS">
+        <pattern pattern="hin({letter}+)" root="d$1" />
+    </affix>
+     <affix form="hiN-" label="FONDNESS">
+        <pattern pattern="hin({letter}+)" root="s$1" />
+    </affix>   
+    <affix form="hiN-" label="FONDNESS">
+        <pattern pattern="hin({letter}+)" root="t$1" />
+    </affix>       
+    <affix form="hiN-" label="FONDNESS">
+        <pattern pattern="hing({letter}+)" root="$1" />
+    </affix>  
+    <affix form="hiN-" label="FONDNESS">
+        <pattern pattern="him({letter}+)" root="b$1" />
+    </affix>    
+    <affix form="hiN-" label="FONDNESS">
+        <pattern pattern="hing({letter}+)" root="$1" />
+    </affix>      
+   
+    
+    <affix form="igkasi-" label="REL">
+        <pattern pattern="igkasi({letter}+)" root="$1" />
+    </affix>   
+ 
+    <affix form="iga-" label="REL">
+        <pattern pattern="iga({letter}+)" root="$1" />
+    </affix>  
+    
+    <affix form="ig-" label="REL">
+        <pattern pattern="ig({letter}+)" root="$1" />
+    </affix> 
+    
+    <affix form="ikag-" label="ORD.NUM">
+        <pattern pattern="ikag({letter}+)" root="$1" />
+    </affix>     
+    
+    <affix form="ika-" label="ORD.NUM">
+        <pattern pattern="ika({letter}+)" root="$1" />
+    </affix>  
+    
+    <affix form="i-" label="INST.PAS">
+        <pattern pattern="i({letter}+)" root="$1" />
+    </affix>   
+    
+    
+     
+    <affix form="katagi-" label="COM.PLACE">
+        <pattern pattern="katagi({letter}+)" root="$1" />
+    </affix>    
+    
+    <affix form="ka-" label="FUT.POT">
+        <pattern pattern="ka({letter}+)" root="$1" />
+    </affix>
+
+    <affix form="maka-" label="FUT.POT">
+        <pattern pattern="maka({letter}+)" root="$1" />
+    </affix>    
+    
+    <affix form="ma-" label="FUT.AF">
+        <pattern pattern="ma({letter}+)" root="$1" />
+    </affix>
+    
+    <affix form="naka-" label="PP.POT">
+        <pattern pattern="naka({letter}+)" root="$1" />
+    </affix>    
+    
+    <affix form="-a" label="SPEC">
+        <pattern pattern="({letter}+{vowel})ha" root="$1" />
+        <pattern pattern="({letter}+)a" root="$1" />
+    </affix>
+    
+</stemmer>
