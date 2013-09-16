@@ -5,8 +5,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 
-// import org.apache.commons.digester3.Digester;
-
 public class Stemmer 
 {
 	private String language;
@@ -19,54 +17,6 @@ public class Stemmer
 		affixes.addLast(pattern);
 		compiled = false;
 	}
-	
-//	public void load(String filename)
-//	{
-//		Digester digester = new Digester();
-//		addDigesterRules(digester);
-//		
-//		digester.push(this);
-//		
-//        try
-//        {
-//            java.io.File srcfile = new java.io.File( filename );
-//            digester.parse( srcfile );
-//        }
-//        catch ( java.io.IOException ioe )
-//        {
-//            System.out.println( "Error reading input file:" + ioe.getMessage() );
-//            System.exit( -1 );
-//        }
-//        catch ( org.xml.sax.SAXException se )
-//        {
-//            System.out.println( "Error parsing input file:" + se.getMessage() );
-//            System.exit( -1 );
-//        }
-//		
-//		compile();
-//	}
-
-//	public void load(InputStream stream)
-//	{
-//		Digester digester = new Digester();
-//		addDigesterRules(digester);
-//		digester.push(this);
-//		
-//		try
-//		{
-//			digester.parse(stream);
-//		}
-//		catch (IOException e)
-//		{			
-//			e.printStackTrace();
-//		}
-//		catch (SAXException e)
-//		{
-//			e.printStackTrace();
-//		}
-//		compile();		
-//	}
-	
 	
 	void compile()
 	{
@@ -118,24 +68,6 @@ public class Stemmer
 		return results;
 	}
 	
-	
-//	private static void addDigesterRules( Digester d )
-//    {
-//		d.addSetProperties( "stemmer" ); 
-//		
-//        d.addCallMethod( "stemmer/constant", "addConstant", 2 );
-//        d.addCallParam( "stemmer/constant", 0, "name" );
-//        d.addCallParam( "stemmer/constant", 1, "value" );
-//		
-//        d.addObjectCreate( "stemmer/affix", Affix.class );
-//        d.addSetProperties( "stemmer/affix" );
-//        d.addSetNext( "stemmer/affix", "addAffix" );
-//
-//        d.addObjectCreate( "stemmer/affix/pattern", AffixPattern.class );
-//        d.addSetProperties( "stemmer/affix/pattern" );
-//        d.addSetNext( "stemmer/affix/pattern", "addPattern" );
-//    }
-
 	public String getLanguage() 
 	{
 		return language;

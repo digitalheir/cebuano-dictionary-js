@@ -19,6 +19,11 @@ public class Derivation
 		affixes.addFirst(affix);
 	}
 	
+	public String getRoot()
+	{
+		return root;
+	}
+	
 	void addAffix(Affix affix)
 	{
 		affixes.addFirst(affix);		

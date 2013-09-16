@@ -4,6 +4,9 @@
     android:versionCode="1"
     android:versionName="1.0" >
 
+
+
+    
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
     
     <uses-sdk
@@ -32,6 +35,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ph.bohol.dictionaryapp.MainActivity" />
         </activity>
+
     </application>
     
 </manifest>

@@ -6,6 +6,9 @@ import java.util.HashMap;
 
 import org.junit.Test;
 
+import ph.bohol.util.stemmer.Affix;
+import ph.bohol.util.stemmer.AffixPattern;
+
 public class AffixTest extends Affix
 {
 	@Test

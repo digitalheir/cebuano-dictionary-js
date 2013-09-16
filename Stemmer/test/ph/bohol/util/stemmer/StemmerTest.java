@@ -7,6 +7,10 @@ import java.util.LinkedList;
 
 import org.junit.Test;
 
+import ph.bohol.util.stemmer.Derivation;
+import ph.bohol.util.stemmer.Stemmer;
+import ph.bohol.util.stemmer.StemmerParser;
+
 public class StemmerTest 
 {
 	@Test

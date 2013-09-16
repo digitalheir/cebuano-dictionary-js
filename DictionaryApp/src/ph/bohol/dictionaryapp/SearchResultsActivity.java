@@ -11,6 +11,7 @@ import ph.bohol.util.stemmer.StemmerParser;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -18,6 +19,8 @@ import android.support.v4.app.NavUtils;
 
 public class SearchResultsActivity extends Activity
 {
+	private DictionaryDatabase database;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -54,17 +57,24 @@ public class SearchResultsActivity extends Activity
 	    
 	    LinkedList<Derivation> derivations = stemmer.findDerivations(searchWord);
 	    
+	    database = new DictionaryDatabase(this);
+	    
 	    String result = "";
 		Iterator<Derivation> iterator = derivations.iterator();	
 		while (iterator.hasNext()) 
 		{
-			result += "Potential derivation: " + iterator.next().toString() + "\n";
+			Derivation derivation = iterator.next();
+			result += "Potential derivation: " + derivation.toString() + "\n";
+			if (database.isRoot(derivation.getRoot()))
+			{
+				result += "ROOT!";
+			}
 		}
 	    
 	    TextView textViewResults = new TextView(this);
-	    textViewResults.setTextSize(40);
+	    textViewResults.setTextSize(16);
 	    textViewResults.setText(result);
-
+	    
 	    // Set the text view as the activity layout
 	    setContentView(textViewResults);
 		
@@ -107,4 +117,12 @@ public class SearchResultsActivity extends Activity
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	
+	@Override
+	protected void onDestroy() 
+	{
+		super.onDestroy();
+		database.close();
+	}
+	
 }

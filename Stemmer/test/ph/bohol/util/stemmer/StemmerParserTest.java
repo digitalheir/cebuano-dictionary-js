@@ -5,6 +5,9 @@ import java.io.IOException;
 
 import org.junit.Test;
 
+import ph.bohol.util.stemmer.Stemmer;
+import ph.bohol.util.stemmer.StemmerParser;
+
 public class StemmerParserTest
 {
 

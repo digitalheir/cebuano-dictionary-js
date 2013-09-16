@@ -2,6 +2,9 @@
 <resources>
 
     <string name="app_name">DictionaryApp</string>
+
+    <item type="string" name="databaseVersion" format="integer">1</item>
+    
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
     <string name="enter_word">Enter a word</string>
