@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project name="CebuanoDictionary" default="createjar">
-    <target name="createjar">
-        <jar destfile="../DictionaryApp/libs/ph.bohol.util.Stemmer.jar" basedir="bin" />
-    </target>
-</project>
