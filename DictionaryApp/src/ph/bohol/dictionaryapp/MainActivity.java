@@ -1,64 +1,71 @@
 package ph.bohol.dictionaryapp;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.View;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
+import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ListView;
 
 public class MainActivity extends Activity
 {
 	static final String SEARCH_WORD = "ph.bohol.dictionaryapp.SEARCH_WORD";
-
+	static final String ENTRY_ID = "ph.bohol.dictionaryapp.ENTRY_ID";
+		
+	private DictionaryDatabase database = null;
+	private ListView listView = null;
+	private Cursor cursor = null;
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-//		String html = "<html><body>Hello, World!</body></html>";
-//		String mime = "text/html";
-//		String encoding = "utf-8";
-
-		WebView webView = (WebView) this.findViewById(R.id.webViewResults);
+		database = new DictionaryDatabase(this);		
+	    listView = (ListView) findViewById(R.id.listview);	
 		
-		webView.setWebViewClient(new WebViewClient() 
+		EditText editText = (EditText) findViewById(R.id.edit_search_word);			
+		editText.addTextChangedListener(new TextWatcher()
 		{
-		    @Override
-		    public boolean shouldOverrideUrlLoading(WebView view, String url) 
-		    {
-		        if (url.startsWith("dict:")) 
-		        {
-		            String searchWord = url.substring(5);
-		            Intent intent = new Intent(getApplicationContext(), SearchResultsActivity.class);
-		    	    intent.putExtra(SEARCH_WORD, searchWord);
-		    	    startActivity(intent);
-		            return true;
-		        }
-		        
-		        Intent intent = new Intent(Intent.ACTION_VIEW);
-		        intent.setData(Uri.parse(url));
-		        startActivity(intent);
-		        return true;		       
-		    }
-		});
-		
-		// Database usage: http://android-helper4u.blogspot.nl/2013/03/d-databse-and-spinner-tutorial.html
-		
-		// XSLT usage: http://stackoverflow.com/questions/4153560/android-convert-xml-using-xslt
-		
-		
-		// webView.getSettings().setJavaScriptEnabled(true);
-		// webView.loadDataWithBaseURL(null, html, mime, encoding, null);
-
-		webView.loadUrl("file:///android_asset/html/test.html");
-
+	        public void afterTextChanged(Editable s) 
+	        {
+	        	updateMatches(s);
+	        }
+	        
+	        public void beforeTextChanged(CharSequence s, int start, int count, int after){}
+	        public void onTextChanged(CharSequence s, int start, int before, int count){}
+	    }); 
 	}
 
+	public void updateMatches(Editable s)
+	{
+		String searchWord = s.toString();
+		cursor = database.getHeadsStartingWith(searchWord);
+	    HeadCursorAdapter h = new HeadCursorAdapter(this, cursor);
+	    listView.setAdapter(h);	 	
+	    	    
+		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() 
+		{
+		    @Override
+		    public void onItemClick(AdapterView<?> parent, final View view, int position, long id) 
+		    {
+				cursor.moveToPosition(position);
+				String entryId = cursor.getString(cursor.getColumnIndex("_id"));
+				  
+				Intent intent = new Intent(MainActivity.this, SearchResultsActivity.class);
+				intent.putExtra(ENTRY_ID, entryId);
+				startActivity(intent);
+		    }
+		});
+	}
+		
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{

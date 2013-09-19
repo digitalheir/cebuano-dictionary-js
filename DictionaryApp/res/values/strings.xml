@@ -11,6 +11,8 @@
     <string name="button_send">Send</string>
     <string name="button_search">Search</string>
     <string name="title_activity_main">MainActivity</string>
+        <string name="title_activity_test">Test Activity</string>
+                <string name="test_activity">Test Activity</string>
     <string name="title_activity_search_results">Search Results</string>
 
 </resources>

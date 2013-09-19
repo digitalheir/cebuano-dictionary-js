@@ -2,8 +2,19 @@ package ph.bohol.dictionaryapp;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.Iterator;
 import java.util.LinkedList;
+
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 
 import ph.bohol.util.stemmer.Derivation;
 import ph.bohol.util.stemmer.Stemmer;
@@ -11,9 +22,9 @@ import ph.bohol.util.stemmer.StemmerParser;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.webkit.WebView;
 import android.widget.TextView;
 import android.support.v4.app.NavUtils;
 
@@ -26,13 +37,70 @@ public class SearchResultsActivity extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_search_results);
+		
 		// Show the Up button in the action bar.
 		setupActionBar();
 		
 		Intent intent = getIntent();
 		String searchWord = intent.getStringExtra(MainActivity.SEARCH_WORD);
 		
-	    // Create the text view
+	    // showDerivations(searchWord);
+	    	       
+        showTransform();
+	}
+
+
+	private void showTransform()
+	{
+		try 
+        {
+            Source xsltSource = new StreamSource(getAssets().open("xslt/WCED-view.xsl"));
+            Source xmlSource = new StreamSource(getAssets().open("xml/andu.xml"));
+
+            TransformerFactory factory = TransformerFactory.newInstance();
+            Transformer transform = factory.newTransformer(xsltSource);
+            Writer stringWriter = new StringWriter();
+            
+            StreamResult streamResult = new StreamResult(stringWriter);           
+            transform.transform(xmlSource, streamResult);
+
+            String resultString = stringWriter.toString();
+            
+            WebView webView = (WebView) this.findViewById(R.id.webViewEntry);
+            
+            if (webView != null)
+            {
+	            //WebView webView = new WebView(this);
+	            webView.loadDataWithBaseURL("", resultString, "text/html", "UTF-8", "");
+            }
+            
+        } 
+        catch (TransformerConfigurationException e) 
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } 
+        catch (TransformerFactoryConfigurationError e) 
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } 
+        catch (TransformerException e) 
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+		catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+
+	private void showDerivations(String searchWord)
+	{
+		// Create the text view
 	    TextView textView = new TextView(this);
 	    textView.setTextSize(40);
 	    textView.setText(searchWord);
@@ -77,7 +145,6 @@ public class SearchResultsActivity extends Activity
 	    
 	    // Set the text view as the activity layout
 	    setContentView(textViewResults);
-		
 	}
 
 	
@@ -122,7 +189,10 @@ public class SearchResultsActivity extends Activity
 	protected void onDestroy() 
 	{
 		super.onDestroy();
-		database.close();
+		if (database != null)
+		{
+			database.close();
+		}
 	}
 	
 }

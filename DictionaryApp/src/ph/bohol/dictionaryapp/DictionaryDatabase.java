@@ -12,6 +12,11 @@ public class DictionaryDatabase extends SQLiteAssetHelper
     private static final String DATABASE_NAME = "dictionary_database";
     private static final int DATABASE_VERSION = 1;
 
+    public static final int HEAD_ID = 0;
+    public static final int HEAD_HEAD = 1;
+    public static final int HEAD_NORMALIZED_HEAD = 2;
+    public static final int HEAD_ENTRY_ID = 4;
+    
     public DictionaryDatabase(Context context) 
     {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);  
@@ -36,11 +41,34 @@ public class DictionaryDatabase extends SQLiteAssetHelper
 		String sqlTables = "Roots";
 		
 		qb.setTables(sqlTables);
-		Cursor c = qb.query(db, sqlSelect, null, null,
-		null, null, null);
+		Cursor c = qb.query(db, sqlSelect, null, null, null, null, null);
 		
 		c.moveToFirst();
 		return c;
-	}
-    
+	}    
+	
+	public Cursor getHeads() 
+	{
+		SQLiteDatabase db = getReadableDatabase();
+		SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+		
+		String [] sqlSelect = {"0 _id", "head", "normalized_head"};
+		String sqlTables = "Heads";
+		
+		qb.setTables(sqlTables);
+		Cursor c = qb.query(db, sqlSelect, null, null, null, null, null);
+		
+		c.moveToFirst();
+		return c;
+	}    
+	
+    public Cursor getHeadsStartingWith(String head) 
+    {
+    	String sqlQuery = "SELECT _id, head, normalized_head FROM Heads WHERE normalized_head LIKE ? ORDER BY normalized_head";      
+    	String [] selectionArguments = { head + "%" };
+    	
+    	SQLiteDatabase db = this.getWritableDatabase();
+    	Cursor cursor = db.rawQuery(sqlQuery, selectionArguments);
+    	return cursor;    	
+    }
 }
