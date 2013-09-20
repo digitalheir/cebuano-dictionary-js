@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -22,6 +23,9 @@ public class MainActivity extends Activity
 	private Cursor cursor = null;
 	
 	
+	private static final int RESULT_SETTINGS = 1;
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -31,6 +35,8 @@ public class MainActivity extends Activity
 		database = new DictionaryDatabase(this);		
 	    listView = (ListView) findViewById(R.id.listview);	
 		
+	    populateList("");
+	    
 		EditText editText = (EditText) findViewById(R.id.edit_search_word);			
 		editText.addTextChangedListener(new TextWatcher()
 		{
@@ -47,6 +53,11 @@ public class MainActivity extends Activity
 	public void updateMatches(Editable s)
 	{
 		String searchWord = s.toString();
+		populateList(searchWord);
+	}
+
+	private void populateList(String searchWord)
+	{
 		cursor = database.getHeadsStartingWith(searchWord);
 	    HeadCursorAdapter h = new HeadCursorAdapter(this, cursor);
 	    listView.setAdapter(h);	 	
@@ -57,7 +68,7 @@ public class MainActivity extends Activity
 		    public void onItemClick(AdapterView<?> parent, final View view, int position, long id) 
 		    {
 				cursor.moveToPosition(position);
-				String entryId = cursor.getString(cursor.getColumnIndex("_id"));
+				String entryId = cursor.getString(cursor.getColumnIndex(DictionaryDatabase.HEAD_ENTRY_ID));
 				  
 				Intent intent = new Intent(MainActivity.this, SearchResultsActivity.class);
 				intent.putExtra(ENTRY_ID, entryId);
@@ -74,6 +85,40 @@ public class MainActivity extends Activity
 		return true;
 	}
 	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) 
+	{
+		switch (item.getItemId()) 
+		{
+			case R.id.action_settings:
+				Intent i = new Intent(this, DictionaryPreferenceActivity.class);
+				startActivityForResult(i, RESULT_SETTINGS);
+				break;
+		}
+		return true;
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) 
+	{
+		super.onActivityResult(requestCode, resultCode, data);
+
+		switch (requestCode) 
+		{
+			case RESULT_SETTINGS:
+				showUserSettings();
+				break;
+		}
+
+	}
+	
+	
+	private void showUserSettings()
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
 	/** Called when the user clicks the Search button */
 	public void searchWord(View view) 
 	{

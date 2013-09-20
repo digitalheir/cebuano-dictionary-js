@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceCategory
+   android:summary="Searching the Dictionary"
+   android:title="Searching" >
+  <CheckBoxPreference
+     android:key="use_stemming"
+     android:summary="@string/on_off"
+     android:title="@string/use_stemming" />
+ </PreferenceCategory>
+ 
+ <PreferenceCategory
+   android:summary="Presentation of Dictionary Data"
+   android:title="@string/presentation" >
+  <CheckBoxPreference
+     android:key="expand_abbreviations"
+     android:summary="@string/on_off"
+     android:title="@string/expand_abbreviations" />
+ 
+  <ListPreference
+     android:entries="@array/listOptions"
+     android:entryValues="@array/listValues"
+     android:key="presentation_style"
+     android:summary="@string/presentation_style_explain"
+     android:title="@string/presentation_style" />
+ </PreferenceCategory>
+</PreferenceScreen>

@@ -2,6 +2,7 @@ package ph.bohol.dictionaryapp;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Iterator;
@@ -43,10 +44,59 @@ public class SearchResultsActivity extends Activity
 		
 		Intent intent = getIntent();
 		String searchWord = intent.getStringExtra(MainActivity.SEARCH_WORD);
+		int entryId = Integer.parseInt(intent.getStringExtra(MainActivity.ENTRY_ID));
 		
-	    // showDerivations(searchWord);
-	    	       
-        showTransform();
+		database = new DictionaryDatabase(this);	
+		String entry = database.getEntry(entryId);
+		
+		String htmlEntry = transformEntry(entry);
+		
+		if (htmlEntry != null)
+		{
+	        WebView webView = (WebView) this.findViewById(R.id.webViewEntry);
+	        if (webView != null)
+	        {
+	            webView.loadDataWithBaseURL("", htmlEntry, "text/html", "UTF-8", "");
+	        }
+		}
+		else
+		{
+			showTransform();
+		}
+	    // showDerivations(searchWord);	    	       
+	}
+
+
+	private String transformEntry(String entry)
+	{
+		try
+		{
+			entry = "<dictionary>" + entry + "</dictionary>";
+
+			Source xsltSource = new StreamSource(getAssets().open("xslt/WCED-view.xsl"));
+			StringReader reader = new StringReader(entry);
+			Source xmlSource = new StreamSource(reader);
+			TransformerFactory factory = TransformerFactory.newInstance();
+			Transformer transform = factory.newTransformer(xsltSource);
+			Writer stringWriter = new StringWriter();
+			StreamResult streamResult = new StreamResult(stringWriter);           
+			
+			transform.transform(xmlSource, streamResult);
+			
+			return stringWriter.toString();
+		}
+		catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (TransformerException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+        return null;
 	}
 
 
@@ -56,7 +106,7 @@ public class SearchResultsActivity extends Activity
         {
             Source xsltSource = new StreamSource(getAssets().open("xslt/WCED-view.xsl"));
             Source xmlSource = new StreamSource(getAssets().open("xml/andu.xml"));
-
+           
             TransformerFactory factory = TransformerFactory.newInstance();
             Transformer transform = factory.newTransformer(xsltSource);
             Writer stringWriter = new StringWriter();
@@ -67,23 +117,10 @@ public class SearchResultsActivity extends Activity
             String resultString = stringWriter.toString();
             
             WebView webView = (WebView) this.findViewById(R.id.webViewEntry);
-            
             if (webView != null)
             {
-	            //WebView webView = new WebView(this);
 	            webView.loadDataWithBaseURL("", resultString, "text/html", "UTF-8", "");
             }
-            
-        } 
-        catch (TransformerConfigurationException e) 
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } 
-        catch (TransformerFactoryConfigurationError e) 
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
         } 
         catch (TransformerException e) 
         {
