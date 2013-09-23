@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="presentationStyleOptions">
+        <item>Compact</item>
+        <item>Structured</item>
+        <item>Traditional</item>
+        <item>Debug</item>
+    </string-array>
+    <string-array name="presentationStyleValues">
+        <item>compact</item>
+        <item>structured</item>
+        <item>traditional</item>
+        <item>debug</item>
+    </string-array>
+
+    <string-array name="fontSizeOptions">
+        <item>Small</item>
+        <item>Normal</item>
+        <item>Large</item>
+    </string-array>
+    <string-array name="fontSizeValues">
+        <item>16</item>
+        <item>20</item>
+        <item>24</item>
+    </string-array>
+    
+</resources>

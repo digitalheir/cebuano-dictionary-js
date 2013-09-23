@@ -16,7 +16,9 @@ public class DictionaryDatabase extends SQLiteAssetHelper
     public static final String HEAD_NORMALIZED_HEAD = "normalized_head";
     public static final String HEAD_ENTRY_ID = "entryid";
     
+    public static final String ENTRY_ID = "_id";
     public static final String ENTRY_ENTRY = "entry";
+	public static final String ENTRY_HEAD = "head";
   
     
     public DictionaryDatabase(Context context) 
@@ -55,7 +57,7 @@ public class DictionaryDatabase extends SQLiteAssetHelper
 		SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
 		
 		String [] sqlSelect = {"0 _id", "entryid", "head", "normalized_head"};
-		String sqlTables = "Heads";
+		String sqlTables = "WCED_head";
 		
 		qb.setTables(sqlTables);
 		Cursor cursor = qb.query(db, sqlSelect, null, null, null, null, null);
@@ -66,7 +68,7 @@ public class DictionaryDatabase extends SQLiteAssetHelper
 	
     public Cursor getHeadsStartingWith(String head) 
     {
-    	String sqlQuery = "SELECT _id, entryid, head, normalized_head FROM Heads WHERE normalized_head LIKE ? ORDER BY normalized_head";      
+    	String sqlQuery = "SELECT _id, entryid, head, normalized_head FROM WCED_head WHERE normalized_head LIKE ? ORDER BY normalized_head";      
     	String [] selectionArguments = { head + "%" };
     	
     	SQLiteDatabase db = this.getWritableDatabase();
@@ -74,15 +76,50 @@ public class DictionaryDatabase extends SQLiteAssetHelper
     	return cursor;    	
     }
     
-    public String getEntry(int entryId) 
+    public Cursor getEntry(int entryId) 
     {
-    	String sqlQuery = "SELECT * FROM Entries WHERE _id = ?";      
+    	String sqlQuery = "SELECT * FROM WCED_entry WHERE _id = ?";      
     	String [] selectionArguments = { Integer.toString(entryId) };
     	
     	SQLiteDatabase db = this.getWritableDatabase();
     	Cursor cursor = db.rawQuery(sqlQuery, selectionArguments);
     	cursor.moveToFirst();
     	
-    	return cursor.getString(cursor.getColumnIndex(ENTRY_ENTRY));
+    	return cursor;
     }
+    
+    public int getNextEntryId(int entryId) 
+    {
+    	String sqlQuery = "SELECT _id FROM WCED_entry WHERE _id > ? ORDER BY _id LIMIT 1";      
+    	String [] selectionArguments = { Integer.toString(entryId) };
+    	
+    	SQLiteDatabase db = this.getWritableDatabase();
+    	Cursor cursor = db.rawQuery(sqlQuery, selectionArguments);
+    	    	
+    	if (cursor.getCount() == 0)
+    	{
+    		return entryId;
+    	}
+    	
+    	cursor.moveToFirst();
+    	return cursor.getInt(cursor.getColumnIndex(ENTRY_ID));
+    }
+    
+    public int getPreviousEntryId(int entryId)
+    {
+    	String sqlQuery = "SELECT _id FROM WCED_entry WHERE _id < ? ORDER BY _id DESC LIMIT 1";      
+    	String [] selectionArguments = { Integer.toString(entryId) };
+    	
+    	SQLiteDatabase db = this.getWritableDatabase();
+    	Cursor cursor = db.rawQuery(sqlQuery, selectionArguments);
+    	
+    	if (cursor.getCount() == 0)
+    	{
+    		return entryId;
+    	}
+    	
+    	cursor.moveToFirst();
+    	return cursor.getInt(cursor.getColumnIndex(ENTRY_ID));
+    }
+    
 }

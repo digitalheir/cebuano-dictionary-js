@@ -12,7 +12,8 @@ public class HeadCursorAdapter extends CursorAdapter
 {
     private LayoutInflater layoutInflater;
     
-    public HeadCursorAdapter(Context context, Cursor cursor) 
+    @SuppressWarnings("deprecation")
+	public HeadCursorAdapter(Context context, Cursor cursor) 
     {
         super(context, cursor);
         layoutInflater = LayoutInflater.from(context); 

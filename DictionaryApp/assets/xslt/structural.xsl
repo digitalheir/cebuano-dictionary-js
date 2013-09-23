@@ -13,7 +13,13 @@
         indent="yes"
         encoding="ISO-8859-1"/>
 
+    <xsl:param name="fontSize" select="'20'"/>
+    
+    <xsl:param name="expandAbbreviations" select="'false'"/>
+
     <xsl:key name="id" match="*[@id]" use="@id"/>
+
+
 
     <xsl:template match="dictionary">
         <html>
@@ -22,11 +28,13 @@
 
                 <style type="text/css">
 
+                    body { font-size: <xsl:value-of select="$fontSize"/>pt; }
+
                     .entry, .hom, .sense, .eg { margin: 5px; }
 
-                    .entry { border-top: solid 1px black; margin-top: 10px; }
+                    .entry { margin-top: 10px; }
 
-                    .entry { margin-left: 10px; border-left: solid 1px black; padding-left: 10px; }
+                    .entry { margin-left: 10px; padding-left: 10px; }
 
                     .hom { margin-left: 10px; border-left: solid 4px red; padding-left: 10px; }
 
@@ -34,16 +42,16 @@
                     .verb { background-color: #EEFFEE; border-color: #99FF99; }
                     .adjective { background-color: #EEFFEE; border-color: #66FF66; }
 
-                    .sense { margin-left: 10px; border-left: solid 0px blue; padding-left: 10px; }
+                    .sense { margin-left: 10px; padding-left: 10px; }
 
-                    .form { font-size: 28px; }
+                    .form { font-size: 120%; }
 
-                    .eg { margin-left: 10px; border-left: solid 0px yellow; padding-left: 10px; }
+                    .eg { margin-left: 10px; padding-left: 10px; }
 
-                    .eg { background-color: #FFCCCC; }
-                    .eg i {  font-style: italic }
+                    .eg { background-color: #FFDDDD; font-size: 80% }
+                    .eg i { font-style: italic }
 
-                    .pos { font-size: 20px; }
+                    .pos { font-size: 120%; }
 
                     .itype { background-color: yellow; }
 
@@ -65,37 +73,7 @@
         </html>
     </xsl:template>
 
-    <xsl:function name="local:get-page-url" as="xs:string">
-        <xsl:param name="page" as="xs:string"/>
-        <xsl:variable name="pageNumber" select="number($page)"/>
-
-        <xsl:choose>
-            <xsl:when test="$page = '537a'">
-                <xsl:sequence select="'http://seapdatapapers.library.cornell.edu/cgi/t/text/pageviewer-idx?c=seap&amp;cc=seap&amp;idno=seap085b&amp;node=seap085b%3A11&amp;view=image&amp;seq=7&amp;size=200'"/>
-            </xsl:when>
-            <xsl:when test="$pageNumber &lt; 538">
-                <xsl:sequence select="concat(concat(
-                    'http://seapdatapapers.library.cornell.edu/cgi/t/text/pageviewer-idx?c=seap&amp;cc=seap&amp;idno=seap085a&amp;node=seap085a%3A11&amp;view=image&amp;seq=', 
-                    $pageNumber + 24),
-                    '&amp;size=200')"/>
-            </xsl:when>
-            <xsl:when test="$pageNumber &gt; 537">
-                <xsl:sequence select="concat(concat(
-                    'http://seapdatapapers.library.cornell.edu/cgi/t/text/pageviewer-idx?c=seap&amp;cc=seap&amp;idno=seap085b&amp;node=seap085b%3A11&amp;view=image&amp;seq=', 
-                    $pageNumber - 530),
-                    '&amp;size=200')"/>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:text></xsl:text>
-            </xsl:otherwise>
-        </xsl:choose>
-    </xsl:function>
-
     <xsl:template match="entry">
-        <xsl:if test="parent::dictionary">
-            <div class="page-ref"><a href="{local:get-page-url(@page)}"><xsl:value-of select="@page"/></a></div>
-        </xsl:if>
-
         <div class="entry">
             <xsl:apply-templates/>
         </div>
@@ -236,9 +214,11 @@
     </xsl:template>
 
     <xsl:template match="pb">
+        <!-- 
         <span class="pb">
             <xsl:value-of select="@n"/>
         </span>
+        -->
     </xsl:template>
 
     <xsl:template match="itype">
@@ -265,6 +245,17 @@
         </i>
     </xsl:template>
 
+    <xsl:template match="abbr">
+        <xsl:choose>
+            <xsl:when test="$expandAbbreviations = 'true'">
+                <xsl:value-of select="@expan" />
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:apply-templates/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+    
     <!-- Discard unwanted stuff -->
 
     <xsl:template match="TEI.2|text|body|trans|div1|sc|corr|head|foreign|back|divGen|sic">

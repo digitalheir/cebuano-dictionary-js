@@ -8,21 +8,33 @@ import java.io.Writer;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
+
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
 
 import ph.bohol.util.stemmer.Derivation;
 import ph.bohol.util.stemmer.Stemmer;
 import ph.bohol.util.stemmer.StemmerParser;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebView;
@@ -32,6 +44,14 @@ import android.support.v4.app.NavUtils;
 public class SearchResultsActivity extends Activity
 {
 	private DictionaryDatabase database;
+	private int entryId;
+	
+	private int fontSize = 20;
+	private boolean expandAbbreviations = false;
+	private String xlstFilename = "xslt/typographical.xsl";
+	
+	private static final int RESULT_SETTINGS = 1;
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -43,11 +63,20 @@ public class SearchResultsActivity extends Activity
 		setupActionBar();
 		
 		Intent intent = getIntent();
-		String searchWord = intent.getStringExtra(MainActivity.SEARCH_WORD);
-		int entryId = Integer.parseInt(intent.getStringExtra(MainActivity.ENTRY_ID));
+		entryId = Integer.parseInt(intent.getStringExtra(MainActivity.ENTRY_ID));
+		
+		showEntry();    	       
+	}
+	
+	private void showEntry()
+	{
+		retrievePreferences();
 		
 		database = new DictionaryDatabase(this);	
-		String entry = database.getEntry(entryId);
+		Cursor cursor = database.getEntry(entryId);
+		String entry = cursor.getString(cursor.getColumnIndex(DictionaryDatabase.ENTRY_ENTRY));
+		String head = cursor.getString(cursor.getColumnIndex(DictionaryDatabase.ENTRY_HEAD));
+		setTitle(head);
 		
 		String htmlEntry = transformEntry(entry);
 		
@@ -63,7 +92,6 @@ public class SearchResultsActivity extends Activity
 		{
 			showTransform();
 		}
-	    // showDerivations(searchWord);	    	       
 	}
 
 
@@ -72,16 +100,25 @@ public class SearchResultsActivity extends Activity
 		try
 		{
 			entry = "<dictionary>" + entry + "</dictionary>";
-
-			Source xsltSource = new StreamSource(getAssets().open("xslt/WCED-view.xsl"));
+					
+			Source xsltSource = new StreamSource(getAssets().open(xlstFilename));
 			StringReader reader = new StringReader(entry);
 			Source xmlSource = new StreamSource(reader);
 			TransformerFactory factory = TransformerFactory.newInstance();
-			Transformer transform = factory.newTransformer(xsltSource);
+			Transformer transformer = factory.newTransformer(xsltSource);
+			if (transformer == null)
+			{
+				// TODO: neat handling of this.
+				return "Internal error: Transformation failed";
+			}
+			
+			transformer.setParameter("expandAbbreviations", Boolean.toString(expandAbbreviations));
+			transformer.setParameter("fontSize", Integer.toString(fontSize));
+						
 			Writer stringWriter = new StringWriter();
 			StreamResult streamResult = new StreamResult(stringWriter);           
 			
-			transform.transform(xmlSource, streamResult);
+			transformer.transform(xmlSource, streamResult);
 			
 			return stringWriter.toString();
 		}
@@ -100,11 +137,66 @@ public class SearchResultsActivity extends Activity
 	}
 
 
+	private void retrievePreferences()
+	{
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);			
+		expandAbbreviations = preferences.getBoolean("expand_abbreviations", false);
+		
+		String fontSizeString = preferences.getString("font_size", "20");
+		if (fontSizeString != null)
+		{
+			fontSize = Integer.parseInt(fontSizeString);
+			fontSize = fontSize < 10 ? 20 : fontSize;
+		}
+		
+		String presentationStyle = preferences.getString("presentation_style", "traditional");		
+		xlstFilename = "xslt/structural.xsl";
+		if (presentationStyle.equalsIgnoreCase("traditional"))
+		{
+			xlstFilename = "xslt/typographical.xsl";
+		}
+		else if (presentationStyle.equalsIgnoreCase("debug"))
+		{
+			xlstFilename = "xslt/debug.xsl";
+		}
+	}
+
+    public static Document loadXMLFromString(String xml)
+    {
+		try
+		{
+	        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+	        factory.setIgnoringElementContentWhitespace(false);
+	      
+	        DocumentBuilder builder = factory.newDocumentBuilder();
+	        // builder.setPreserveWhiteSpace();
+	        InputSource is = new InputSource(new StringReader(xml));
+	        return builder.parse(is);
+		}
+		catch (ParserConfigurationException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (SAXException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+    }
+	
+	
 	private void showTransform()
 	{
 		try 
         {
-            Source xsltSource = new StreamSource(getAssets().open("xslt/WCED-view.xsl"));
+            Source xsltSource = new StreamSource(getAssets().open("xslt/structural.xsl"));
             Source xmlSource = new StreamSource(getAssets().open("xml/andu.xml"));
            
             TransformerFactory factory = TransformerFactory.newInstance();
@@ -190,9 +282,7 @@ public class SearchResultsActivity extends Activity
 	 */
 	private void setupActionBar()
 	{
-
 		getActionBar().setDisplayHomeAsUpEnabled(true);
-
 	}
 
 	@Override
@@ -218,8 +308,48 @@ public class SearchResultsActivity extends Activity
 			//
 			NavUtils.navigateUpFromSameTask(this);
 			return true;
+			
+		case R.id.action_next:
+			moveToNextEntry();
+			break;
+			
+		case R.id.action_previous:
+			moveToPreviousEntry();
+			break;
+			
+		case R.id.action_settings:
+			Intent i = new Intent(this, DictionaryPreferenceActivity.class);
+			startActivityForResult(i, RESULT_SETTINGS);
+			break;
+			
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	
+	private void moveToPreviousEntry()
+	{
+		entryId = database.getPreviousEntryId(entryId);
+		showEntry();		
+	}
+
+	private void moveToNextEntry()
+	{
+		entryId = database.getNextEntryId(entryId);
+		showEntry();
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) 
+	{
+		super.onActivityResult(requestCode, resultCode, data);
+
+		switch (requestCode) 
+		{
+			case RESULT_SETTINGS:
+				showEntry();
+				break;
+		}
 	}
 	
 	@Override

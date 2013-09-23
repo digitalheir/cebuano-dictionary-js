@@ -20,18 +20,25 @@
     <string name="title_activity_search_results">Search Results</string>
     
     <!-- Result Activity -->
-    
+  
+    <string name="show_next_entry">Next Entry</string>
+    <string name="show_previous_entry">Previous Entry</string>
+      
     <!-- Preference Activity -->
     
     <string name="preference_activity">Preferences</string>
 
     <string name="search">Search</string>
+    <string name="search_summary">Way of searching the dictionary</string>
     <string name="presentation">Presentation</string>
+    <string name="presentation_summary">Presentation of dictionary content</string>
     <string name="use_stemming">Use stemming algorithm</string>
     <string name="yes_no">Yes/No</string>
     <string name="on_off">On/Off</string>
     <string name="expand_abbreviations">Expand abbreviations</string>
     <string name="presentation_style">Presentation style</string>
-    <string name="presentation_style_explain">Selects the way the entry is displayed</string>
-        
+    <string name="presentation_style_summary">Selects the way entries are displayed</string>        
+    <string name="font_size">Font size</string>
+    <string name="font_size_summary">Selects the font size</string>
+    
 </resources>

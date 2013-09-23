@@ -1,5 +1,6 @@
 package ph.bohol.dictionaryapp;
 
+import ph.bohol.util.normalizer.CebuanoNormalizer;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+
 
 public class MainActivity extends Activity
 {
@@ -58,6 +60,8 @@ public class MainActivity extends Activity
 
 	private void populateList(String searchWord)
 	{
+		CebuanoNormalizer n = new CebuanoNormalizer();
+		searchWord = n.normalize(searchWord);
 		cursor = database.getHeadsStartingWith(searchWord);
 	    HeadCursorAdapter h = new HeadCursorAdapter(this, cursor);
 	    listView.setAdapter(h);	 	
@@ -109,7 +113,6 @@ public class MainActivity extends Activity
 				showUserSettings();
 				break;
 		}
-
 	}
 	
 	
@@ -122,7 +125,7 @@ public class MainActivity extends Activity
 	/** Called when the user clicks the Search button */
 	public void searchWord(View view) 
 	{
-	    Intent intent = new Intent(this, SearchResultsActivity.class);
+	    Intent intent = new Intent(this, TestActivity.class);
 	    EditText editText = (EditText) findViewById(R.id.edit_search_word);
 	    String searchWord = editText.getText().toString();
 	    intent.putExtra(SEARCH_WORD, searchWord);

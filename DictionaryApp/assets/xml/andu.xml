@@ -1,0 +1,36 @@
+<dictionary>
+<entry page="42" id="875"><form lang="ceb"><w id="andu">andu</w>, <w id="anduq">andù</w><sub>1</sub></form>
+<hom role="v"><pos>v</pos>
+<sense n="1"><number>1</number> <itype>[A1; a12]</itype><trans> expect to realize s.t. out of s.t. </trans>
+<eg><i lang="ceb">Mag-andu kag hángin ánang pangitáa,</i><trans> You will get exactly nothing from that sort of livelihood. </trans></eg>
+<eg><i lang="ceb">Unsay maandu mu ánang pagpúnay ug katúlug?</i><trans> What do you expect to get out of sleeping all the time? </trans></eg>
+</sense>
+<sense n="2"><number>2</number> <itype>[A; a]</itype><trans> <tr>sum up</tr>, make an account of. </trans>
+<eg><i lang="ceb">Nag-andu siya sa mga butang nga wà gánì níya mahímu,</i><trans> She is counting up things for credit to get credit for them, when she hasn’t even done them. </trans></eg>
+<eg><i lang="ceb">Ayaw kug paningli, kay ug andúhun nátù ag ákung nagastu nímu, dì ka kabayad,</i><trans> Do not try to collect what I owe you, because if we sum up all that I spent on you, you could never pay. </trans></eg>
+</sense>
+<sense n="3"><number>3</number> <itype>[A; b4(1)]</itype><trans> lay open one’s cards. </trans>
+<eg><i lang="ceb">Kun makaandu na ka, dì ka na makapunù,</i><trans> When you have already laid your cards on the table, you cannot add any more cards. </trans></eg>
+</sense>
+<sense n="3a"><number>3a</number> <form lang="ceb"><abbr expan="pag-andù">pag-</abbr><w id="_"> (</w><abbr expan="inig-andù">inig-</abbr><w id="_pa">) pa</w></form><trans> but actually, when it came (comes) to the test (when the cards were laid on the table). </trans>
+<eg><i lang="ceb">Sígi siyang hangyù. Pag-andù pa, dì diay gustu,</i><trans> He kept begging, but when I finally agreed to it, he didn’t want to. </trans></eg>
+<eg><i lang="ceb">Padatùdátù siya. Pag-andù pa, pubri kaáyu,</i><trans> He pretended to be rich. But when it came to the test, he turned out to be poor. </trans></eg>
+</sense></hom>
+<hom role="n"><pos>n</pos>
+<sense n="0"><trans> <bx>way —</bx> <tr>not certain</tr>. </trans>
+<eg><i lang="ceb">Wà pay andu ug maghíkay ba mi sa pyista,</i><trans> We’re undecided as yet whether to prepare for the fiesta. </trans></eg>
+</sense></hom>
+<entry><form lang="ceb"><w id="anduxhay">andúhay</w></form>
+<hom role="n"><pos>n</pos>
+<sense n="0"><trans> <tr>confrontation</tr>. </trans>
+</sense></hom>
+<hom role="v"><pos>v</pos>
+<sense n="0"> <itype>[C]</itype><trans> have a confrontation. </trans>
+<eg><i lang="ceb">Mag-andúhay ta arun mahúsay ang tanan,</i><trans> Let’s have it out to settle everything. </trans></eg>
+</sense></hom></entry>
+<entry><form lang="ceb"><w id="anduhuxnun">anduhúnun</w></form>
+<hom role="n"><pos>n</pos>
+<sense n="0"><trans> matter to be decided. </trans>
+<eg><i lang="ceb">Anduhúnun pa ning ákung pagpaiskuyla nímug midisína,</i><trans> I’m not sure whether we will send you to medical school.
+</trans></eg>
+</sense></hom></entry></entry></dictionary>
