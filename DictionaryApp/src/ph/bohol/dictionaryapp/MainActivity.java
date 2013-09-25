@@ -20,9 +20,9 @@ public class MainActivity extends Activity
 	static final String SEARCH_WORD = "ph.bohol.dictionaryapp.SEARCH_WORD";
 	static final String ENTRY_ID = "ph.bohol.dictionaryapp.ENTRY_ID";
 		
-	private DictionaryDatabase database = null;
 	private ListView listView = null;
 	private Cursor cursor = null;
+	private String searchWord;
 	
 	
 	private static final int RESULT_SETTINGS = 1;
@@ -34,7 +34,6 @@ public class MainActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		database = new DictionaryDatabase(this);		
 	    listView = (ListView) findViewById(R.id.listview);	
 		
 	    populateList("");
@@ -54,7 +53,7 @@ public class MainActivity extends Activity
 
 	public void updateMatches(Editable s)
 	{
-		String searchWord = s.toString();
+		searchWord = s.toString();
 		populateList(searchWord);
 	}
 
@@ -62,6 +61,14 @@ public class MainActivity extends Activity
 	{
 		CebuanoNormalizer n = new CebuanoNormalizer();
 		searchWord = n.normalize(searchWord);
+		
+		// First cleanup our previous cursor, to prevent resource leaks.
+		if (cursor != null)
+		{
+			cursor.close();
+		}
+		
+		DictionaryDatabase database = DictionaryDatabase.getInstance(this);
 		cursor = database.getHeadsStartingWith(searchWord);
 	    HeadCursorAdapter h = new HeadCursorAdapter(this, cursor);
 	    listView.setAdapter(h);	 	
@@ -102,6 +109,8 @@ public class MainActivity extends Activity
 		return true;
 	}
 	
+
+	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) 
 	{
@@ -110,16 +119,9 @@ public class MainActivity extends Activity
 		switch (requestCode) 
 		{
 			case RESULT_SETTINGS:
-				showUserSettings();
+				// populateList(searchWord);
 				break;
 		}
-	}
-	
-	
-	private void showUserSettings()
-	{
-		// TODO Auto-generated method stub
-		
 	}
 
 	/** Called when the user clicks the Search button */
@@ -131,4 +133,17 @@ public class MainActivity extends Activity
 	    intent.putExtra(SEARCH_WORD, searchWord);
 	    startActivity(intent);
 	}
+	
+	@Override
+	protected void onDestroy() 
+	{
+		super.onDestroy();
+		if (cursor != null)
+		{
+			cursor.close();
+		}
+	}
+	
+
+	
 }

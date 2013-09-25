@@ -1,44 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">DictionaryApp</string>    
+    <string name="app_name">DictionaryApp</string>
+
     <item name="databaseVersion" format="integer" type="string">1</item>
 
     <!-- Main Activity -->
-    
+
     <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="enter_word">Enter a word</string>
-    <string name="button_send">Send</string>
+    <string name="enter_word">Enter a Cebuano word</string>
     <string name="button_search">Search</string>
     <string name="title_activity_main">MainActivity</string>
-    
-    <!--  Test Activity -->
-    
+
+    <!-- Test Activity -->
+
     <string name="title_activity_test">Test Activity</string>
     <string name="test_activity">Test Activity</string>
     <string name="title_activity_search_results">Search Results</string>
-    
+
     <!-- Result Activity -->
-  
+
     <string name="show_next_entry">Next Entry</string>
     <string name="show_previous_entry">Previous Entry</string>
-      
-    <!-- Preference Activity -->
-    
-    <string name="preference_activity">Preferences</string>
 
+    <!-- Preference Activity -->
+
+    <string name="preference_activity">Preferences</string>
     <string name="search">Search</string>
     <string name="search_summary">Way of searching the dictionary</string>
+    <string name="show_preview">Show preview</string>
+    <string name="show_preview_summary">Show the first line of the entry with the search results (may be slow)</string>
     <string name="presentation">Presentation</string>
     <string name="presentation_summary">Presentation of dictionary content</string>
+    <string name="presentation_compact">Compact</string>
+    <string name="presentation_traditional">Traditional</string>
+    <string name="presentation_structural">Structural</string>
+    <string name="presentation_debug">Debug</string>
+    <string name="fontsize_tiny">Tiny</string>
+    <string name="fontsize_small">Small</string>
+    <string name="fontsize_medium">Medium</string>
+    <string name="fontsize_large">Large</string>    
     <string name="use_stemming">Use stemming algorithm</string>
+    <string name="use_stemming_summary">Try to find roots of words entered</string>
     <string name="yes_no">Yes/No</string>
     <string name="on_off">On/Off</string>
     <string name="expand_abbreviations">Expand abbreviations</string>
+    <string name="expand_abbreviations_summary">Fully spell out the abbreviated forms used in the dictionary</string>
     <string name="presentation_style">Presentation style</string>
-    <string name="presentation_style_summary">Selects the way entries are displayed</string>        
+    <string name="presentation_style_summary">Selects the way entries are displayed</string>
     <string name="font_size">Font size</string>
     <string name="font_size_summary">Selects the font size</string>
-    
+
 </resources>

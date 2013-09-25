@@ -8,23 +8,12 @@ import java.io.Writer;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-
-import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
 
 import ph.bohol.util.stemmer.Derivation;
 import ph.bohol.util.stemmer.Stemmer;
@@ -43,12 +32,11 @@ import android.support.v4.app.NavUtils;
 
 public class SearchResultsActivity extends Activity
 {
-	private DictionaryDatabase database;
 	private int entryId;
 	
 	private int fontSize = 20;
 	private boolean expandAbbreviations = false;
-	private String xlstFilename = "xslt/typographical.xsl";
+	private String xsltFilename = "xslt/typographical.xsl";
 	
 	private static final int RESULT_SETTINGS = 1;
 	
@@ -72,25 +60,32 @@ public class SearchResultsActivity extends Activity
 	{
 		retrievePreferences();
 		
-		database = new DictionaryDatabase(this);	
+		DictionaryDatabase database = DictionaryDatabase.getInstance(this);	
 		Cursor cursor = database.getEntry(entryId);
-		String entry = cursor.getString(cursor.getColumnIndex(DictionaryDatabase.ENTRY_ENTRY));
-		String head = cursor.getString(cursor.getColumnIndex(DictionaryDatabase.ENTRY_HEAD));
-		setTitle(head);
-		
-		String htmlEntry = transformEntry(entry);
-		
-		if (htmlEntry != null)
+		try
 		{
-	        WebView webView = (WebView) this.findViewById(R.id.webViewEntry);
-	        if (webView != null)
-	        {
-	            webView.loadDataWithBaseURL("", htmlEntry, "text/html", "UTF-8", "");
-	        }
+			String entry = cursor.getString(cursor.getColumnIndex(DictionaryDatabase.ENTRY_ENTRY));
+			String head = cursor.getString(cursor.getColumnIndex(DictionaryDatabase.ENTRY_HEAD));
+			setTitle(head);
+			
+			String htmlEntry = transformEntry(entry);
+			
+			if (htmlEntry != null)
+			{
+		        WebView webView = (WebView) this.findViewById(R.id.webViewEntry);
+		        if (webView != null)
+		        {
+		            webView.loadDataWithBaseURL("", htmlEntry, "text/html", "UTF-8", "");
+		        }
+			}
+			else
+			{
+				showTransform();
+			}
 		}
-		else
+		finally
 		{
-			showTransform();
+			cursor.close();
 		}
 	}
 
@@ -101,7 +96,7 @@ public class SearchResultsActivity extends Activity
 		{
 			entry = "<dictionary>" + entry + "</dictionary>";
 					
-			Source xsltSource = new StreamSource(getAssets().open(xlstFilename));
+			Source xsltSource = new StreamSource(getAssets().open(xsltFilename));
 			StringReader reader = new StringReader(entry);
 			Source xmlSource = new StreamSource(reader);
 			TransformerFactory factory = TransformerFactory.newInstance();
@@ -150,48 +145,21 @@ public class SearchResultsActivity extends Activity
 		}
 		
 		String presentationStyle = preferences.getString("presentation_style", "traditional");		
-		xlstFilename = "xslt/structural.xsl";
+		xsltFilename = "xslt/structural.xsl";
 		if (presentationStyle.equalsIgnoreCase("traditional"))
 		{
-			xlstFilename = "xslt/typographical.xsl";
+			xsltFilename = "xslt/typographical.xsl";
 		}
 		else if (presentationStyle.equalsIgnoreCase("debug"))
 		{
-			xlstFilename = "xslt/debug.xsl";
+			xsltFilename = "xslt/debug.xsl";
+		}
+		else if (presentationStyle.equalsIgnoreCase("compact"))
+		{
+			xsltFilename = "xslt/compact.xsl";
 		}
 	}
 
-    public static Document loadXMLFromString(String xml)
-    {
-		try
-		{
-	        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-	        factory.setIgnoringElementContentWhitespace(false);
-	      
-	        DocumentBuilder builder = factory.newDocumentBuilder();
-	        // builder.setPreserveWhiteSpace();
-	        InputSource is = new InputSource(new StringReader(xml));
-	        return builder.parse(is);
-		}
-		catch (ParserConfigurationException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch (SAXException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch (IOException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
-    }
-	
-	
 	private void showTransform()
 	{
 		try 
@@ -254,7 +222,7 @@ public class SearchResultsActivity extends Activity
 	    
 	    LinkedList<Derivation> derivations = stemmer.findDerivations(searchWord);
 	    
-	    database = new DictionaryDatabase(this);
+		DictionaryDatabase database = DictionaryDatabase.getInstance(this);	
 	    
 	    String result = "";
 		Iterator<Derivation> iterator = derivations.iterator();	
@@ -329,12 +297,14 @@ public class SearchResultsActivity extends Activity
 	
 	private void moveToPreviousEntry()
 	{
+		DictionaryDatabase database = DictionaryDatabase.getInstance(this);	
 		entryId = database.getPreviousEntryId(entryId);
 		showEntry();		
 	}
 
 	private void moveToNextEntry()
 	{
+		DictionaryDatabase database = DictionaryDatabase.getInstance(this);	
 		entryId = database.getNextEntryId(entryId);
 		showEntry();
 	}
@@ -350,16 +320,5 @@ public class SearchResultsActivity extends Activity
 				showEntry();
 				break;
 		}
-	}
-	
-	@Override
-	protected void onDestroy() 
-	{
-		super.onDestroy();
-		if (database != null)
-		{
-			database.close();
-		}
-	}
-	
+	}	
 }

@@ -182,16 +182,8 @@
     </xsl:template>
 
     <xsl:template match="xr">
-        <span>
-            <xsl:choose>
-                <xsl:when test="key('id', substring(@target, 2))">
-                    <a href="{@target}"><xsl:apply-templates/></a>
-                </xsl:when>
-                <xsl:otherwise>
-                    <xsl:attribute name="class">xr</xsl:attribute>
-                    <xsl:apply-templates/>
-                </xsl:otherwise>
-            </xsl:choose>
+        <span class="xr">
+            <xsl:apply-templates/>
         </span>
     </xsl:template>
 
@@ -216,11 +208,9 @@
     </xsl:template>
 
     <xsl:template match="pb">
-        <!-- 
         <span class="pb">
             <xsl:value-of select="@n"/>
         </span>
-        -->
     </xsl:template>
 
     <xsl:template match="itype">
@@ -249,7 +239,7 @@
 
     <xsl:template match="abbr">
         <xsl:apply-templates/>
-        <span class="expan"> {<xsl:value-of select="@expan" />} </span>
+        <span class="expan"><xsl:text> </xsl:text><xsl:value-of select="@expan" /><xsl:text> </xsl:text></span>
     </xsl:template>
     
     <!-- Discard unwanted stuff -->

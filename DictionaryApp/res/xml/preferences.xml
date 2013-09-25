@@ -5,34 +5,53 @@
         android:summary="@string/search_summary"
         android:title="@string/search" >
         
+        <ListPreference
+            android:entries="@array/fontSizeOptions"
+            android:entryValues="@array/fontSizeValues"
+            android:key="search_font_size"
+            android:summary="@string/font_size_summary"
+            android:title="@string/font_size" 
+            android:defaultValue="20"
+            />
+        
+        <CheckBoxPreference
+            android:key="show_preview"
+            android:summary="@string/show_preview_summary"
+            android:title="@string/show_preview" 
+            android:defaultValue="true"/>
+        
         <CheckBoxPreference
             android:key="use_stemming"
-            android:summary="@string/on_off"
-            android:title="@string/use_stemming" />
+            android:summary="@string/use_stemming_summary"
+            android:title="@string/use_stemming" 
+            android:defaultValue="true"/>
     </PreferenceCategory>
     
     <PreferenceCategory
         android:summary="@string/presentation_summary"
         android:title="@string/presentation" >
         
-                <ListPreference
+        <ListPreference
             android:entries="@array/fontSizeOptions"
             android:entryValues="@array/fontSizeValues"
             android:key="font_size"
             android:summary="@string/font_size_summary"
-            android:title="@string/font_size" />
+            android:title="@string/font_size"
+            android:defaultValue="20" />
         
         <CheckBoxPreference
             android:key="expand_abbreviations"
-            android:summary="@string/on_off"
-            android:title="@string/expand_abbreviations" />
+            android:summary="@string/expand_abbreviations_summary"
+            android:title="@string/expand_abbreviations" 
+            android:defaultValue="true"/>
 
         <ListPreference
             android:entries="@array/presentationStyleOptions"
             android:entryValues="@array/presentationStyleValues"
             android:key="presentation_style"
             android:summary="@string/presentation_style_summary"
-            android:title="@string/presentation_style" />
+            android:title="@string/presentation_style" 
+            android:defaultValue="structural"/>
     </PreferenceCategory>
 
 </PreferenceScreen>

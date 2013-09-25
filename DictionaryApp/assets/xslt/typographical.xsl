@@ -191,16 +191,8 @@
     </xsl:template>
 
     <xsl:template match="xr">
-        <span>
-            <xsl:choose>
-                <xsl:when test="key('id', substring(@target, 2))">
-                    <a href="{@target}"><xsl:apply-templates/></a>
-                </xsl:when>
-                <xsl:otherwise>
-                    <xsl:attribute name="class">xr</xsl:attribute>
-                    <xsl:apply-templates/>
-                </xsl:otherwise>
-            </xsl:choose>
+        <span class="xr">
+            <xsl:apply-templates/>
         </span>
     </xsl:template>
 
