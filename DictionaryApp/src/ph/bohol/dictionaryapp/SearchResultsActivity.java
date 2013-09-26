@@ -1,13 +1,9 @@
 package ph.bohol.dictionaryapp;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.Iterator;
-import java.util.LinkedList;
-
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -15,9 +11,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import ph.bohol.util.stemmer.Derivation;
-import ph.bohol.util.stemmer.Stemmer;
-import ph.bohol.util.stemmer.StemmerParser;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.app.Activity;
@@ -27,7 +20,6 @@ import android.database.Cursor;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebView;
-import android.widget.TextView;
 import android.support.v4.app.NavUtils;
 
 public class SearchResultsActivity extends Activity
@@ -50,6 +42,8 @@ public class SearchResultsActivity extends Activity
 		// Show the Up button in the action bar.
 		setupActionBar();
 		
+		retrievePreferences();
+		
 		Intent intent = getIntent();
 		entryId = Integer.parseInt(intent.getStringExtra(MainActivity.ENTRY_ID));
 		
@@ -57,9 +51,7 @@ public class SearchResultsActivity extends Activity
 	}
 	
 	private void showEntry()
-	{
-		retrievePreferences();
-		
+	{		
 		DictionaryDatabase database = DictionaryDatabase.getInstance(this);	
 		Cursor cursor = database.getEntry(entryId);
 		try
@@ -78,17 +70,12 @@ public class SearchResultsActivity extends Activity
 		            webView.loadDataWithBaseURL("", htmlEntry, "text/html", "UTF-8", "");
 		        }
 			}
-			else
-			{
-				showTransform();
-			}
 		}
 		finally
 		{
 			cursor.close();
 		}
 	}
-
 
 	private String transformEntry(String entry)
 	{
@@ -131,7 +118,6 @@ public class SearchResultsActivity extends Activity
         return null;
 	}
 
-
 	private void retrievePreferences()
 	{
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);			
@@ -160,91 +146,6 @@ public class SearchResultsActivity extends Activity
 		}
 	}
 
-	private void showTransform()
-	{
-		try 
-        {
-            Source xsltSource = new StreamSource(getAssets().open("xslt/structural.xsl"));
-            Source xmlSource = new StreamSource(getAssets().open("xml/andu.xml"));
-           
-            TransformerFactory factory = TransformerFactory.newInstance();
-            Transformer transform = factory.newTransformer(xsltSource);
-            Writer stringWriter = new StringWriter();
-            
-            StreamResult streamResult = new StreamResult(stringWriter);           
-            transform.transform(xmlSource, streamResult);
-
-            String resultString = stringWriter.toString();
-            
-            WebView webView = (WebView) this.findViewById(R.id.webViewEntry);
-            if (webView != null)
-            {
-	            webView.loadDataWithBaseURL("", resultString, "text/html", "UTF-8", "");
-            }
-        } 
-        catch (TransformerException e) 
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-		catch (IOException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-
-	private void showDerivations(String searchWord)
-	{
-		// Create the text view
-	    TextView textView = new TextView(this);
-	    textView.setTextSize(40);
-	    textView.setText(searchWord);
-
-	    // Set the text view as the activity layout
-	    setContentView(textView);
-	    
-	    InputStream stream = null;
-		try
-		{
-			stream = getAssets().open("xml/stemmerCebuano.xml");
-		}
-		catch (IOException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	    
-	    // Find potential derivations of the word:
-		StemmerParser parser = new StemmerParser();
-	    Stemmer stemmer = parser.parse(stream);
-	    
-	    LinkedList<Derivation> derivations = stemmer.findDerivations(searchWord);
-	    
-		DictionaryDatabase database = DictionaryDatabase.getInstance(this);	
-	    
-	    String result = "";
-		Iterator<Derivation> iterator = derivations.iterator();	
-		while (iterator.hasNext()) 
-		{
-			Derivation derivation = iterator.next();
-			result += "Potential derivation: " + derivation.toString() + "\n";
-			if (database.isRoot(derivation.getRoot()))
-			{
-				result += "ROOT!";
-			}
-		}
-	    
-	    TextView textViewResults = new TextView(this);
-	    textViewResults.setTextSize(16);
-	    textViewResults.setText(result);
-	    
-	    // Set the text view as the activity layout
-	    setContentView(textViewResults);
-	}
-
-	
 	/**
 	 * Set up the {@link android.app.ActionBar}.
 	 */
@@ -293,7 +194,6 @@ public class SearchResultsActivity extends Activity
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
 	
 	private void moveToPreviousEntry()
 	{
@@ -317,6 +217,7 @@ public class SearchResultsActivity extends Activity
 		switch (requestCode) 
 		{
 			case RESULT_SETTINGS:
+				retrievePreferences();
 				showEntry();
 				break;
 		}

@@ -1,6 +1,14 @@
 package ph.bohol.dictionaryapp;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
+import ph.bohol.util.stemmer.Derivation;
+import ph.bohol.util.stemmer.Stemmer;
+import ph.bohol.util.stemmer.StemmerParser;
 
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -17,6 +25,7 @@ import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.EditText;
+import android.widget.TextView;
 
 public class TestActivity extends Activity
 {
@@ -103,6 +112,55 @@ public class TestActivity extends Activity
 	}
 
 	
+	private void showDerivations(String searchWord)
+	{
+		// Create the text view
+	    TextView textView = new TextView(this);
+	    textView.setTextSize(40);
+	    textView.setText(searchWord);
+
+	    // Set the text view as the activity layout
+	    setContentView(textView);
+	    
+	    InputStream stream = null;
+		try
+		{
+			stream = getAssets().open("xml/stemmerCebuano.xml");
+		}
+		catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    
+	    // Find potential derivations of the word:
+		StemmerParser parser = new StemmerParser();
+	    Stemmer stemmer = parser.parse(stream);
+	    
+	    List<Derivation> derivations = stemmer.findDerivations(searchWord);
+	    
+		DictionaryDatabase database = DictionaryDatabase.getInstance(this);	
+	    
+	    String result = "";
+		Iterator<Derivation> iterator = derivations.iterator();	
+		while (iterator.hasNext()) 
+		{
+			Derivation derivation = iterator.next();
+			result += "Potential derivation: " + derivation.toString() + "\n";
+			if (database.isRoot(derivation.getRoot()))
+			{
+				result += "ROOT!";
+			}
+		}
+	    
+	    TextView textViewResults = new TextView(this);
+	    textViewResults.setTextSize(16);
+	    textViewResults.setText(result);
+	    
+	    // Set the text view as the activity layout
+	    setContentView(textViewResults);
+	}
+	
 	public void playSound(Context context) throws IllegalArgumentException, SecurityException, IllegalStateException,
     	IOException 
     {
@@ -131,7 +189,7 @@ public class TestActivity extends Activity
 	/** Called when the user clicks the Search button */
 	public void searchWord(View view) 
 	{
-	    Intent intent = new Intent(this, SearchResultsActivity.class);
+	    Intent intent = new Intent(this, TestActivity.class);
 	    EditText editText = (EditText) findViewById(R.id.edit_search_word);
 	    String searchWord = editText.getText().toString();
 	    intent.putExtra(SEARCH_WORD, searchWord);

@@ -4,6 +4,10 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -11,6 +15,8 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
+
+import ph.bohol.util.stemmer.Derivation;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -111,6 +117,56 @@ public class DictionaryDatabase extends SQLiteAssetHelper
     	return cursor;    	
     }
     
+    public Cursor getHeadsForDerivations(String head, List<Derivation> derivations) 
+    {
+    	final String snippetFormat = "SELECT _id, entryid, head, normalized_head, '%s' AS derivation FROM wced_head WHERE normalized_head = ?";
+    	
+    	List<String> subQueries = new LinkedList<String>();
+    	List<String> arguments = new ArrayList<String>();
+    	
+    	// First add the default query:
+    	subQueries.add("SELECT _id, entryid, head, normalized_head, NULL AS derivation FROM WCED_head WHERE normalized_head LIKE ?");
+    	arguments.add(head + "%");
+    	
+    	// Then add the potential derivations:
+		Iterator<Derivation> iterator = derivations.iterator();	
+		while (iterator.hasNext()) 
+		{
+			Derivation derivation = iterator.next();			
+						
+			String snippet = String.format(snippetFormat, derivation.toString().replace("'", "''"));
+		
+			subQueries.add(snippet);
+			arguments.add(derivation.getRoot());
+		}  	
+    	
+		String query = unionize(subQueries);
+		query += " ORDER BY derivation NOT NULL, head";
+		
+    	String [] selectionArguments = new String[arguments.size()];
+    	arguments.toArray(selectionArguments);
+    	    	
+    	SQLiteDatabase db = this.getWritableDatabase();
+    	Cursor cursor = db.rawQuery(query, selectionArguments);
+    	return cursor;    	
+    }
+    
+    private static String unionize(List<String> queries)
+    {
+    	String result = "";
+		Iterator<String> iterator = queries.iterator();	
+		while (iterator.hasNext()) 
+		{
+			if (!result.isEmpty())
+			{
+				result += " UNION ";
+			}
+			result += iterator.next();				
+		}    
+		return result;
+    }
+    
+    
     public Cursor getEntry(int entryId) 
     {
     	String sqlQuery = "SELECT * FROM WCED_entry WHERE _id = ?";      
@@ -132,12 +188,12 @@ public class DictionaryDatabase extends SQLiteAssetHelper
     	String entryHtml = transformEntry(entryXml);        	
     	return entryHtml;
     }
-    
-    
+        
 	private String transformEntry(String entry)
 	{
 		try
 		{
+			// TODO: move XSL transforms to separate class.
 			if (compactEntryTransformer == null)
 			{
 				Source xsltSource = new StreamSource(context.getAssets().open("xslt/compact.xsl"));

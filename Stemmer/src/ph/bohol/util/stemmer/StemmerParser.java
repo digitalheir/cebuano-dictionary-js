@@ -15,7 +15,7 @@ public class StemmerParser extends DefaultHandler
 {
 	Stemmer stemmer = null;
 	Affix temporaryAffix = null;
-
+	
     public Stemmer parse(InputStream stemmerStream) 
     {
         SAXParserFactory factory = SAXParserFactory.newInstance();
