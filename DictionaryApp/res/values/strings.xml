@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">DictionaryApp</string>
+    <string name="app_name">Dictionary of Cebuano Visayan</string>
 
     <item name="databaseVersion" format="integer" type="string">1</item>
 
@@ -16,13 +16,13 @@
 
     <string name="title_activity_test">Test Activity</string>
     <string name="test_activity">Test Activity</string>
-    <string name="title_activity_search_results">Search Results</string>
 
-    <!-- Result Activity -->
+    <!-- Show Entry Activity -->
 
     <string name="show_next_entry">Next Entry</string>
     <string name="show_previous_entry">Previous Entry</string>
-
+    <string name="title_activity_show_entry">Show Entry</string>
+    
     <!-- Preference Activity -->
 
     <string name="preference_activity">Preferences</string>

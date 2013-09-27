@@ -11,6 +11,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.app.Activity;
@@ -20,9 +21,10 @@ import android.database.Cursor;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.support.v4.app.NavUtils;
 
-public class SearchResultsActivity extends Activity
+public class ShowEntryActivity extends Activity
 {
 	private int entryId;
 	
@@ -67,6 +69,31 @@ public class SearchResultsActivity extends Activity
 		        WebView webView = (WebView) this.findViewById(R.id.webViewEntry);
 		        if (webView != null)
 		        {
+		    		webView.setWebViewClient(new WebViewClient() 
+		    		{
+		    		    @Override
+		    		    public boolean shouldOverrideUrlLoading(WebView view, String url) 
+		    		    {
+		    		        if (url.startsWith("search:")) 
+		    		        {
+		    					// Send back to main. This way, links clicked in the data do not result in opening lots 
+		    		        	// of MainActivity instances.		    		 
+		    		            String searchWord = url.substring(7);
+		    		            Intent resultIntent = new Intent();
+		    		            resultIntent.putExtra(MainActivity.SEARCH_WORD, searchWord);
+		    		            setResult(Activity.RESULT_OK, resultIntent);
+		    		            finish();
+		    		            return true;
+		    		        }
+		    		        
+		    		        // Show URL in external browser
+		    		        Intent intent = new Intent(Intent.ACTION_VIEW);
+		    		        intent.setData(Uri.parse(url));
+		    		        startActivity(intent);
+		    		        return true;		       
+		    		    }
+		    		});
+		        			        	
 		            webView.loadDataWithBaseURL("", htmlEntry, "text/html", "UTF-8", "");
 		        }
 			}

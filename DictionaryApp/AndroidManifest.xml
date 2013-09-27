@@ -26,8 +26,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="ph.bohol.dictionaryapp.SearchResultsActivity"
-            android:label="@string/title_activity_search_results"
+            android:name="ph.bohol.dictionaryapp.ShowEntryActivity"
+            android:label="@string/title_activity_show_entry"
             android:parentActivityName="ph.bohol.dictionaryapp.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

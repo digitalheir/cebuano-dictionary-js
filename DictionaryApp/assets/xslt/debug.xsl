@@ -19,20 +19,16 @@
 
     <xsl:key name="id" match="*[@id]" use="@id"/>
 
-
-
     <xsl:template match="dictionary">
         <html>
             <head>
-                <title>Dictionary of Cebuano Visayan</title>
+                <title>John U. Wolff - Dictionary of Cebuano Visayan</title>
 
                 <style type="text/css">
 
                     body { font-size: <xsl:value-of select="$fontSize"/>pt; }
 
                     .entry, .hom, .sense, .eg { margin: 5px; }
-
-                    .entry { border-top: solid 1px black; margin-top: 10px; }
 
                     .entry { margin-left: 10px; border-left: solid 1px black; padding-left: 10px; }
 
@@ -66,6 +62,10 @@
                     .rm { font-style: normal; font-weight: normal; }
                     
                     .expan { color: gray; }
+                    
+                    .search { text-decoration: none; }
+                    
+                    .sc { font-variant:small-caps; }
 
                 </style>
             </head>
@@ -183,6 +183,25 @@
 
     <xsl:template match="xr">
         <span class="xr">
+            <xsl:choose>
+                <xsl:when test="@target">
+                    <a class="search">
+                        <xsl:attribute name="href">
+                            <!-- TODO: hack to remove x and q encoding present in files. -->
+                            <xsl:text>search:</xsl:text><xsl:value-of select="substring-after(translate(@target, 'xq1234567890', ''), '#')"/>
+                        </xsl:attribute>
+                        <xsl:apply-templates />
+                    </a>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:apply-templates />
+                </xsl:otherwise>
+            </xsl:choose>
+        </span>
+    </xsl:template>
+
+    <xsl:template match="sc">
+        <span class="sc">
             <xsl:apply-templates/>
         </span>
     </xsl:template>

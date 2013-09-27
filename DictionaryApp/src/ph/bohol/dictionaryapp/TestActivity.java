@@ -3,7 +3,6 @@ package ph.bohol.dictionaryapp;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import ph.bohol.util.stemmer.Derivation;
@@ -47,7 +46,7 @@ public class TestActivity extends Activity
 		        if (url.startsWith("dict:")) 
 		        {
 		            String searchWord = url.substring(5);
-		            Intent intent = new Intent(getApplicationContext(), SearchResultsActivity.class);
+		            Intent intent = new Intent(getApplicationContext(), ShowEntryActivity.class);
 		    	    intent.putExtra(SEARCH_WORD, searchWord);
 		    	    startActivity(intent);
 		            return true;
@@ -112,6 +111,7 @@ public class TestActivity extends Activity
 	}
 
 	
+	@SuppressWarnings("unused")
 	private void showDerivations(String searchWord)
 	{
 		// Create the text view

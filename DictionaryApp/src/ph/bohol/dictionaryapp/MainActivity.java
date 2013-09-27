@@ -29,6 +29,8 @@ public class MainActivity extends Activity
 	static final String SEARCH_WORD = "ph.bohol.dictionaryapp.SEARCH_WORD";
 	static final String ENTRY_ID = "ph.bohol.dictionaryapp.ENTRY_ID";
 		
+	private EditText editText;
+	
 	private ListView listView = null;
 	private Cursor cursor = null;
 	private String searchWord;
@@ -36,6 +38,7 @@ public class MainActivity extends Activity
 	private Stemmer stemmer = null;
 		
 	private static final int RESULT_SETTINGS = 1;
+	private static final int RESULT_SHOW_ENTRY = 2;
 		
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -56,7 +59,7 @@ public class MainActivity extends Activity
 		
 	    populateList(searchWord);
 	    
-		EditText editText = (EditText) findViewById(R.id.edit_search_word);		
+	    editText = (EditText) findViewById(R.id.edit_search_word);		
 		editText.setText(searchWord);
 		editText.addTextChangedListener(new TextWatcher()
 		{
@@ -101,10 +104,11 @@ public class MainActivity extends Activity
 		    {
 				cursor.moveToPosition(position);
 				String entryId = cursor.getString(cursor.getColumnIndex(DictionaryDatabase.HEAD_ENTRY_ID));
-				  
-				Intent intent = new Intent(MainActivity.this, SearchResultsActivity.class);
+				  	
+				// Result will be search word if cross-reference is followed.
+				Intent intent = new Intent(MainActivity.this, ShowEntryActivity.class);
 				intent.putExtra(ENTRY_ID, entryId);
-				startActivity(intent);
+				startActivityForResult(intent, RESULT_SHOW_ENTRY);
 		    }
 		});
 	}
@@ -157,6 +161,14 @@ public class MainActivity extends Activity
 
 		switch (requestCode) 
 		{
+			case RESULT_SHOW_ENTRY:
+				// User followed a cross-reference to another entry, search for it.
+				if (resultCode == Activity.RESULT_OK)
+				{
+					searchWord = data.getStringExtra(MainActivity.SEARCH_WORD);
+					editText.setText(searchWord);
+				}
+				break;
 			case RESULT_SETTINGS:
 				// populateList(searchWord);
 				break;
