@@ -39,7 +39,7 @@ public class ShowEntryActivity extends Activity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_search_results);
+		setContentView(R.layout.activity_show_entry);
 		
 		// Show the Up button in the action bar.
 		setupActionBar();
