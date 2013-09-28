@@ -40,11 +40,9 @@ public class DictionaryDatabase extends SQLiteAssetHelper
     public static final String ENTRY_ID = "_id";
     public static final String ENTRY_ENTRY = "entry";
 	public static final String ENTRY_HEAD = "head";
-  
-	
+  	
 	private Transformer compactEntryTransformer = null;
 	private Context context = null;
-
 	
 	// Prevent resource leaks by using this only as a singleton, using the getInstance() method.
 	private DictionaryDatabase(Context context) 

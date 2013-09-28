@@ -2,34 +2,33 @@ package ph.bohol.dictionaryapp;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
-
 import ph.bohol.util.normalizer.CebuanoNormalizer;
-import ph.bohol.util.stemmer.Derivation;
 import ph.bohol.util.stemmer.Stemmer;
 import ph.bohol.util.stemmer.StemmerParser;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.SearchView;
 
 
 public class MainActivity extends Activity
+	implements SearchView.OnQueryTextListener
 {
 	private static final String ASSET_STEMMER_CEBUANO = "xml/stemmerCebuano.xml";
 	
 	static final String SEARCH_WORD = "ph.bohol.dictionaryapp.SEARCH_WORD";
 	static final String ENTRY_ID = "ph.bohol.dictionaryapp.ENTRY_ID";
 		
-	private EditText editText;
+	// private EditText editText;
+	private SearchView searchView;
 	
 	private ListView listView = null;
 	private Cursor cursor = null;
@@ -49,52 +48,48 @@ public class MainActivity extends Activity
 		intializeStemmer();
 		
 	    listView = (ListView) findViewById(R.id.listview);	
-
-		Intent intent = getIntent();
-		String searchWord = intent.getStringExtra(MainActivity.SEARCH_WORD);
+		
+		// Get searchWord after resume (e.g. after a rotation).
+        if (savedInstanceState != null)
+        {
+        	searchWord = savedInstanceState.getString(SEARCH_WORD);
+        }
+        else
+        {
+        	Intent intent = getIntent();
+        	searchWord = intent.getStringExtra(MainActivity.SEARCH_WORD);
+        }
 		if (searchWord == null)
 		{
 			searchWord = "";
 		}
 		
 	    populateList(searchWord);
-	    
-	    editText = (EditText) findViewById(R.id.edit_search_word);		
-		editText.setText(searchWord);
-		editText.addTextChangedListener(new TextWatcher()
-		{
-	        public void afterTextChanged(Editable s) 
-	        {
-	        	updateMatches(s);
-	        }
-	        
-	        public void beforeTextChanged(CharSequence s, int start, int count, int after){}
-	        public void onTextChanged(CharSequence s, int start, int before, int count){}
-	    }); 
 	}
 
-	public void updateMatches(Editable s)
-	{
-		searchWord = s.toString();
-		populateList(searchWord);
-	}
-
+    @Override
+    public void onSaveInstanceState(Bundle outState) 
+    {
+         outState.putString(SEARCH_WORD, searchWord);
+         super.onSaveInstanceState(outState);
+    }
+	
 	private void populateList(String searchWord)
 	{
-		CebuanoNormalizer n = new CebuanoNormalizer();
-		searchWord = n.normalize(searchWord);
-		
-		// List<Derivation> derivations = stemmer.findDerivations(searchWord);
-		
+		PrepareCursorTask cursorTask = new PrepareCursorTask(this);
+		cursorTask.execute(searchWord);
+	}
+
+	private void setCursorAdapter(Cursor newCursor)
+	{
 		// First cleanup our previous cursor, to prevent resource leaks.
 		if (cursor != null)
 		{
 			cursor.close();
 		}
+		cursor = newCursor;
 		
-		DictionaryDatabase database = DictionaryDatabase.getInstance(this);
-		cursor = database.getHeadsStartingWith(searchWord);
-	    HeadCursorAdapter h = new HeadCursorAdapter(this, cursor);
+		HeadCursorAdapter h = new HeadCursorAdapter(this, cursor);
 	    listView.setAdapter(h);	 	
 	    	    
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() 
@@ -138,6 +133,14 @@ public class MainActivity extends Activity
 	{
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
+		
+	    MenuItem searchItem = menu.findItem(R.id.search);
+	    searchView = (SearchView) searchItem.getActionView();
+	    searchView.setOnQueryTextListener(this);	  
+	    searchView.setIconifiedByDefault(false);
+		
+	    // Set search word already retrieved from the intent in onCreate();
+	    searchView.setQuery(searchWord, false);	    
 		return true;
 	}
 	
@@ -166,23 +169,15 @@ public class MainActivity extends Activity
 				if (resultCode == Activity.RESULT_OK)
 				{
 					searchWord = data.getStringExtra(MainActivity.SEARCH_WORD);
-					editText.setText(searchWord);
+					// editText.setText(searchWord);
+					searchView.setQuery(searchWord, false);	
+					populateList(searchWord);
 				}
 				break;
 			case RESULT_SETTINGS:
 				// populateList(searchWord);
 				break;
 		}
-	}
-
-	/** Called when the user clicks the Search button */
-	public void searchWord(View view) 
-	{
-	    Intent intent = new Intent(this, TestActivity.class);
-	    EditText editText = (EditText) findViewById(R.id.edit_search_word);
-	    String searchWord = editText.getText().toString();
-	    intent.putExtra(SEARCH_WORD, searchWord);
-	    startActivity(intent);
 	}
 	
 	@Override
@@ -194,4 +189,64 @@ public class MainActivity extends Activity
 			cursor.close();
 		}
 	}
+
+	@Override
+	public boolean onQueryTextChange(String newText)
+	{
+		if (!newText.equals(searchWord))
+		{
+			searchWord = newText;
+			populateList(searchWord);
+		}
+		return false;
+	}
+	
+	@Override
+	public boolean onQueryTextSubmit(String query)
+	{
+		// Already handled by the onQueryTextChange() handler, just close the search
+		searchView.clearFocus();
+		return true;
+	}
+	
+	private class PrepareCursorTask extends AsyncTask<String, Void, Cursor>
+	{
+		private final Context context;
+		
+		PrepareCursorTask(Context context)
+		{
+			this.context = context;
+		}
+		
+		@Override
+		protected Cursor doInBackground(String... searchWords)
+		{
+			String searchWord = searchWords[0];
+			CebuanoNormalizer n = new CebuanoNormalizer();
+			searchWord = n.normalize(searchWord);
+			
+			// List<Derivation> derivations = stemmer.findDerivations(searchWord);
+			
+			DictionaryDatabase database = DictionaryDatabase.getInstance(context);
+			Cursor cursor = database.getHeadsStartingWith(searchWord);
+			
+			// Move the cursor to the first entry, do force the database do some heavy-lifting
+			// on this task's thread before handing it to the UI thread.
+			cursor.moveToFirst();
+			return cursor;
+		}
+		
+		@Override
+		protected void onPostExecute(Cursor result)
+		{
+		    if (isCancelled()) 
+		    {
+		    	result = null;
+		    }
+		    else
+		    {
+		    	setCursorAdapter(result);
+		    }
+		}		
+	}	
 }

@@ -109,7 +109,6 @@ public class TestActivity extends Activity
 		webView.loadUrl("file:///android_asset/html/test.html");
 
 	}
-
 	
 	@SuppressWarnings("unused")
 	private void showDerivations(String searchWord)
@@ -165,15 +164,15 @@ public class TestActivity extends Activity
     	IOException 
     {
 		Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-		MediaPlayer mMediaPlayer = new MediaPlayer();
-		mMediaPlayer.setDataSource(context, soundUri);
+		MediaPlayer mediaPlayer = new MediaPlayer();
+		mediaPlayer.setDataSource(context, soundUri);
 		final AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
 		if (audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) 
 		{
-		    mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
-		    mMediaPlayer.setLooping(false);
-		    mMediaPlayer.prepare();
-		    mMediaPlayer.start();
+		    mediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+		    mediaPlayer.setLooping(false);
+		    mediaPlayer.prepare();
+		    mediaPlayer.start();
 		}
     }
 	
@@ -190,8 +189,9 @@ public class TestActivity extends Activity
 	public void searchWord(View view) 
 	{
 	    Intent intent = new Intent(this, TestActivity.class);
-	    EditText editText = (EditText) findViewById(R.id.edit_search_word);
-	    String searchWord = editText.getText().toString();
+	    // EditText editText = (EditText) findViewById(R.id.edit_search_word);
+	    // String searchWord = editText.getText().toString();
+	    String searchWord = "babuy";
 	    intent.putExtra(SEARCH_WORD, searchWord);
 	    startActivity(intent);
 	}
