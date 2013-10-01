@@ -1,28 +1,21 @@
 package ph.bohol.dictionaryapp;
 
-import java.io.IOException;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.io.Writer;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
-
-import android.net.Uri;
-import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.net.Uri;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.v4.app.NavUtils;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.GestureDetector.SimpleOnGestureListener;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.support.v4.app.NavUtils;
 
 public class ShowEntryActivity extends Activity
 {
@@ -30,10 +23,19 @@ public class ShowEntryActivity extends Activity
 	
 	private int fontSize = 20;
 	private boolean expandAbbreviations = false;
-	private String xsltFilename = "xslt/typographical.xsl";
+	private String presentationStyle = EntryTransformer.STYLE_TRADITIONAL;
+	
+	private EntryTransformer entryTransformer = null;
 	
 	private static final int RESULT_SETTINGS = 1;
 	
+	
+    private static final int SWIPE_MIN_DISTANCE = 120;
+    private static final int SWIPE_MAX_OFF_PATH = 250;
+    private static final int SWIPE_THRESHOLD_VELOCITY = 200;
+    private GestureDetector gestureDetector;
+    View.OnTouchListener gestureListener;
+    
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -44,7 +46,17 @@ public class ShowEntryActivity extends Activity
 		// Show the Up button in the action bar.
 		setupActionBar();
 		
-		retrievePreferences();
+        gestureDetector = new GestureDetector(this, new MyGestureDetector());
+        gestureListener = new View.OnTouchListener() 
+        {
+            public boolean onTouch(View v, MotionEvent event) 
+            {
+                return gestureDetector.onTouchEvent(event);
+            }
+        };
+		
+		retrievePreferences();		
+		entryTransformer = new EntryTransformer(this);
 		
 		Intent intent = getIntent();
 		entryId = Integer.parseInt(intent.getStringExtra(MainActivity.ENTRY_ID));
@@ -95,6 +107,7 @@ public class ShowEntryActivity extends Activity
 		    		});
 		        			        	
 		            webView.loadDataWithBaseURL("", htmlEntry, "text/html", "UTF-8", "");
+		            webView.setOnTouchListener(gestureListener);
 		        }
 			}
 		}
@@ -106,71 +119,20 @@ public class ShowEntryActivity extends Activity
 
 	private String transformEntry(String entry)
 	{
-		try
-		{
-			entry = "<dictionary>" + entry + "</dictionary>";
-					
-			Source xsltSource = new StreamSource(getAssets().open(xsltFilename));
-			StringReader reader = new StringReader(entry);
-			Source xmlSource = new StreamSource(reader);
-			TransformerFactory factory = TransformerFactory.newInstance();
-			Transformer transformer = factory.newTransformer(xsltSource);
-			if (transformer == null)
-			{
-				// TODO: neat handling of this.
-				return "Internal error: Transformation failed";
-			}
-			
-			transformer.setParameter("expandAbbreviations", Boolean.toString(expandAbbreviations));
-			transformer.setParameter("fontSize", Integer.toString(fontSize));
-						
-			Writer stringWriter = new StringWriter();
-			StreamResult streamResult = new StreamResult(stringWriter);           
-			
-			transformer.transform(xmlSource, streamResult);
-			
-			return stringWriter.toString();
-		}
-		catch (IOException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch (TransformerException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-        return null;
+		entry = "<dictionary>" + entry + "</dictionary>";
+		
+		entryTransformer.setExpandAbbreviations(expandAbbreviations);
+		entryTransformer.setFontSize(fontSize);
+		return entryTransformer.transform(entry, presentationStyle);		 
 	}
-
+	
 	private void retrievePreferences()
 	{
-		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);			
-		expandAbbreviations = preferences.getBoolean("expand_abbreviations", false);
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
 		
-		String fontSizeString = preferences.getString("font_size", "20");
-		if (fontSizeString != null)
-		{
-			fontSize = Integer.parseInt(fontSizeString);
-			fontSize = fontSize < 10 ? 20 : fontSize;
-		}
-		
-		String presentationStyle = preferences.getString("presentation_style", "traditional");		
-		xsltFilename = "xslt/structural.xsl";
-		if (presentationStyle.equalsIgnoreCase("traditional"))
-		{
-			xsltFilename = "xslt/typographical.xsl";
-		}
-		else if (presentationStyle.equalsIgnoreCase("debug"))
-		{
-			xsltFilename = "xslt/debug.xsl";
-		}
-		else if (presentationStyle.equalsIgnoreCase("compact"))
-		{
-			xsltFilename = "xslt/compact.xsl";
-		}
+		expandAbbreviations = preferences.getBoolean(DictionaryPreferenceActivity.KEY_EXPAND_ABBREVIATIONS, false);		
+		fontSize = Integer.parseInt(preferences.getString(DictionaryPreferenceActivity.KEY_PRESENTATION_FONT_SIZE, "20"));		
+		presentationStyle = preferences.getString(DictionaryPreferenceActivity.KEY_PRESENTATION_STYLE, EntryTransformer.STYLE_TRADITIONAL);
 	}
 
 	/**
@@ -249,4 +211,39 @@ public class ShowEntryActivity extends Activity
 				break;
 		}
 	}	
+	
+	class MyGestureDetector extends SimpleOnGestureListener
+	{
+		@Override
+		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY)
+		{
+			try
+			{
+				if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
+				{
+					return false;
+				}
+				
+				// right to left swipe
+				if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY)
+				{
+					moveToNextEntry();
+					// Toast.makeText(SelectFilterActivity.this, "Left Swipe",
+					// Toast.LENGTH_SHORT).show();
+				}
+				else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY)
+				{
+					moveToPreviousEntry();
+					// Toast.makeText(SelectFilterActivity.this, "Right Swipe",
+					// Toast.LENGTH_SHORT).show();
+				}
+			}
+			catch (Exception e)
+			{
+				// nothing
+			}
+			return false;
+		}
+	}
+	
 }

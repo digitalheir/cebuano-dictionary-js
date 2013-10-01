@@ -146,7 +146,7 @@ public class TestActivity extends Activity
 		{
 			Derivation derivation = iterator.next();
 			result += "Potential derivation: " + derivation.toString() + "\n";
-			if (database.isRoot(derivation.getRoot()))
+			if (database.isRootWord(derivation.getRoot()))
 			{
 				result += "ROOT!";
 			}

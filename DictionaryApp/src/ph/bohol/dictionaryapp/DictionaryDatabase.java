@@ -1,34 +1,28 @@
 package ph.bohol.dictionaryapp;
 
-import java.io.IOException;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
+import java.util.Map;
 
 import ph.bohol.util.stemmer.Derivation;
+import ph.bohol.util.stemmer.RootWordProvider;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
+import android.text.Html;
+import android.text.Spanned;
+import android.util.Log;
 
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
 public class DictionaryDatabase extends SQLiteAssetHelper 
+	implements RootWordProvider
 {
-	private static DictionaryDatabase instance = null;
-	
     private static final String DATABASE_NAME = "dictionary_database";
     private static final int DATABASE_VERSION = 1;
 
@@ -40,39 +34,50 @@ public class DictionaryDatabase extends SQLiteAssetHelper
     public static final String ENTRY_ID = "_id";
     public static final String ENTRY_ENTRY = "entry";
 	public static final String ENTRY_HEAD = "head";
-  	
-	private Transformer compactEntryTransformer = null;
-	private Context context = null;
 	
+	private static final String TAG = "DictionaryDatabase";
+	
+	private static final int CACHE_SIZE = 100;
+
+	private static DictionaryDatabase instance = null;
+	private static Map<Integer, Spanned> entryCache = Collections.synchronizedMap(new EntryCache(CACHE_SIZE));
+	
+	// TODO: move transformations and result caching out of DictionaryDatabase 
+	private EntryTransformer entryTransformer = null;
+		
 	// Prevent resource leaks by using this only as a singleton, using the getInstance() method.
 	private DictionaryDatabase(Context context) 
     {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);  
-        this.context = context;
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this.entryTransformer = new EntryTransformer(context);
     }
 
     public static DictionaryDatabase getInstance(Context context) 
     {
-        // Use the application context, which will ensure that you 
-        // don't accidentally leak an Activity's context.
+        // Use the application context, which will ensure that you do not accidentally leak an Activity's context.
         // See this article for more information: http://bit.ly/6LRzfx
         if (instance == null) 
         {
+        	Log.d(TAG, "Creating new DictionaryDatabase object");
         	instance = new DictionaryDatabase(context.getApplicationContext());
         }
         return instance;
     }
         
-    public boolean isRoot(String root) 
+    public boolean isRootWord(String root) 
     {
-    	String sqlQuery = "SELECT * FROM Roots WHERE root = ?";      
-    	String [] selectionArguments = { root };
-    	
+    	String sqlQuery = "SELECT 1 FROM WCED_head WHERE normalized_head = ? LIMIT 1";      
+    	String [] selectionArguments = { root };    	
     	SQLiteDatabase db = this.getWritableDatabase();
-    	Cursor cursor = db.rawQuery(sqlQuery, selectionArguments);
-    	boolean result = cursor.getCount() > 0;
-    	cursor.close();
-    	return result;
+    	Cursor cursor = db.rawQuery(sqlQuery, selectionArguments);;
+    	try
+    	{
+    		return cursor.getCount() > 0;
+    	}
+    	finally
+    	{
+    		cursor.close();
+    	}
     }
     
 	public Cursor getRoots() 
@@ -163,71 +168,39 @@ public class DictionaryDatabase extends SQLiteAssetHelper
 		}    
 		return result;
     }
-    
-    
+        
     public Cursor getEntry(int entryId) 
     {
     	String sqlQuery = "SELECT * FROM WCED_entry WHERE _id = ?";      
-    	String [] selectionArguments = { Integer.toString(entryId) };
-    	
+    	String [] selectionArguments = { Integer.toString(entryId) };    	
     	SQLiteDatabase db = this.getWritableDatabase();
     	Cursor cursor = db.rawQuery(sqlQuery, selectionArguments);
-    	cursor.moveToFirst();
-    	
+    	cursor.moveToFirst();    	
     	return cursor;
     }
     
-    public String getEntryHtml(int entryId)
+    private String getEntryHtml(int entryId)
     {
     	Cursor cursor = getEntry(entryId);    	
     	String entryXml = cursor.getString(cursor.getColumnIndex(DictionaryDatabase.ENTRY_ENTRY));
-    	cursor.close();
-    	    	
-    	String entryHtml = transformEntry(entryXml);        	
+    	cursor.close();    	    	
+    	String entryHtml = entryTransformer.transform(entryXml, EntryTransformer.STYLE_COMPACT);
     	return entryHtml;
     }
-        
-	private String transformEntry(String entry)
-	{
-		try
-		{
-			// TODO: move XSL transforms to separate class.
-			if (compactEntryTransformer == null)
-			{
-				Source xsltSource = new StreamSource(context.getAssets().open("xslt/compact.xsl"));
-				TransformerFactory factory = TransformerFactory.newInstance();
-				compactEntryTransformer = factory.newTransformer(xsltSource);
-				if (compactEntryTransformer == null)
-				{
-					// TODO: neat handling of this.
-					return "Internal error: Transformation failed";
-				}
-			}
-						
-			StringReader reader = new StringReader(entry);
-			Source xmlSource = new StreamSource(reader);
-			
-			Writer stringWriter = new StringWriter();
-			StreamResult streamResult = new StreamResult(stringWriter);           
-			
-			compactEntryTransformer.transform(xmlSource, streamResult);
-			
-			return stringWriter.toString();
-		}
-		catch (IOException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch (TransformerException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-        return null;
-	}
     
+    public Spanned getEntrySpanned(int entryId)
+    {
+    	Spanned entrySpanned =  entryCache.get(entryId);    	
+    	if (entrySpanned == null)
+    	{
+    		Log.d(TAG, "Getting entry rendered in Spanned for entryId: " + Integer.toString(entryId));
+    		
+    		String entryHtml = getEntryHtml(entryId);    		
+    		entrySpanned = Html.fromHtml(entryHtml);
+    		entryCache.put(entryId, entrySpanned);
+    	}
+    	return entrySpanned;
+    }
     
     public int getNextEntryId(int entryId) 
     {

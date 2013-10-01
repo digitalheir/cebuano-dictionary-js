@@ -30,12 +30,12 @@
 
                     body { font-size: <xsl:value-of select="$fontSize"/>pt; }
 
-                    .form { font-size: 120%; }
+                    .form { font-size: 110%; }
 
-                    .eg { font-size: 80%; color: gray; }
+                    .eg { font-size: 90%; color: gray; }
                     .eg i {  font-style: italic }
 
-                    .pos { font-size: 120%; color: red; }
+                    .pos { font-size: 110%; color: red; }
 
                     .num { font-weight: bold; color: blue; }
 

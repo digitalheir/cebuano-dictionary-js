@@ -12,9 +12,11 @@ import android.preference.PreferenceManager;
 public class DictionaryPreferenceActivity extends PreferenceActivity 
 	implements OnSharedPreferenceChangeListener
 {
-	public static final String SEARCH_KEY_FONT_SIZE = "search_font_size";
-	public static final String PRESENTATION_KEY_FONT_SIZE = "font_size";
+	public static final String KEY_SEARCH_FONT_SIZE = "search_font_size";
+	public static final String KEY_PRESENTATION_FONT_SIZE = "font_size";
+	public static final String KEY_EXPAND_ABBREVIATIONS = "expand_abbreviations";
     public static final String KEY_PRESENTATION_STYLE = "presentation_style";
+    
     private ListPreference searchFontSizeListPreference;
     private ListPreference presentationFontSizeListPreference;
     private ListPreference presentationStyleListPreference;
@@ -26,8 +28,8 @@ public class DictionaryPreferenceActivity extends PreferenceActivity
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.preferences);
 		
-		searchFontSizeListPreference = (ListPreference) getPreferenceScreen().findPreference(SEARCH_KEY_FONT_SIZE);
-		presentationFontSizeListPreference = (ListPreference) getPreferenceScreen().findPreference(PRESENTATION_KEY_FONT_SIZE);
+		searchFontSizeListPreference = (ListPreference) getPreferenceScreen().findPreference(KEY_SEARCH_FONT_SIZE);
+		presentationFontSizeListPreference = (ListPreference) getPreferenceScreen().findPreference(KEY_PRESENTATION_FONT_SIZE);
 		presentationStyleListPreference = (ListPreference) getPreferenceScreen().findPreference(KEY_PRESENTATION_STYLE);		
 	}
 	
@@ -38,8 +40,8 @@ public class DictionaryPreferenceActivity extends PreferenceActivity
 		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         
         presentationStyleListPreference.setSummary(presentationStyleToText(sharedPreferences.getString(KEY_PRESENTATION_STYLE, "")));
-        presentationFontSizeListPreference.setSummary(fontSizeToText(sharedPreferences.getString(PRESENTATION_KEY_FONT_SIZE, "")));
-        searchFontSizeListPreference.setSummary(fontSizeToText(sharedPreferences.getString(SEARCH_KEY_FONT_SIZE, "")));
+        presentationFontSizeListPreference.setSummary(fontSizeToText(sharedPreferences.getString(KEY_PRESENTATION_FONT_SIZE, "")));
+        searchFontSizeListPreference.setSummary(fontSizeToText(sharedPreferences.getString(KEY_SEARCH_FONT_SIZE, "")));
 
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
     }
@@ -81,13 +83,13 @@ public class DictionaryPreferenceActivity extends PreferenceActivity
 	    {  	
 	    	presentationStyleListPreference.setSummary(presentationStyleToText(sharedPreferences.getString(KEY_PRESENTATION_STYLE, "")));
 	    }
-	    else if (key.equals(PRESENTATION_KEY_FONT_SIZE)) 
+	    else if (key.equals(KEY_PRESENTATION_FONT_SIZE)) 
 	    {    	
-	    	presentationFontSizeListPreference.setSummary(fontSizeToText(sharedPreferences.getString(PRESENTATION_KEY_FONT_SIZE, "")));
+	    	presentationFontSizeListPreference.setSummary(fontSizeToText(sharedPreferences.getString(KEY_PRESENTATION_FONT_SIZE, "")));
 	    }
-	    else if (key.equals(SEARCH_KEY_FONT_SIZE)) 
+	    else if (key.equals(KEY_SEARCH_FONT_SIZE)) 
 	    {    	
-	    	searchFontSizeListPreference.setSummary(fontSizeToText(sharedPreferences.getString(SEARCH_KEY_FONT_SIZE, "")));
+	    	searchFontSizeListPreference.setSummary(fontSizeToText(sharedPreferences.getString(KEY_SEARCH_FONT_SIZE, "")));
 	    }
 	}
 }

@@ -11,6 +11,7 @@ public class Stemmer
 	private boolean compiled = false;
 	private Map<String, String> constants = new HashMap<String, String>();
 	private LinkedList<Affix> affixes = new LinkedList<Affix>();
+	private RootWordProvider rootProvider = null;
 
 	public void addAffix(Affix pattern)
 	{
@@ -41,7 +42,11 @@ public class Stemmer
 		}
 				
 		LinkedList<Derivation> results = new LinkedList<Derivation>();
-		results.add(new Derivation(word));
+		
+		if (isRootWord(word))
+		{
+			results.add(new Derivation(word));
+		}
 		
 		Iterator<Affix> iterator = affixes.iterator();
 		while (iterator.hasNext()) 
@@ -66,6 +71,11 @@ public class Stemmer
 		}	
 		
 		return results;
+	}
+	
+	private boolean isRootWord(String word)
+	{
+		return (rootProvider == null || rootProvider.isRootWord(word));		
 	}
 	
 	public String getLanguage() 
@@ -97,5 +107,15 @@ public class Stemmer
 		}	
 				
 		System.out.println( "</stemmer>" );	
+	}
+
+	public RootWordProvider getRootProvider()
+	{
+		return rootProvider;
+	}
+
+	public void setRootProvider(RootWordProvider rootProvider)
+	{
+		this.rootProvider = rootProvider;
 	}	
 }

@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-import android.text.Html;
 import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -95,10 +94,8 @@ public class HeadCursorAdapter extends CursorAdapter
 		protected Spanned doInBackground(Integer... entryId)
 		{
 			DictionaryDatabase database = DictionaryDatabase.getInstance(context);
-			String entryHtml = database.getEntryHtml(entryId[0]);
-
-			Spanned entrySpanned = Html.fromHtml(entryHtml);
-			return  entrySpanned;
+			Spanned entrySpanned = database.getEntrySpanned(entryId[0]);
+			return entrySpanned;
 		}
 		
 		@Override

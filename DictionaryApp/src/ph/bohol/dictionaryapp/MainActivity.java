@@ -38,7 +38,7 @@ public class MainActivity extends Activity
 		
 	private static final int RESULT_SETTINGS = 1;
 	private static final int RESULT_SHOW_ENTRY = 2;
-		
+			
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -48,7 +48,7 @@ public class MainActivity extends Activity
 		intializeStemmer();
 		
 	    listView = (ListView) findViewById(R.id.listview);	
-		
+			    
 		// Get searchWord after resume (e.g. after a rotation).
         if (savedInstanceState != null)
         {
@@ -249,4 +249,6 @@ public class MainActivity extends Activity
 		    }
 		}		
 	}	
+	
+
 }
