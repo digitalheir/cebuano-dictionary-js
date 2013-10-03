@@ -2,18 +2,22 @@ package ph.bohol.dictionaryapp;
 
 import java.io.IOException;
 import java.io.InputStream;
+
 import ph.bohol.util.normalizer.CebuanoNormalizer;
 import ph.bohol.util.stemmer.Stemmer;
 import ph.bohol.util.stemmer.StemmerParser;
-import android.os.AsyncTask;
-import android.os.Bundle;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -21,53 +25,71 @@ import android.widget.SearchView;
 
 public class MainActivity extends Activity
 	implements SearchView.OnQueryTextListener
-{
-	private static final String ASSET_STEMMER_CEBUANO = "xml/stemmerCebuano.xml";
-	
+{	
 	static final String SEARCH_WORD = "ph.bohol.dictionaryapp.SEARCH_WORD";
 	static final String ENTRY_ID = "ph.bohol.dictionaryapp.ENTRY_ID";
 		
-	// private EditText editText;
-	private SearchView searchView;
-	
-	private ListView listView = null;
-	private Cursor cursor = null;
-	private String searchWord;
-	
-	private Stemmer stemmer = null;
-		
+	private static final String TAG = "MainActivity";
 	private static final int RESULT_SETTINGS = 1;
 	private static final int RESULT_SHOW_ENTRY = 2;
-			
+	private static final String ASSET_STEMMER_CEBUANO = "xml/stemmerCebuano.xml";
+	
+	private SearchView searchView;	
+	private ListView listView = null;
+	private WebView webView = null;
+	private Cursor cursor = null;
+	private String searchWord;	
+	private Stemmer stemmer = null;
+					
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		Log.d(TAG, "OnCreate");
 
 		intializeStemmer();
 		
 	    listView = (ListView) findViewById(R.id.listview);	
+    	webView = (WebView) findViewById(R.id.webview);	
 			    
 		// Get searchWord after resume (e.g. after a rotation).
         if (savedInstanceState != null)
         {
         	searchWord = savedInstanceState.getString(SEARCH_WORD);
+        	Log.d(TAG, "Got searchWord '" + searchWord + "' from savedInstanceState");
         }
         else
         {
         	Intent intent = getIntent();
         	searchWord = intent.getStringExtra(MainActivity.SEARCH_WORD);
+        	Log.d(TAG, "Got searchWord '" + searchWord + "' from intent");
         }
-		if (searchWord == null)
-		{
-			searchWord = "";
-		}
-		
-	    populateList(searchWord);
+		update();
 	}
 
-    @Override
+	private void update()
+	{
+		if (searchWord == null || searchWord.isEmpty())
+		{			
+			searchWord = "";
+			showFrontPage();
+		}
+		else
+		{
+			populateList(searchWord);
+		}
+	}
+
+    private void showFrontPage()
+	{		
+    	listView.setVisibility(View.INVISIBLE);
+    	webView.setVisibility(View.VISIBLE);
+    	webView.loadUrl("file:///android_asset/html/frontpage.html");
+	}
+
+	@Override
     public void onSaveInstanceState(Bundle outState) 
     {
          outState.putString(SEARCH_WORD, searchWord);
@@ -76,6 +98,8 @@ public class MainActivity extends Activity
 	
 	private void populateList(String searchWord)
 	{
+		webView.setVisibility(View.INVISIBLE);
+		listView.setVisibility(View.VISIBLE);
 		PrepareCursorTask cursorTask = new PrepareCursorTask(this);
 		cursorTask.execute(searchWord);
 	}
@@ -103,7 +127,7 @@ public class MainActivity extends Activity
 				// Result will be search word if cross-reference is followed.
 				Intent intent = new Intent(MainActivity.this, ShowEntryActivity.class);
 				intent.putExtra(ENTRY_ID, entryId);
-				startActivityForResult(intent, RESULT_SHOW_ENTRY);
+				startActivityForResult(intent, RESULT_SHOW_ENTRY);				
 		    }
 		});
 	}
@@ -161,17 +185,24 @@ public class MainActivity extends Activity
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) 
 	{
 		super.onActivityResult(requestCode, resultCode, data);
-
+		
+		if (resultCode == Activity.RESULT_CANCELED) 
+		{
+			return;
+	    }
+		
 		switch (requestCode) 
 		{
 			case RESULT_SHOW_ENTRY:
+				overridePendingTransition(R.anim.left_in, R.anim.right_out);
+				
 				// User followed a cross-reference to another entry, search for it.
 				if (resultCode == Activity.RESULT_OK)
 				{
 					searchWord = data.getStringExtra(MainActivity.SEARCH_WORD);
-					// editText.setText(searchWord);
-					searchView.setQuery(searchWord, false);	
-					populateList(searchWord);
+					searchView.setQuery(searchWord, false);						
+					Log.d(TAG, "Activity returned with '" + searchWord + "'");
+					update();
 				}
 				break;
 			case RESULT_SETTINGS:
@@ -196,7 +227,7 @@ public class MainActivity extends Activity
 		if (!newText.equals(searchWord))
 		{
 			searchWord = newText;
-			populateList(searchWord);
+			update();
 		}
 		return false;
 	}

@@ -56,5 +56,6 @@
     <string name="presentation_style_summary">Selects the way entries are displayed</string>
     <string name="font_size">Font size</string>
     <string name="font_size_summary">Selects the font size</string>
-
+    <string name="reached_first_entry">You\'ve reached the first entry</string>
+    <string name="reached_last_entry">You\'ve reached the last entry</string>   
 </resources>

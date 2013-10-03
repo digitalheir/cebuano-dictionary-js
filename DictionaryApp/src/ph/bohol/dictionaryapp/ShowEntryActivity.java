@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 public class ShowEntryActivity extends Activity
 {
@@ -28,11 +30,15 @@ public class ShowEntryActivity extends Activity
 	private EntryTransformer entryTransformer = null;
 	
 	private static final int RESULT_SETTINGS = 1;
-	
-	
+		
     private static final int SWIPE_MIN_DISTANCE = 120;
     private static final int SWIPE_MAX_OFF_PATH = 250;
     private static final int SWIPE_THRESHOLD_VELOCITY = 200;
+
+	private static final String ENTRY_ID = "ph.bohol.dictionaryapp.ENTRY_ID";
+
+	private static final String TAG = "ShowEntryActivity";
+	
     private GestureDetector gestureDetector;
     View.OnTouchListener gestureListener;
     
@@ -42,6 +48,10 @@ public class ShowEntryActivity extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_show_entry);
+		
+		Log.d(TAG, "OnCreate");
+		
+		overridePendingTransition(R.anim.right_in, R.anim.left_out);
 		
 		// Show the Up button in the action bar.
 		setupActionBar();
@@ -58,11 +68,26 @@ public class ShowEntryActivity extends Activity
 		retrievePreferences();		
 		entryTransformer = new EntryTransformer(this);
 		
-		Intent intent = getIntent();
-		entryId = Integer.parseInt(intent.getStringExtra(MainActivity.ENTRY_ID));
-		
+		// Get entryId after resume (e.g. after a rotation).
+        if (savedInstanceState != null)
+        {
+        	entryId = savedInstanceState.getInt(ENTRY_ID);
+        }
+        else
+        {
+        	Intent intent = getIntent();
+			entryId = Integer.parseInt(intent.getStringExtra(MainActivity.ENTRY_ID));
+        }
+				
 		showEntry();    	       
 	}
+	
+    @Override
+    public void onSaveInstanceState(Bundle outState) 
+    {
+         outState.putInt(ENTRY_ID, entryId);
+         super.onSaveInstanceState(outState);
+    }
 	
 	private void showEntry()
 	{		
@@ -93,7 +118,7 @@ public class ShowEntryActivity extends Activity
 		    		            String searchWord = url.substring(7);
 		    		            Intent resultIntent = new Intent();
 		    		            resultIntent.putExtra(MainActivity.SEARCH_WORD, searchWord);
-		    		            setResult(Activity.RESULT_OK, resultIntent);
+		    		            setResult(Activity.RESULT_OK, resultIntent);		    		            
 		    		            finish();
 		    		            return true;
 		    		        }
@@ -164,7 +189,8 @@ public class ShowEntryActivity extends Activity
 			//
 			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
 			//
-			NavUtils.navigateUpFromSameTask(this);
+			// NavUtils.navigateUpFromSameTask(this);
+			finish();
 			return true;
 			
 		case R.id.action_next:
@@ -187,14 +213,24 @@ public class ShowEntryActivity extends Activity
 	private void moveToPreviousEntry()
 	{
 		DictionaryDatabase database = DictionaryDatabase.getInstance(this);	
-		entryId = database.getPreviousEntryId(entryId);
+		int newEntryId = database.getPreviousEntryId(entryId);
+		if (newEntryId == entryId)
+		{
+			Toast.makeText(this, getResources().getString(R.string.reached_first_entry), Toast.LENGTH_SHORT).show();
+		}
+		entryId = newEntryId;
 		showEntry();		
 	}
 
 	private void moveToNextEntry()
 	{
 		DictionaryDatabase database = DictionaryDatabase.getInstance(this);	
-		entryId = database.getNextEntryId(entryId);
+		int newEntryId = database.getNextEntryId(entryId);
+		if (newEntryId == entryId)
+		{
+			Toast.makeText(this, getResources().getString(R.string.reached_last_entry), Toast.LENGTH_SHORT).show();
+		}
+		entryId = newEntryId;
 		showEntry();
 	}
 
@@ -228,14 +264,10 @@ public class ShowEntryActivity extends Activity
 				if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY)
 				{
 					moveToNextEntry();
-					// Toast.makeText(SelectFilterActivity.this, "Left Swipe",
-					// Toast.LENGTH_SHORT).show();
 				}
 				else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY)
 				{
 					moveToPreviousEntry();
-					// Toast.makeText(SelectFilterActivity.this, "Right Swipe",
-					// Toast.LENGTH_SHORT).show();
 				}
 			}
 			catch (Exception e)
