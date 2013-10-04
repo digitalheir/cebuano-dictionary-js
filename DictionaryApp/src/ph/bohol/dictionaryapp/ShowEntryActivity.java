@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
@@ -26,6 +25,8 @@ public class ShowEntryActivity extends Activity
 	private int fontSize = 20;
 	private boolean expandAbbreviations = false;
 	private String presentationStyle = EntryTransformer.STYLE_TRADITIONAL;
+	private boolean givenSwipeNextHint = false;
+	private boolean givenSwipePreviousHint = false;
 	
 	private EntryTransformer entryTransformer = null;
 	
@@ -194,10 +195,20 @@ public class ShowEntryActivity extends Activity
 			return true;
 			
 		case R.id.action_next:
+			if (!givenSwipeNextHint)
+			{
+				Toast.makeText(this, getResources().getString(R.string.can_swipe_to_move_to_next_entry), Toast.LENGTH_SHORT).show();
+				givenSwipeNextHint = true;
+			}
 			moveToNextEntry();
 			break;
 			
 		case R.id.action_previous:
+			if (!givenSwipePreviousHint)
+			{
+				Toast.makeText(this, getResources().getString(R.string.can_swipe_to_move_to_previous_entry), Toast.LENGTH_SHORT).show();
+				givenSwipePreviousHint = true;
+			}
 			moveToPreviousEntry();
 			break;
 			
@@ -234,6 +245,7 @@ public class ShowEntryActivity extends Activity
 		showEntry();
 	}
 
+	// TODO use OnSharedPreferenceChangeListener to detect preference changes.
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) 
 	{

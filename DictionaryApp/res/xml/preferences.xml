@@ -25,6 +25,12 @@
             android:summary="@string/use_stemming_summary"
             android:title="@string/use_stemming" 
             android:defaultValue="true"/>
+        
+        <CheckBoxPreference
+            android:key="reverse_lookup"
+            android:summary="@string/use_reverse_lookup_summary"
+            android:title="@string/use_reverse_lookup" 
+            android:defaultValue="false"/>        
     </PreferenceCategory>
     
     <PreferenceCategory

@@ -3,16 +3,18 @@ package ph.bohol.dictionaryapp;
 import java.io.IOException;
 import java.io.InputStream;
 
-import ph.bohol.util.normalizer.CebuanoNormalizer;
 import ph.bohol.util.stemmer.Stemmer;
 import ph.bohol.util.stemmer.StemmerParser;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,6 +42,7 @@ public class MainActivity extends Activity
 	private Cursor cursor = null;
 	private String searchWord;	
 	private Stemmer stemmer = null;
+	private boolean reverseLookup = false;
 					
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -49,6 +52,7 @@ public class MainActivity extends Activity
 		
 		Log.d(TAG, "OnCreate");
 
+		retrievePreferences();
 		intializeStemmer();
 		
 	    listView = (ListView) findViewById(R.id.listview);	
@@ -132,6 +136,12 @@ public class MainActivity extends Activity
 		});
 	}
 
+	private void retrievePreferences()
+	{
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);		
+		reverseLookup  = preferences.getBoolean(DictionaryPreferenceActivity.KEY_REVERSE_LOOKUP, false);		
+	}
+	
 	private void intializeStemmer()
 	{
 		if (stemmer == null)
@@ -186,7 +196,8 @@ public class MainActivity extends Activity
 	{
 		super.onActivityResult(requestCode, resultCode, data);
 		
-		if (resultCode == Activity.RESULT_CANCELED) 
+		// TODO use OnSharedPreferenceChangeListener to detect preference changes.
+		if (resultCode == Activity.RESULT_CANCELED && !(requestCode == RESULT_SETTINGS)) 
 		{
 			return;
 	    }
@@ -206,7 +217,8 @@ public class MainActivity extends Activity
 				}
 				break;
 			case RESULT_SETTINGS:
-				// populateList(searchWord);
+				retrievePreferences();
+				update();
 				break;
 		}
 	}
@@ -251,15 +263,19 @@ public class MainActivity extends Activity
 		
 		@Override
 		protected Cursor doInBackground(String... searchWords)
-		{
-			String searchWord = searchWords[0];
-			CebuanoNormalizer n = new CebuanoNormalizer();
-			searchWord = n.normalize(searchWord);
-			
+		{			
 			// List<Derivation> derivations = stemmer.findDerivations(searchWord);
 			
 			DictionaryDatabase database = DictionaryDatabase.getInstance(context);
-			Cursor cursor = database.getHeadsStartingWith(searchWord);
+			Cursor cursor;
+			if (reverseLookup)
+			{
+				cursor = database.getHeadsAndTranslationsStartingWith(searchWord);		
+			}
+			else
+			{
+				cursor = database.getHeadsStartingWith(searchWord);	
+			}
 			
 			// Move the cursor to the first entry, do force the database do some heavy-lifting
 			// on this task's thread before handing it to the UI thread.

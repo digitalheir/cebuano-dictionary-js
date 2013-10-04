@@ -33,6 +33,7 @@
                     .form { font-size: 110%; }
 
                     .eg { font-size: 90%; color: gray; }
+                    
                     .eg i {  font-style: italic }
 
                     .pos { font-size: 110%; color: red; }
@@ -42,10 +43,13 @@
                     .itype { }
 
                     .bio { font-style: italic; font-weight: bold; }
-                    .tr { background-color: #FFFFCC; }
+                    
+                    .tr {  }
+                    
                     .xr {  }
                     
                     .gramGrp {  }
+                    
                     .exp { color: grey; }
 
                     .rm { font-style: normal; font-weight: normal; }
@@ -192,7 +196,20 @@
 
     <xsl:template match="xr">
         <span class="xr">
-            <xsl:apply-templates/>
+            <xsl:choose>
+                <xsl:when test="@target">
+                    <a class="search">
+                        <xsl:attribute name="href">
+                            <!-- TODO: hack to remove x and q encoding present in files. -->
+                            <xsl:text>search:</xsl:text><xsl:value-of select="substring-after(translate(@target, 'xq1234567890', ''), '#')"/>
+                        </xsl:attribute>
+                        <xsl:apply-templates />
+                    </a>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:apply-templates />
+                </xsl:otherwise>
+            </xsl:choose>
         </span>
     </xsl:template>
 

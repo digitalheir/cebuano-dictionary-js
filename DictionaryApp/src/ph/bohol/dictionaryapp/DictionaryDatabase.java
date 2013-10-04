@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import ph.bohol.util.normalizer.CebuanoNormalizer;
 import ph.bohol.util.stemmer.Derivation;
 import ph.bohol.util.stemmer.RootWordProvider;
 
@@ -80,21 +81,6 @@ public class DictionaryDatabase extends SQLiteAssetHelper
     	}
     }
     
-	public Cursor getRoots() 
-	{
-		SQLiteDatabase db = getReadableDatabase();
-		SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
-		
-		String [] sqlSelect = {"0 _id", "root"};
-		String sqlTables = "Roots";
-		
-		qb.setTables(sqlTables);
-		Cursor cursor = qb.query(db, sqlSelect, null, null, null, null, null);
-		
-		cursor.moveToFirst();
-		return cursor;
-	}    
-	
 	public Cursor getHeads() 
 	{
 		SQLiteDatabase db = getReadableDatabase();
@@ -112,8 +98,27 @@ public class DictionaryDatabase extends SQLiteAssetHelper
 	
     public Cursor getHeadsStartingWith(String head) 
     {
+		CebuanoNormalizer n = new CebuanoNormalizer();
+		String normalizedHead = n.normalize(head);
+    	
     	String sqlQuery = "SELECT _id, entryid, head, normalized_head FROM WCED_head WHERE normalized_head LIKE ? ORDER BY normalized_head";      
-    	String [] selectionArguments = { head + "%" };
+    	String [] selectionArguments = { normalizedHead + "%" };
+    	
+    	SQLiteDatabase db = this.getWritableDatabase();
+    	Cursor cursor = db.rawQuery(sqlQuery, selectionArguments);
+    	return cursor;    	
+    }
+    
+    public Cursor getHeadsAndTranslationsStartingWith(String head) 
+    {
+		CebuanoNormalizer n = new CebuanoNormalizer();
+		String normalizedHead = n.normalize(head);
+		
+    	String sqlQueryHeads = "SELECT _id, entryid, head, normalized_head FROM WCED_head WHERE normalized_head LIKE ?";
+    	String sqlQueryTrans = "SELECT _id, entryid, translation as head, translation as normalized_head FROM WCED_translation WHERE translation LIKE ?";
+            	
+    	String sqlQuery = sqlQueryHeads + " UNION " + sqlQueryTrans + " ORDER BY normalized_head COLLATE NOCASE";      
+    	String [] selectionArguments = { normalizedHead + "%", head + "%" };
     	
     	SQLiteDatabase db = this.getWritableDatabase();
     	Cursor cursor = db.rawQuery(sqlQuery, selectionArguments);

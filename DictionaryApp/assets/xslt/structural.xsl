@@ -21,6 +21,8 @@
 
 
 
+    <!-- http://colorschemedesigner.com/#2N62lffYIRNQG  -->
+
     <xsl:template match="dictionary">
         <html>
             <head>
@@ -36,33 +38,38 @@
 
                     .entry { margin-left: 10px; padding-left: 10px; }
 
-                    .hom { margin-left: 10px; border-left: solid 4px red; padding-left: 10px; }
+                    .hom { margin-left: 10px; border-left: solid 4px #FF858B; padding-left: 10px; }
 
-                    .noun { background-color: #EEFFEE; border-color: green; }
-                    .verb { background-color: #EEFFEE; border-color: #99FF99; }
-                    .adjective { background-color: #EEFFEE; border-color: #66FF66; }
+                    .noun { border-color: #8FFC84; }
+                    
+                    .verb { border-color: #8EB4F9; }
+                    
+                    .adjective { border-color: #FFFE86; }
 
                     .sense { margin-left: 10px; padding-left: 10px; }
 
-                    .form { font-size: 120%; }
+                    .form { font-size: 110%; }
 
                     .eg { margin-left: 10px; padding-left: 10px; }
 
-                    .eg { background-color: #FFDDDD; font-size: 80% }
+                    .eg { color: gray; font-size: 90% }
+                    
                     .eg i { font-style: italic }
 
-                    .pos { font-size: 120%; }
+                    .pos { font-size: 110%; color: red; }
 
-                    .itype { background-color: yellow; }
+                    .num { color: blue; }
 
-                    .note { background-color: orange; }
-                    .bio { background-color: #BFFF92; font-style: italic; font-weight: bold; }
-                    .tr { background-color: #CCFFFF; }
-                    .xr { background-color: #FFFFAA; }
-                    .pb { color: red; font-weight: bold; }
-                    .gramGrp { background-color: yellow; }
-                    .exp { color: grey; }
-
+                    .itype { }
+                    
+                    .bio { font-style: italic; font-weight: bold; }
+                    
+                    .tr { }
+                    
+                    .xr { }
+                                        
+                    .gramGrp { }
+                    
                     .rm { font-style: normal; font-weight: normal; }
 
                 </style>
@@ -122,7 +129,7 @@
     </xsl:template>
 
     <xsl:template match="number">
-        <b>
+        <b class="num">
             <xsl:apply-templates/>
         </b>
     </xsl:template>
@@ -181,7 +188,20 @@
 
     <xsl:template match="xr">
         <span class="xr">
-            <xsl:apply-templates/>
+            <xsl:choose>
+                <xsl:when test="@target">
+                    <a class="search">
+                        <xsl:attribute name="href">
+                            <!-- TODO: hack to remove x and q encoding present in files. -->
+                            <xsl:text>search:</xsl:text><xsl:value-of select="substring-after(translate(@target, 'xq1234567890', ''), '#')"/>
+                        </xsl:attribute>
+                        <xsl:apply-templates />
+                    </a>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:apply-templates />
+                </xsl:otherwise>
+            </xsl:choose>
         </span>
     </xsl:template>
 

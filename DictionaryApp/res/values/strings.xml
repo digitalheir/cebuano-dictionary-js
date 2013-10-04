@@ -29,6 +29,9 @@
     <string name="show_previous_entry">Previous Entry</string>
     <string name="title_activity_show_entry">Show Entry</string>
     
+    <string name="can_swipe_to_move_to_next_entry">You can swipe right-to-left for the next entry</string>
+    <string name="can_swipe_to_move_to_previous_entry">You can swipe left-to-right for the previous entry</string>   
+        
     <!-- Preference Activity -->
 
     <string name="preference_activity">Preferences</string>
@@ -48,6 +51,8 @@
     <string name="fontsize_large">Large</string>    
     <string name="use_stemming">Stemming</string>
     <string name="use_stemming_summary">Try to find roots of words entered</string>
+    <string name="use_reverse_lookup">Reverse lookup</string>
+    <string name="use_reverse_lookup_summary">Search through English translations given</string>    
     <string name="yes_no">Yes/No</string>
     <string name="on_off">On/Off</string>
     <string name="expand_abbreviations">Expand abbreviations</string>

@@ -16,6 +16,7 @@ public class DictionaryPreferenceActivity extends PreferenceActivity
 	public static final String KEY_PRESENTATION_FONT_SIZE = "font_size";
 	public static final String KEY_EXPAND_ABBREVIATIONS = "expand_abbreviations";
     public static final String KEY_PRESENTATION_STYLE = "presentation_style";
+    public static final String KEY_REVERSE_LOOKUP = "reverse_lookup";
     
     private ListPreference searchFontSizeListPreference;
     private ListPreference presentationFontSizeListPreference;
