@@ -3,6 +3,7 @@ package ph.bohol.dictionaryapp;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 public class ShowEntryActivity extends Activity
+	implements OnSharedPreferenceChangeListener
 {
 	private int entryId;
 	
@@ -27,8 +29,6 @@ public class ShowEntryActivity extends Activity
 	private String presentationStyle = EntryTransformer.STYLE_TRADITIONAL;
 	private boolean givenSwipeNextHint = false;
 	private boolean givenSwipePreviousHint = false;
-	
-	private EntryTransformer entryTransformer = null;
 	
 	private static final int RESULT_SETTINGS = 1;
 		
@@ -66,8 +66,7 @@ public class ShowEntryActivity extends Activity
             }
         };
 		
-		retrievePreferences();		
-		entryTransformer = new EntryTransformer(this);
+		retrievePreferences();
 		
 		// Get entryId after resume (e.g. after a rotation).
         if (savedInstanceState != null)
@@ -147,6 +146,7 @@ public class ShowEntryActivity extends Activity
 	{
 		entry = "<dictionary>" + entry + "</dictionary>";
 		
+		EntryTransformer entryTransformer = EntryTransformer.getInstance(this);
 		entryTransformer.setExpandAbbreviations(expandAbbreviations);
 		entryTransformer.setFontSize(fontSize);
 		return entryTransformer.transform(entry, presentationStyle);		 
@@ -245,12 +245,18 @@ public class ShowEntryActivity extends Activity
 		showEntry();
 	}
 
-	// TODO use OnSharedPreferenceChangeListener to detect preference changes.
+	// TODO / DONE use OnSharedPreferenceChangeListener to detect preference changes.
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) 
 	{
 		super.onActivityResult(requestCode, resultCode, data);
 
+		// TODO / DONE use OnSharedPreferenceChangeListener to detect preference changes.
+		if (resultCode == Activity.RESULT_CANCELED && !(requestCode == RESULT_SETTINGS)) 
+		{
+			return;
+	    }
+		
 		switch (requestCode) 
 		{
 			case RESULT_SETTINGS:
@@ -289,5 +295,40 @@ public class ShowEntryActivity extends Activity
 			return false;
 		}
 	}
+
+	@Override
+    protected void onResume() 
+	{
+        super.onResume();        
+		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+		
+		retrievePreferences();
+
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+    }
 	
+    @Override
+    protected void onPause() 
+    {
+        super.onPause();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
+    }
+    
+	@Override
+	public void onSharedPreferenceChanged(SharedPreferences preferences, String key)
+	{		
+	    if (key.equals(DictionaryPreferenceActivity.KEY_EXPAND_ABBREVIATIONS)) 
+	    {  	
+			expandAbbreviations = preferences.getBoolean(DictionaryPreferenceActivity.KEY_EXPAND_ABBREVIATIONS, false);		
+	    }
+	    else if (key.equals(DictionaryPreferenceActivity.KEY_PRESENTATION_FONT_SIZE)) 
+	    {    	
+	    	fontSize = Integer.parseInt(preferences.getString(DictionaryPreferenceActivity.KEY_PRESENTATION_FONT_SIZE, "20"));		
+	    }
+	    else if (key.equals(DictionaryPreferenceActivity.KEY_PRESENTATION_STYLE)) 
+	    {    	
+	    	presentationStyle = preferences.getString(DictionaryPreferenceActivity.KEY_PRESENTATION_STYLE, EntryTransformer.STYLE_TRADITIONAL);
+	    }		
+	}
 }

@@ -43,16 +43,24 @@ public class DictionaryDatabase extends SQLiteAssetHelper
 	private static DictionaryDatabase instance = null;
 	private static Map<Integer, Spanned> entryCache = Collections.synchronizedMap(new EntryCache(CACHE_SIZE));
 	
-	// TODO: move transformations and result caching out of DictionaryDatabase 
-	private EntryTransformer entryTransformer = null;
-		
-	// Prevent resource leaks by using this only as a singleton, using the getInstance() method.
+	private Context context = null;
+	
+	/**
+	 * Create a new DictionaryDatabase object. Prevent resource leaks by using this only as a singleton, using the 
+	 * getInstance() method.
+	 * @param context the application context.
+	 */
 	private DictionaryDatabase(Context context) 
     {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        this.entryTransformer = new EntryTransformer(context);
+        this.context = context;
     }
 
+	/** 
+	 * Get the instance of the DictionaryDatabase singleton. Create it if it is not yet available.
+	 * @param context a context. The application context will be obtained from this context.
+	 * @return the instance of the DictionaryDatabase singleton.
+	 */
     public static DictionaryDatabase getInstance(Context context) 
     {
         // Use the application context, which will ensure that you do not accidentally leak an Activity's context.
@@ -65,6 +73,7 @@ public class DictionaryDatabase extends SQLiteAssetHelper
         return instance;
     }
         
+    @Override
     public boolean isRootWord(String root) 
     {
     	String sqlQuery = "SELECT 1 FROM WCED_head WHERE normalized_head = ? LIMIT 1";      
@@ -189,7 +198,7 @@ public class DictionaryDatabase extends SQLiteAssetHelper
     	Cursor cursor = getEntry(entryId);    	
     	String entryXml = cursor.getString(cursor.getColumnIndex(DictionaryDatabase.ENTRY_ENTRY));
     	cursor.close();    	    	
-    	String entryHtml = entryTransformer.transform(entryXml, EntryTransformer.STYLE_COMPACT);
+    	String entryHtml = EntryTransformer.getInstance(context).transform(entryXml, EntryTransformer.STYLE_COMPACT);
     	return entryHtml;
     }
     

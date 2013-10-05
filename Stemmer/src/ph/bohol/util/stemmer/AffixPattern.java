@@ -69,7 +69,7 @@ public class AffixPattern
 		return "<pattern pattern='" + pattern + "' root='" + root + "'/>\n";
 	}
 	
-	public void compile(Map<String, String> constants) 
+	void compile(Map<String, String> constants) 
 	{
 		// Replace constants given as "...{key}..." in pattern.		
 		Pattern constantPattern = Pattern.compile("\\{(\\w+)\\}");

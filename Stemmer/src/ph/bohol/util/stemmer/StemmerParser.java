@@ -13,8 +13,8 @@ import org.xml.sax.helpers.DefaultHandler;
 
 public class StemmerParser extends DefaultHandler 
 {
-	Stemmer stemmer = null;
-	Affix temporaryAffix = null;
+	private Stemmer stemmer = null;
+	private Affix temporaryAffix = null;
 	
     public Stemmer parse(InputStream stemmerStream) 
     {
@@ -96,7 +96,6 @@ public class StemmerParser extends DefaultHandler
         if (elementName.equals("stemmer")) 
         {
         	stemmer.compile();
-        }
-        
+        }        
     }
 }

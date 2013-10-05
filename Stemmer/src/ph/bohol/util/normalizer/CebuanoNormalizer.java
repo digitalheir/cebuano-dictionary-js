@@ -15,11 +15,12 @@ public class CebuanoNormalizer implements SpellingNormalizer
 
 		// Old orthography stuff
 		normalizedString = normalizedString.replaceAll("z", "s");
-		normalizedString = normalizedString.replaceAll("ca", "ka");
 		normalizedString = normalizedString.replaceAll("ce", "si");
 		normalizedString = normalizedString.replaceAll("ci", "si");		
 		normalizedString = normalizedString.replaceAll("gui", "gi");
 		normalizedString = normalizedString.replaceAll("qui", "ki");
+		normalizedString = normalizedString.replaceAll("c", "k");
+		normalizedString = normalizedString.replaceAll("j", "h");
 						
 		// Wolff's spelling.
 		// f -> p; v -> b; o -> u; e -> i

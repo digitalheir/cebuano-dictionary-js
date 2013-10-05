@@ -31,6 +31,8 @@ public class EntryTransformer
 
 	private static final String TAG = "EntryTransformer";
 
+	private static EntryTransformer instance = null;
+
 	private final Map<String, String> stylesheets = new HashMap<String, String>();
 	private final Map<String, Transformer> transformers = new HashMap<String, Transformer>();
 
@@ -39,7 +41,8 @@ public class EntryTransformer
 
 	private Context context;
 
-	EntryTransformer(Context context)
+	// Prevent resource leaks by using this only as a singleton, using the getInstance() method.
+	private EntryTransformer(Context context)
 	{
 		this.context = context;
 		this.stylesheets.put(STYLE_COMPACT, XSLT_COMPACT);
@@ -48,6 +51,18 @@ public class EntryTransformer
 		this.stylesheets.put(STYLE_DEBUG, XSLT_DEBUG);
 	}
 
+    public static EntryTransformer getInstance(Context context) 
+    {
+        // Use the application context, which will ensure that you do not accidentally leak an Activity's context.
+        // See this article for more information: http://bit.ly/6LRzfx
+        if (instance == null) 
+        {
+        	Log.d(TAG, "Creating new EntryTransformer object");
+        	instance = new EntryTransformer(context.getApplicationContext());
+        }
+        return instance;
+    }
+	
 	public String transform(String entry, String presentationStyle)
 	{
 		try

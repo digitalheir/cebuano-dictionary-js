@@ -27,4 +27,13 @@
         <item>24</item>
     </string-array>
     
+        <string-array name="measureOptions">
+        <item>@string/measure_original</item>
+        <item>@string/measure_metric</item>
+    </string-array>
+    <string-array name="measureValues">
+        <item>original</item>
+        <item>metric</item>
+    </string-array>
+    
 </resources>

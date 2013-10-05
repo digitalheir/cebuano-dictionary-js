@@ -13,7 +13,7 @@ public class Stemmer
 	private LinkedList<Affix> affixes = new LinkedList<Affix>();
 	private RootWordProvider rootProvider = null;
 
-	public void addAffix(Affix pattern)
+	void addAffix(Affix pattern)
 	{
 		affixes.addLast(pattern);
 		compiled = false;
@@ -29,7 +29,7 @@ public class Stemmer
 		compiled = true;
 	}
 	
-	public void addConstant(String key, String value)
+	void addConstant(String key, String value)
 	{
 		constants.put(key, value);
 	}
@@ -83,7 +83,7 @@ public class Stemmer
 		return language;
 	}
 
-	public void setLanguage(String language) 
+	void setLanguage(String language) 
 	{
 		this.language = language;
 	}

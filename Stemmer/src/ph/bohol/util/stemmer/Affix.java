@@ -11,6 +11,10 @@ public class Affix
 	private String label;
 	private LinkedList<AffixPattern> patterns = new LinkedList<AffixPattern>();
 
+	/**
+	 * Add a pattern to the list of patterns for this Affix.
+	 * @param pattern the pattern to be added.
+	 */
 	public void addPattern(AffixPattern pattern)
 	{
 		patterns.addLast(pattern);
@@ -36,6 +40,11 @@ public class Affix
 		this.label = label;
 	}
 
+	/**
+	 * Determine whether this affix is applied to the given word.
+	 * @param word the word to be tested for the presence of this affix.
+	 * @return true if the affix is applied to this word, false otherwise.
+	 */
 	public boolean applies(String word)
 	{
 		Iterator<AffixPattern> iterator = patterns.iterator();		
@@ -47,6 +56,11 @@ public class Affix
 		return false;
 	}
 	
+	/**
+	 * Remove this affix from a given word.
+	 * @param word the word from which the affix is to be removed.
+	 * @return the word with the affix removed, or null if the affix was not present.
+	 */
 	public String strip(String word)
 	{
 		Iterator<AffixPattern> iterator = patterns.iterator();		
@@ -80,7 +94,7 @@ public class Affix
 		return result;
 	}
 
-	public void compile(Map<String, String> constants) 
+	void compile(Map<String, String> constants) 
 	{
 		Iterator<AffixPattern> iterator = patterns.iterator();		 
 		while (iterator.hasNext()) 

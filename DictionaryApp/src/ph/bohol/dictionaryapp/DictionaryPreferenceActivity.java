@@ -17,10 +17,12 @@ public class DictionaryPreferenceActivity extends PreferenceActivity
 	public static final String KEY_EXPAND_ABBREVIATIONS = "expand_abbreviations";
     public static final String KEY_PRESENTATION_STYLE = "presentation_style";
     public static final String KEY_REVERSE_LOOKUP = "reverse_lookup";
+    public static final String KEY_MEASURE_UNITS = "measure_units";
     
     private ListPreference searchFontSizeListPreference;
     private ListPreference presentationFontSizeListPreference;
     private ListPreference presentationStyleListPreference;
+    private ListPreference measureUnitListPreference;
 		
 	@SuppressWarnings("deprecation")
 	@Override
@@ -31,7 +33,8 @@ public class DictionaryPreferenceActivity extends PreferenceActivity
 		
 		searchFontSizeListPreference = (ListPreference) getPreferenceScreen().findPreference(KEY_SEARCH_FONT_SIZE);
 		presentationFontSizeListPreference = (ListPreference) getPreferenceScreen().findPreference(KEY_PRESENTATION_FONT_SIZE);
-		presentationStyleListPreference = (ListPreference) getPreferenceScreen().findPreference(KEY_PRESENTATION_STYLE);		
+		presentationStyleListPreference = (ListPreference) getPreferenceScreen().findPreference(KEY_PRESENTATION_STYLE);	
+		measureUnitListPreference = (ListPreference) getPreferenceScreen().findPreference(KEY_MEASURE_UNITS);
 	}
 	
 	@Override
@@ -43,6 +46,7 @@ public class DictionaryPreferenceActivity extends PreferenceActivity
         presentationStyleListPreference.setSummary(presentationStyleToText(sharedPreferences.getString(KEY_PRESENTATION_STYLE, "")));
         presentationFontSizeListPreference.setSummary(fontSizeToText(sharedPreferences.getString(KEY_PRESENTATION_FONT_SIZE, "")));
         searchFontSizeListPreference.setSummary(fontSizeToText(sharedPreferences.getString(KEY_SEARCH_FONT_SIZE, "")));
+		measureUnitListPreference.setSummary(measureUnitToText(sharedPreferences.getString(KEY_MEASURE_UNITS, "")));
 
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
     }
@@ -70,6 +74,13 @@ public class DictionaryPreferenceActivity extends PreferenceActivity
 		return getString(R.string.fontsize_medium);
 	}
 	
+	private String measureUnitToText(String measureUnit)
+	{
+		if (measureUnit.equalsIgnoreCase("metric"))
+			return getString(R.string.measure_metric);		
+		return getString(R.string.measure_original);
+	}
+	
     @Override
     protected void onPause() 
     {
@@ -91,6 +102,10 @@ public class DictionaryPreferenceActivity extends PreferenceActivity
 	    else if (key.equals(KEY_SEARCH_FONT_SIZE)) 
 	    {    	
 	    	searchFontSizeListPreference.setSummary(fontSizeToText(sharedPreferences.getString(KEY_SEARCH_FONT_SIZE, "")));
+	    }
+	    else if (key.equals(KEY_MEASURE_UNITS)) 
+	    {    	
+	    	measureUnitListPreference.setSummary(measureUnitToText(sharedPreferences.getString(KEY_MEASURE_UNITS, "")));
 	    }
 	}
 }
