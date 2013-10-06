@@ -10,11 +10,9 @@ import java.util.Map;
 import ph.bohol.util.normalizer.CebuanoNormalizer;
 import ph.bohol.util.stemmer.Derivation;
 import ph.bohol.util.stemmer.RootWordProvider;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteQueryBuilder;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
@@ -38,10 +36,12 @@ public class DictionaryDatabase extends SQLiteAssetHelper
 	
 	private static final String TAG = "DictionaryDatabase";
 	
-	private static final int CACHE_SIZE = 100;
+	private static final int ENTRY_CACHE_SIZE = 100;
+	private static final int ROOT_CACHE_SIZE = 1000;
 
 	private static DictionaryDatabase instance = null;
-	private static Map<Integer, Spanned> entryCache = Collections.synchronizedMap(new EntryCache(CACHE_SIZE));
+	private static Map<Integer, Spanned> entryCache = Collections.synchronizedMap(new EntryCache(ENTRY_CACHE_SIZE));
+	private static Map<String, Boolean> rootCache = Collections.synchronizedMap(new RootCache(ROOT_CACHE_SIZE));
 	
 	private Context context = null;
 	
@@ -76,90 +76,66 @@ public class DictionaryDatabase extends SQLiteAssetHelper
     @Override
     public boolean isRootWord(String root) 
     {
+    	Boolean isRoot =  rootCache.get(root);   
+    	if (isRoot != null)
+    		return isRoot;
+    	    	
+    	Log.d(TAG, "Query for root: " + root);
     	String sqlQuery = "SELECT 1 FROM WCED_head WHERE normalized_head = ? LIMIT 1";      
     	String [] selectionArguments = { root };    	
     	SQLiteDatabase db = this.getWritableDatabase();
     	Cursor cursor = db.rawQuery(sqlQuery, selectionArguments);;
     	try
     	{
-    		return cursor.getCount() > 0;
+    		boolean result = cursor.getCount() > 0;
+    		rootCache.put(root, result);
+    		return result;
     	}
     	finally
     	{
     		cursor.close();
     	}
     }
-    
-	public Cursor getHeads() 
-	{
-		SQLiteDatabase db = getReadableDatabase();
-		SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
-		
-		String [] sqlSelect = {"0 _id", "entryid", "head", "normalized_head"};
-		String sqlTables = "WCED_head";
-		
-		qb.setTables(sqlTables);
-		Cursor cursor = qb.query(db, sqlSelect, null, null, null, null, null);
-		
-		cursor.moveToFirst();
-		return cursor;
-	}    
-	
-    public Cursor getHeadsStartingWith(String head) 
+    	   
+    public Cursor getHeads(String head, boolean reverseLookup, List<Derivation> derivations) 
     {
 		CebuanoNormalizer n = new CebuanoNormalizer();
 		String normalizedHead = n.normalize(head);
-    	
-    	String sqlQuery = "SELECT _id, entryid, head, normalized_head FROM WCED_head WHERE normalized_head LIKE ? ORDER BY normalized_head";      
-    	String [] selectionArguments = { normalizedHead + "%" };
-    	
-    	SQLiteDatabase db = this.getWritableDatabase();
-    	Cursor cursor = db.rawQuery(sqlQuery, selectionArguments);
-    	return cursor;    	
-    }
-    
-    public Cursor getHeadsAndTranslationsStartingWith(String head) 
-    {
-		CebuanoNormalizer n = new CebuanoNormalizer();
-		String normalizedHead = n.normalize(head);
-		
-    	String sqlQueryHeads = "SELECT _id, entryid, head, normalized_head FROM WCED_head WHERE normalized_head LIKE ?";
-    	String sqlQueryTrans = "SELECT _id, entryid, translation as head, translation as normalized_head FROM WCED_translation WHERE translation LIKE ?";
-            	
-    	String sqlQuery = sqlQueryHeads + " UNION " + sqlQueryTrans + " ORDER BY normalized_head COLLATE NOCASE";      
-    	String [] selectionArguments = { normalizedHead + "%", head + "%" };
-    	
-    	SQLiteDatabase db = this.getWritableDatabase();
-    	Cursor cursor = db.rawQuery(sqlQuery, selectionArguments);
-    	return cursor;    	
-    }
-    
-    public Cursor getHeadsForDerivations(String head, List<Derivation> derivations) 
-    {
-    	final String snippetFormat = "SELECT _id, entryid, head, normalized_head, '%s' AS derivation FROM wced_head WHERE normalized_head = ?";
-    	
+    	    	
     	List<String> subQueries = new LinkedList<String>();
     	List<String> arguments = new ArrayList<String>();
     	
-    	// First add the default query:
     	subQueries.add("SELECT _id, entryid, head, normalized_head, NULL AS derivation FROM WCED_head WHERE normalized_head LIKE ?");
-    	arguments.add(head + "%");
+    	arguments.add(normalizedHead + "%");
     	
-    	// Then add the potential derivations:
-		Iterator<Derivation> iterator = derivations.iterator();	
-		while (iterator.hasNext()) 
-		{
-			Derivation derivation = iterator.next();			
-						
-			String snippet = String.format(snippetFormat, derivation.toString().replace("'", "''"));
-		
-			subQueries.add(snippet);
-			arguments.add(derivation.getRoot());
-		}  	
+    	if (reverseLookup)
+    	{
+    		subQueries.add("SELECT _id, entryid, translation as head, translation as normalized_head, NULL as derivation FROM WCED_translation WHERE translation LIKE ?");
+    		arguments.add(head + "%");
+    	}
+    	
+    	if (derivations != null)
+    	{
+        	final String snippetFormat = "SELECT _id, entryid, head, normalized_head, '%s' AS derivation FROM wced_head WHERE normalized_head = ?";
+        	
+			Iterator<Derivation> iterator = derivations.iterator();	
+			while (iterator.hasNext()) 
+			{
+				Derivation derivation = iterator.next();			
+							
+				String snippet = String.format(snippetFormat, derivation.toString().replace("'", "''"));
+			
+				subQueries.add(snippet);
+				arguments.add(derivation.getRoot());
+			}
+    	}
     	
 		String query = unionize(subQueries);
-		query += " ORDER BY derivation NOT NULL, head";
+		query += " ORDER BY normalized_head COLLATE NOCASE";
 		
+    	Log.d(TAG, "Query for heads and derived forms: " + head);
+    	Log.d(TAG, "Query SQL: " + query);
+    	
     	String [] selectionArguments = new String[arguments.size()];
     	arguments.toArray(selectionArguments);
     	    	
@@ -168,6 +144,12 @@ public class DictionaryDatabase extends SQLiteAssetHelper
     	return cursor;    	
     }
     
+    /**
+     * Combine all SQL sub-queries in the list to a single SQL query with the UNION statement. All fragments
+     * must be valid in the context of a UNION statement.
+     * @param queries The SQL queries to be combined.
+     * @return A SQL string having all sub-queries combined.
+     */
     private static String unionize(List<String> queries)
     {
     	String result = "";
@@ -202,6 +184,11 @@ public class DictionaryDatabase extends SQLiteAssetHelper
     	return entryHtml;
     }
     
+    /**
+     * Get a Spanned object with the rich-text content of an entry.
+     * @param entryId The entryId for which the rich-text is wanted.
+     * @return a Spanned object with the content of the entry.
+     */
     public Spanned getEntrySpanned(int entryId)
     {
     	Spanned entrySpanned =  entryCache.get(entryId);    	
@@ -216,6 +203,11 @@ public class DictionaryDatabase extends SQLiteAssetHelper
     	return entrySpanned;
     }
     
+    /**
+     * Find the entryId of the next entry.
+     * @param entryId The entryId of which the next entry is sought.
+     * @return the next entryId, or the original entryId if this entry is the last.
+     */
     public int getNextEntryId(int entryId) 
     {
     	String sqlQuery = "SELECT _id FROM WCED_entry WHERE _id > ? ORDER BY _id LIMIT 1";      
@@ -237,7 +229,12 @@ public class DictionaryDatabase extends SQLiteAssetHelper
     		cursor.close();
     	}
     }
-    
+
+    /**
+     * Find the entryId of the previous entry.
+     * @param entryId The entryId of which the previous entry is sought.
+     * @return the previous entryId, or the original entryId if this entry is the first.
+     */
     public int getPreviousEntryId(int entryId)
     {
     	String sqlQuery = "SELECT _id FROM WCED_entry WHERE _id < ? ORDER BY _id DESC LIMIT 1";      
@@ -259,5 +256,4 @@ public class DictionaryDatabase extends SQLiteAssetHelper
     		cursor.close();
     	}
     }
-    
 }

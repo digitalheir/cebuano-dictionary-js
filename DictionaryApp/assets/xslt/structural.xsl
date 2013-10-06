@@ -13,13 +13,11 @@
         indent="yes"
         encoding="ISO-8859-1"/>
 
-    <xsl:param name="fontSize" select="'20'"/>
-    
+    <xsl:param name="fontSize" select="'20'"/>    
     <xsl:param name="expandAbbreviations" select="'false'"/>
+    <xsl:param name="useMetric" select="'false'"/>
 
     <xsl:key name="id" match="*[@id]" use="@id"/>
-
-
 
     <!-- http://colorschemedesigner.com/#2N62lffYIRNQG  -->
 
@@ -225,13 +223,7 @@
         </xsl:copy>
     </xsl:template>
 
-    <xsl:template match="pb">
-        <!-- 
-        <span class="pb">
-            <xsl:value-of select="@n"/>
-        </span>
-        -->
-    </xsl:template>
+    <xsl:template match="pb"/>
 
     <xsl:template match="itype">
         <span class="itype">
@@ -267,6 +259,18 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
+    
+    <xsl:template match="measure">
+        <xsl:choose>
+            <xsl:when test="$useMetric = 'true'">
+                <xsl:value-of select="@reg" />
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:apply-templates/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+    
     
     <!-- Discard unwanted stuff -->
 

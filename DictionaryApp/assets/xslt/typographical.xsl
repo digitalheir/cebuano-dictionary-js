@@ -18,8 +18,8 @@
     <xsl:key name="id" match="*[@id]" use="@id"/>
 
     <xsl:param name="fontSize" select="'20'"/>
-    
     <xsl:param name="expandAbbreviations" select="'false'"/>
+    <xsl:param name="useMetric" select="'false'"/>
 
     <xsl:template match="dictionary">
         <html>
@@ -233,13 +233,7 @@
         </xsl:copy>
     </xsl:template>
 
-    <xsl:template match="pb">
-        <!-- 
-        <span class="pb">
-            <xsl:value-of select="@n"/>
-        </span>
-        -->
-    </xsl:template>
+    <xsl:template match="pb"/>
 
     <xsl:template match="itype">
         <span class="itype">
@@ -269,6 +263,17 @@
         <xsl:choose>
             <xsl:when test="$expandAbbreviations = 'true'">
                 <xsl:value-of select="@expan" />
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:apply-templates/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
+    <xsl:template match="measure">
+        <xsl:choose>
+            <xsl:when test="$useMetric = 'true'">
+                <xsl:value-of select="@reg" />
             </xsl:when>
             <xsl:otherwise>
                 <xsl:apply-templates/>

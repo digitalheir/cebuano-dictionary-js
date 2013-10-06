@@ -38,7 +38,7 @@
     <string name="search">Search</string>
     <string name="search_summary">Way of searching the dictionary</string>
     <string name="show_preview">Show preview</string>
-    <string name="show_preview_summary">Show the first line of the entry with the search results (may be slow)</string>
+    <string name="show_preview_summary">Show the first line of each entry in the search results</string>
     <string name="presentation">Presentation</string>
     <string name="presentation_summary">Presentation of dictionary content</string>
     <string name="presentation_compact">Compact</string>

@@ -26,6 +26,7 @@ public class ShowEntryActivity extends Activity
 	
 	private int fontSize = 20;
 	private boolean expandAbbreviations = false;
+	private boolean useMetric = false;
 	private String presentationStyle = EntryTransformer.STYLE_TRADITIONAL;
 	private boolean givenSwipeNextHint = false;
 	private boolean givenSwipePreviousHint = false;
@@ -41,7 +42,7 @@ public class ShowEntryActivity extends Activity
 	private static final String TAG = "ShowEntryActivity";
 	
     private GestureDetector gestureDetector;
-    View.OnTouchListener gestureListener;
+    private View.OnTouchListener gestureListener;
     
 	
 	@Override
@@ -149,6 +150,7 @@ public class ShowEntryActivity extends Activity
 		EntryTransformer entryTransformer = EntryTransformer.getInstance(this);
 		entryTransformer.setExpandAbbreviations(expandAbbreviations);
 		entryTransformer.setFontSize(fontSize);
+		entryTransformer.setUseMetric(useMetric);
 		return entryTransformer.transform(entry, presentationStyle);		 
 	}
 	
@@ -159,6 +161,8 @@ public class ShowEntryActivity extends Activity
 		expandAbbreviations = preferences.getBoolean(DictionaryPreferenceActivity.KEY_EXPAND_ABBREVIATIONS, false);		
 		fontSize = Integer.parseInt(preferences.getString(DictionaryPreferenceActivity.KEY_PRESENTATION_FONT_SIZE, "20"));		
 		presentationStyle = preferences.getString(DictionaryPreferenceActivity.KEY_PRESENTATION_STYLE, EntryTransformer.STYLE_TRADITIONAL);
+		useMetric = preferences.getString(DictionaryPreferenceActivity.KEY_MEASURE_UNITS, 
+	    		DictionaryPreferenceActivity.VALUE_MEASURE_ORIGINAL).equals(DictionaryPreferenceActivity.VALUE_MEASURE_METRIC);
 	}
 
 	/**
@@ -329,6 +333,11 @@ public class ShowEntryActivity extends Activity
 	    else if (key.equals(DictionaryPreferenceActivity.KEY_PRESENTATION_STYLE)) 
 	    {    	
 	    	presentationStyle = preferences.getString(DictionaryPreferenceActivity.KEY_PRESENTATION_STYLE, EntryTransformer.STYLE_TRADITIONAL);
-	    }		
+	    }
+	    else if (key.equals(DictionaryPreferenceActivity.KEY_MEASURE_UNITS)) 
+	    {    	
+	    	useMetric = preferences.getString(DictionaryPreferenceActivity.KEY_MEASURE_UNITS, 
+	    		DictionaryPreferenceActivity.VALUE_MEASURE_ORIGINAL).equals(DictionaryPreferenceActivity.VALUE_MEASURE_METRIC);
+	    }
 	}
 }

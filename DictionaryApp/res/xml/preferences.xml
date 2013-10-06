@@ -31,16 +31,7 @@
             android:summary="@string/use_reverse_lookup_summary"
             android:title="@string/use_reverse_lookup" 
             android:defaultValue="false"/>        
-            
-	    <ListPreference
-            android:entries="@array/measureOptions"
-            android:entryValues="@array/measureValues"
-            android:key="measure_units"
-            android:summary="@string/measure_units_summary"
-            android:title="@string/measure_units" 
-            android:defaultValue="original"
-            />
-        
+           
     </PreferenceCategory>
     
     <PreferenceCategory
@@ -68,6 +59,16 @@
             android:summary="@string/presentation_style_summary"
             android:title="@string/presentation_style" 
             android:defaultValue="structural"/>
+        
+        <ListPreference
+            android:entries="@array/measureOptions"
+            android:entryValues="@array/measureValues"
+            android:key="measure_units"
+            android:summary="@string/measure_units_summary"
+            android:title="@string/measure_units" 
+            android:defaultValue="original"
+            />
+        
     </PreferenceCategory>
 
 </PreferenceScreen>

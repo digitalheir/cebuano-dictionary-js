@@ -2,7 +2,10 @@ package ph.bohol.dictionaryapp;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
+import ph.bohol.util.normalizer.CebuanoNormalizer;
+import ph.bohol.util.stemmer.Derivation;
 import ph.bohol.util.stemmer.Stemmer;
 import ph.bohol.util.stemmer.StemmerParser;
 
@@ -42,6 +45,7 @@ public class MainActivity extends Activity
 	private String searchWord;	
 	private Stemmer stemmer = null;
 	private boolean reverseLookup = false;
+	private boolean useStemming = false;
 					
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -138,7 +142,8 @@ public class MainActivity extends Activity
 	private void retrievePreferences()
 	{
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);		
-		reverseLookup  = preferences.getBoolean(DictionaryPreferenceActivity.KEY_REVERSE_LOOKUP, false);		
+		reverseLookup  = preferences.getBoolean(DictionaryPreferenceActivity.KEY_REVERSE_LOOKUP, false);	
+		useStemming = preferences.getBoolean(DictionaryPreferenceActivity.KEY_USE_STEMMING, false);
 	}
 	
 	private void intializeStemmer()
@@ -152,12 +157,13 @@ public class MainActivity extends Activity
 			}
 			catch (IOException e)
 			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Log.d(TAG, "Fatal error: unable to open " + ASSET_STEMMER_CEBUANO);
+				e.printStackTrace();				
 			}
 		    
 			StemmerParser parser = new StemmerParser();
 		    stemmer = parser.parse(stream);			
+		    stemmer.setRootProvider(DictionaryDatabase.getInstance(this));
 		}
 	}
 		
@@ -263,19 +269,20 @@ public class MainActivity extends Activity
 		@Override
 		protected Cursor doInBackground(String... searchWords)
 		{			
-			// List<Derivation> derivations = stemmer.findDerivations(searchWord);
+			CebuanoNormalizer n = new CebuanoNormalizer();
+			String normalizedSearchWord = n.normalize(searchWord);
 			
 			DictionaryDatabase database = DictionaryDatabase.getInstance(context);
 			Cursor cursor;
-			if (reverseLookup)
-			{
-				cursor = database.getHeadsAndTranslationsStartingWith(searchWord);		
-			}
-			else
-			{
-				cursor = database.getHeadsStartingWith(searchWord);	
-			}
 			
+			List<Derivation> derivations = null;
+			if (useStemming)
+			{
+				derivations = stemmer.findDerivations(normalizedSearchWord);				
+			}
+						
+			cursor = database.getHeads(searchWord, reverseLookup, derivations);
+
 			// Move the cursor to the first entry, do force the database do some heavy-lifting
 			// on this task's thread before handing it to the UI thread.
 			cursor.moveToFirst();

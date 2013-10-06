@@ -15,8 +15,6 @@
 
     <xsl:param name="fontSize" select="'20'"/>
     
-    <xsl:param name="expandAbbreviations" select="'false'"/>
-
     <xsl:key name="id" match="*[@id]" use="@id"/>
 
     <xsl:template match="dictionary">
@@ -259,6 +257,11 @@
     <xsl:template match="abbr">
         <xsl:apply-templates/>
         <span class="expan"><xsl:text> </xsl:text><xsl:value-of select="@expan" /><xsl:text> </xsl:text></span>
+    </xsl:template>
+    
+    <xsl:template match="measure">
+        <xsl:apply-templates/>
+        <span class="expan"><xsl:text> ( = </xsl:text><xsl:value-of select="@reg" /><xsl:text>) </xsl:text></span>
     </xsl:template>
     
     <!-- Discard unwanted stuff -->

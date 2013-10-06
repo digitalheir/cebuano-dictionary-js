@@ -11,7 +11,7 @@ public class Stemmer
 	private boolean compiled = false;
 	private Map<String, String> constants = new HashMap<String, String>();
 	private LinkedList<Affix> affixes = new LinkedList<Affix>();
-	private RootWordProvider rootProvider = null;
+	private RootWordProvider rootWordProvider = null;
 
 	void addAffix(Affix pattern)
 	{
@@ -75,7 +75,7 @@ public class Stemmer
 	
 	private boolean isRootWord(String word)
 	{
-		return (rootProvider == null || rootProvider.isRootWord(word));		
+		return (rootWordProvider == null || rootWordProvider.isRootWord(word));		
 	}
 	
 	public String getLanguage() 
@@ -111,11 +111,11 @@ public class Stemmer
 
 	public RootWordProvider getRootProvider()
 	{
-		return rootProvider;
+		return rootWordProvider;
 	}
 
 	public void setRootProvider(RootWordProvider rootProvider)
 	{
-		this.rootProvider = rootProvider;
+		this.rootWordProvider = rootProvider;
 	}	
 }

@@ -38,6 +38,7 @@ public class EntryTransformer
 
 	private boolean expandAbbreviations = false;
 	private int fontSize = 20;
+	private boolean useMetric = false;
 
 	private Context context;
 
@@ -109,6 +110,7 @@ public class EntryTransformer
 			transformers.put(presentationStyle, transformer);
 		}
 		
+		transformer.setParameter("useMetric", Boolean.toString(useMetric));
 		transformer.setParameter("expandAbbreviations", Boolean.toString(expandAbbreviations));
 		transformer.setParameter("fontSize", Integer.toString(fontSize));
 		
@@ -135,6 +137,16 @@ public class EntryTransformer
 		this.expandAbbreviations = expandAbbreviations;
 	}
 
+	public boolean isUseMetric()
+	{
+		return useMetric;
+	}
+
+	public void setUseMetric(boolean useMetric)
+	{
+		this.useMetric = useMetric;
+	}
+	
 	public int getFontSize()
 	{
 		return fontSize;

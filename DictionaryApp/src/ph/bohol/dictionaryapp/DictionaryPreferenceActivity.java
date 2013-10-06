@@ -18,7 +18,11 @@ public class DictionaryPreferenceActivity extends PreferenceActivity
     public static final String KEY_PRESENTATION_STYLE = "presentation_style";
     public static final String KEY_REVERSE_LOOKUP = "reverse_lookup";
     public static final String KEY_MEASURE_UNITS = "measure_units";
-    
+	public static final String KEY_USE_STEMMING = "use_stemming";
+ 
+    public static final String VALUE_MEASURE_ORIGINAL = "original";
+    public static final String VALUE_MEASURE_METRIC = "metric";
+      
     private ListPreference searchFontSizeListPreference;
     private ListPreference presentationFontSizeListPreference;
     private ListPreference presentationStyleListPreference;
@@ -54,11 +58,11 @@ public class DictionaryPreferenceActivity extends PreferenceActivity
 	
 	private String presentationStyleToText(String presentationStyle)
 	{
-		if (presentationStyle.equalsIgnoreCase("structural"))
+		if (presentationStyle.equalsIgnoreCase(EntryTransformer.STYLE_STRUCTURAL))
 			return getString(R.string.presentation_structural);		
-		if (presentationStyle.equalsIgnoreCase("compact"))
+		if (presentationStyle.equalsIgnoreCase(EntryTransformer.STYLE_COMPACT))
 			return getString(R.string.presentation_compact);	
-		if (presentationStyle.equalsIgnoreCase("debug"))
+		if (presentationStyle.equalsIgnoreCase(EntryTransformer.STYLE_DEBUG))
 			return getString(R.string.presentation_debug);	
 		return getString(R.string.presentation_traditional);
 	}
@@ -76,7 +80,7 @@ public class DictionaryPreferenceActivity extends PreferenceActivity
 	
 	private String measureUnitToText(String measureUnit)
 	{
-		if (measureUnit.equalsIgnoreCase("metric"))
+		if (measureUnit.equalsIgnoreCase(VALUE_MEASURE_METRIC))
 			return getString(R.string.measure_metric);		
 		return getString(R.string.measure_original);
 	}
