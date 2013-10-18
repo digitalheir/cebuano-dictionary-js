@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class HeadCursorAdapter extends CursorAdapter
@@ -20,7 +21,7 @@ public class HeadCursorAdapter extends CursorAdapter
 	private boolean showPreview = false;
 
 	@SuppressWarnings("deprecation")
-	public HeadCursorAdapter(Context context, Cursor cursor)
+	public HeadCursorAdapter(final Context context, final Cursor cursor)
 	{
 		super(context, cursor);
 		layoutInflater = LayoutInflater.from(context);
@@ -30,7 +31,7 @@ public class HeadCursorAdapter extends CursorAdapter
 	}
 
 	@Override
-	public void bindView(View view, Context context, Cursor cursor)
+	public void bindView(final View view, final Context context, final Cursor cursor)
 	{
 		String head = cursor.getString(cursor.getColumnIndexOrThrow(DictionaryDatabase.HEAD_HEAD));
 
@@ -47,11 +48,36 @@ public class HeadCursorAdapter extends CursorAdapter
 			detailTextView.setText("");
 			FetchEntryDetailsTask task = new FetchEntryDetailsTask(context, detailTextView);
 			task.execute(entryId);
+			
+			// Show the match-type using an icon, only if an imageView is in the view.
+			String type = cursor.getString(cursor.getColumnIndexOrThrow(DictionaryDatabase.HEAD_TYPE));
+			if (type != null)
+			{
+				ImageView imageView = (ImageView) view.findViewById(R.id.icon);
+				if (imageView != null)
+				{				
+					if (type.equals("d"))
+					{
+						imageView.setImageResource(R.drawable.ic_tilde);
+						imageView.setVisibility(ImageView.VISIBLE);
+					}
+					else if (type.equals("r"))
+					{
+						imageView.setImageResource(R.drawable.ic_left_arrow);
+						imageView.setVisibility(ImageView.VISIBLE);
+					}
+					else
+					{
+						// imageView.setImageResource(R.drawable.ic_diamonds);
+						imageView.setVisibility(ImageView.INVISIBLE);
+					}
+				}
+			}
 		}
 	}
 
 	@Override
-	public View newView(Context context, Cursor cursor, ViewGroup parent)
+	public View newView(final Context context, final Cursor cursor, final ViewGroup parent)
 	{
 		if (showPreview)
 		{
@@ -75,9 +101,9 @@ public class HeadCursorAdapter extends CursorAdapter
 	    private final Context context;
 	    private final WeakReference<TextView> detailTextViewReference;
 
-	    FetchEntryDetailsTask(Context context, TextView detailTextView)
+	    FetchEntryDetailsTask(final Context newContext, final TextView detailTextView)
 	    {
-	    	this.context = context;
+	    	this.context = newContext;
 	    	this.detailTextViewReference = new WeakReference<TextView>(detailTextView);
 	    	
 	    	// Are we already working for this TextView? (And the ListView re-used it during scrolling)
@@ -91,7 +117,7 @@ public class HeadCursorAdapter extends CursorAdapter
 	    }
 		
 		@Override
-		protected Spanned doInBackground(Integer... entryId)
+		protected Spanned doInBackground(final Integer... entryId)
 		{
 			DictionaryDatabase database = DictionaryDatabase.getInstance(context);
 			Spanned entrySpanned = database.getEntrySpanned(entryId[0]);

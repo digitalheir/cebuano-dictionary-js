@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -46,9 +47,10 @@ public class MainActivity extends Activity
 	private Stemmer stemmer = null;
 	private boolean reverseLookup = false;
 	private boolean useStemming = false;
+	private String lastSearchWord = null;
 					
 	@Override
-	protected void onCreate(Bundle savedInstanceState)
+	protected void onCreate(final Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
@@ -72,6 +74,10 @@ public class MainActivity extends Activity
         	Intent intent = getIntent();
         	searchWord = intent.getStringExtra(MainActivity.SEARCH_WORD);
         	Log.d(TAG, "Got searchWord '" + searchWord + "' from intent");
+        }
+        if (searchWord == null || searchWord.isEmpty())
+        {
+        	searchWord = lastSearchWord;
         }
 		update();
 	}
@@ -97,21 +103,21 @@ public class MainActivity extends Activity
 	}
 
 	@Override
-    public void onSaveInstanceState(Bundle outState) 
+    public void onSaveInstanceState(final Bundle outState) 
     {
          outState.putString(SEARCH_WORD, searchWord);
          super.onSaveInstanceState(outState);
     }
 	
-	private void populateList(String searchWord)
+	private void populateList(final String newSearchWord)
 	{
 		webView.setVisibility(View.INVISIBLE);
 		listView.setVisibility(View.VISIBLE);
 		PrepareCursorTask cursorTask = new PrepareCursorTask(this);
-		cursorTask.execute(searchWord);
+		cursorTask.execute(newSearchWord);
 	}
 
-	private void setCursorAdapter(Cursor newCursor)
+	private void setCursorAdapter(final Cursor newCursor)
 	{
 		// First cleanup our previous cursor, to prevent resource leaks.
 		if (cursor != null)
@@ -126,7 +132,7 @@ public class MainActivity extends Activity
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() 
 		{
 		    @Override
-		    public void onItemClick(AdapterView<?> parent, final View view, int position, long id) 
+		    public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) 
 		    {
 				cursor.moveToPosition(position);
 				String entryId = cursor.getString(cursor.getColumnIndex(DictionaryDatabase.HEAD_ENTRY_ID));
@@ -144,6 +150,15 @@ public class MainActivity extends Activity
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);		
 		reverseLookup  = preferences.getBoolean(DictionaryPreferenceActivity.KEY_REVERSE_LOOKUP, false);	
 		useStemming = preferences.getBoolean(DictionaryPreferenceActivity.KEY_USE_STEMMING, false);
+		lastSearchWord = preferences.getString(DictionaryPreferenceActivity.KEY_LAST_SEARCHWORD, "");
+	}
+	
+	private void saveSearchWord()
+	{
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);		
+		SharedPreferences.Editor editor = preferences.edit();
+		editor.putString(DictionaryPreferenceActivity.KEY_LAST_SEARCHWORD, searchWord);
+		editor.commit();		
 	}
 	
 	private void intializeStemmer()
@@ -168,7 +183,7 @@ public class MainActivity extends Activity
 	}
 		
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu)
+	public boolean onCreateOptionsMenu(final Menu menu)
 	{
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
@@ -184,7 +199,7 @@ public class MainActivity extends Activity
 	}
 	
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) 
+	public boolean onOptionsItemSelected(final MenuItem item) 
 	{
 		switch (item.getItemId()) 
 		{
@@ -192,12 +207,21 @@ public class MainActivity extends Activity
 				Intent i = new Intent(this, DictionaryPreferenceActivity.class);
 				startActivityForResult(i, RESULT_SETTINGS);
 				break;
+			case R.id.about:
+				AboutDialog about = new AboutDialog(this);
+				about.requestWindowFeature(Window.FEATURE_NO_TITLE); 
+				about.setTitle(R.string.about_cebuano_dictionary);
+				about.show();
+				break;
+			case R.id.help:
+				
+				break;
 		}
 		return true;
 	}
 	
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) 
+	protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) 
 	{
 		super.onActivityResult(requestCode, resultCode, data);
 		
@@ -230,7 +254,8 @@ public class MainActivity extends Activity
 	
 	@Override
 	protected void onDestroy() 
-	{
+	{	
+		saveSearchWord();
 		super.onDestroy();
 		if (cursor != null)
 		{
@@ -239,7 +264,7 @@ public class MainActivity extends Activity
 	}
 
 	@Override
-	public boolean onQueryTextChange(String newText)
+	public boolean onQueryTextChange(final String newText)
 	{
 		if (!newText.equals(searchWord))
 		{
@@ -250,8 +275,9 @@ public class MainActivity extends Activity
 	}
 	
 	@Override
-	public boolean onQueryTextSubmit(String query)
+	public boolean onQueryTextSubmit(final String query)
 	{
+		saveSearchWord();
 		// Already handled by the onQueryTextChange() handler, just close the search
 		searchView.clearFocus();
 		return true;
@@ -261,19 +287,19 @@ public class MainActivity extends Activity
 	{
 		private final Context context;
 		
-		PrepareCursorTask(Context context)
+		PrepareCursorTask(final Context newContext)
 		{
-			this.context = context;
+			this.context = newContext;
 		}
 		
 		@Override
-		protected Cursor doInBackground(String... searchWords)
+		protected Cursor doInBackground(final String... searchWords)
 		{			
 			CebuanoNormalizer n = new CebuanoNormalizer();
 			String normalizedSearchWord = n.normalize(searchWord);
 			
 			DictionaryDatabase database = DictionaryDatabase.getInstance(context);
-			Cursor cursor;
+			Cursor headsCursor;
 			
 			List<Derivation> derivations = null;
 			if (useStemming)
@@ -281,12 +307,12 @@ public class MainActivity extends Activity
 				derivations = stemmer.findDerivations(normalizedSearchWord);				
 			}
 						
-			cursor = database.getHeads(searchWord, reverseLookup, derivations);
+			headsCursor = database.getHeads(searchWord, reverseLookup, derivations);
 
 			// Move the cursor to the first entry, do force the database do some heavy-lifting
 			// on this task's thread before handing it to the UI thread.
-			cursor.moveToFirst();
-			return cursor;
+			headsCursor.moveToFirst();
+			return headsCursor;
 		}
 		
 		@Override

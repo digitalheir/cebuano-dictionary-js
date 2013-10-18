@@ -7,9 +7,16 @@
         android:title="@string/action_settings"/>
     <item
         android:id="@+id/action_previous"
+        android:showAsAction="never"
         android:title="@string/show_previous_entry"/>
     <item
         android:id="@+id/action_next"
+        android:showAsAction="never"
         android:title="@string/show_next_entry"/>
+    <item
+        android:id="@+id/about"
+        android:icon="@drawable/ic_2_action_about"
+        android:showAsAction="never"
+        android:title="@string/about"/>
 
 </menu>

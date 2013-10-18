@@ -13,7 +13,16 @@
     <string name="enter_word">Enter a Cebuano word</string>
     <string name="button_search">Search</string>
     <string name="title_activity_main">MainActivity</string>
-
+    <string name="about">About</string>
+    <string name="about_cebuano_dictionary">About Cebuano Dictionary</string>
+    <string name="app_logo">App Logo</string>
+    
+    <string name="main_entry">Main entry</string>
+    <string name="sub_entry">Sub entry</string>
+    <string name="reverse_lookup">Reverse lookup</string>
+    <string name="derived_form">Derived form</string>
+    <string name="cross_reference">Cross-reference</string>
+    
     <!-- Search Activity -->
     
     <string name="search_hint">Enter a word</string>
@@ -23,6 +32,10 @@
     <string name="title_activity_test">Test Activity</string>
     <string name="test_activity">Test Activity</string>
 
+    <!-- Help Activity -->
+
+    <string name="help">Help</string>
+    
     <!-- Show Entry Activity -->
 
     <string name="show_next_entry">Next Entry</string>

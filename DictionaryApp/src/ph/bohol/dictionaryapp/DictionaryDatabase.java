@@ -19,7 +19,7 @@ import android.util.Log;
 
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
-public class DictionaryDatabase extends SQLiteAssetHelper 
+final public class DictionaryDatabase extends SQLiteAssetHelper 
 	implements RootWordProvider
 {
     private static final String DATABASE_NAME = "dictionary_database";
@@ -29,6 +29,8 @@ public class DictionaryDatabase extends SQLiteAssetHelper
     public static final String HEAD_HEAD = "head";
     public static final String HEAD_NORMALIZED_HEAD = "normalized_head";
     public static final String HEAD_ENTRY_ID = "entryid";
+    public static final String HEAD_DERIVATION = "derivation";
+    public static final String HEAD_TYPE = "type";
     
     public static final String ENTRY_ID = "_id";
     public static final String ENTRY_ENTRY = "entry";
@@ -38,6 +40,8 @@ public class DictionaryDatabase extends SQLiteAssetHelper
 	
 	private static final int ENTRY_CACHE_SIZE = 100;
 	private static final int ROOT_CACHE_SIZE = 1000;
+	
+	
 
 	private static DictionaryDatabase instance = null;
 	private static Map<Integer, Spanned> entryCache = Collections.synchronizedMap(new EntryCache(ENTRY_CACHE_SIZE));
@@ -50,10 +54,10 @@ public class DictionaryDatabase extends SQLiteAssetHelper
 	 * getInstance() method.
 	 * @param context the application context.
 	 */
-	private DictionaryDatabase(Context context) 
+	private DictionaryDatabase(final Context newContext) 
     {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        this.context = context;
+        super(newContext, DATABASE_NAME, null, DATABASE_VERSION);
+        this.context = newContext;
     }
 
 	/** 
@@ -61,7 +65,7 @@ public class DictionaryDatabase extends SQLiteAssetHelper
 	 * @param context a context. The application context will be obtained from this context.
 	 * @return the instance of the DictionaryDatabase singleton.
 	 */
-    public static DictionaryDatabase getInstance(Context context) 
+    public static DictionaryDatabase getInstance(final Context context) 
     {
         // Use the application context, which will ensure that you do not accidentally leak an Activity's context.
         // See this article for more information: http://bit.ly/6LRzfx
@@ -74,7 +78,7 @@ public class DictionaryDatabase extends SQLiteAssetHelper
     }
         
     @Override
-    public boolean isRootWord(String root) 
+    public boolean isRootWord(final String root) 
     {
     	Boolean isRoot =  rootCache.get(root);   
     	if (isRoot != null)
@@ -84,7 +88,7 @@ public class DictionaryDatabase extends SQLiteAssetHelper
     	String sqlQuery = "SELECT 1 FROM WCED_head WHERE normalized_head = ? LIMIT 1";      
     	String [] selectionArguments = { root };    	
     	SQLiteDatabase db = this.getWritableDatabase();
-    	Cursor cursor = db.rawQuery(sqlQuery, selectionArguments);;
+    	Cursor cursor = db.rawQuery(sqlQuery, selectionArguments);
     	try
     	{
     		boolean result = cursor.getCount() > 0;
@@ -97,7 +101,7 @@ public class DictionaryDatabase extends SQLiteAssetHelper
     	}
     }
     	   
-    public Cursor getHeads(String head, boolean reverseLookup, List<Derivation> derivations) 
+    public Cursor getHeads(final String head, final boolean reverseLookup, final List<Derivation> derivations) 
     {
 		CebuanoNormalizer n = new CebuanoNormalizer();
 		String normalizedHead = n.normalize(head);
@@ -105,18 +109,18 @@ public class DictionaryDatabase extends SQLiteAssetHelper
     	List<String> subQueries = new LinkedList<String>();
     	List<String> arguments = new ArrayList<String>();
     	
-    	subQueries.add("SELECT _id, entryid, head, normalized_head, NULL AS derivation FROM WCED_head WHERE normalized_head LIKE ?");
+    	subQueries.add("SELECT _id, entryid, head, normalized_head, NULL AS derivation, 'n' AS type FROM WCED_head WHERE normalized_head LIKE ?");
     	arguments.add(normalizedHead + "%");
     	
     	if (reverseLookup)
     	{
-    		subQueries.add("SELECT _id, entryid, translation as head, translation as normalized_head, NULL as derivation FROM WCED_translation WHERE translation LIKE ?");
+    		subQueries.add("SELECT _id, entryid, translation as head, translation as normalized_head, NULL as derivation, 'r' AS type FROM WCED_translation WHERE translation LIKE ?");
     		arguments.add(head + "%");
     	}
     	
     	if (derivations != null)
     	{
-        	final String snippetFormat = "SELECT _id, entryid, head, normalized_head, '%s' AS derivation FROM wced_head WHERE normalized_head = ?";
+        	final String snippetFormat = "SELECT _id, entryid, head, normalized_head, '%s' AS derivation, 'd' AS type FROM wced_head WHERE normalized_head = ?";
         	
 			Iterator<Derivation> iterator = derivations.iterator();	
 			while (iterator.hasNext()) 
@@ -150,7 +154,7 @@ public class DictionaryDatabase extends SQLiteAssetHelper
      * @param queries The SQL queries to be combined.
      * @return A SQL string having all sub-queries combined.
      */
-    private static String unionize(List<String> queries)
+    private static String unionize(final List<String> queries)
     {
     	String result = "";
 		Iterator<String> iterator = queries.iterator();	
@@ -165,7 +169,7 @@ public class DictionaryDatabase extends SQLiteAssetHelper
 		return result;
     }
         
-    public Cursor getEntry(int entryId) 
+    public Cursor getEntry(final int entryId) 
     {
     	String sqlQuery = "SELECT * FROM WCED_entry WHERE _id = ?";      
     	String [] selectionArguments = { Integer.toString(entryId) };    	
@@ -175,7 +179,7 @@ public class DictionaryDatabase extends SQLiteAssetHelper
     	return cursor;
     }
     
-    private String getEntryHtml(int entryId)
+    private String getEntryHtml(final int entryId)
     {
     	Cursor cursor = getEntry(entryId);    	
     	String entryXml = cursor.getString(cursor.getColumnIndex(DictionaryDatabase.ENTRY_ENTRY));
@@ -189,7 +193,7 @@ public class DictionaryDatabase extends SQLiteAssetHelper
      * @param entryId The entryId for which the rich-text is wanted.
      * @return a Spanned object with the content of the entry.
      */
-    public Spanned getEntrySpanned(int entryId)
+    public Spanned getEntrySpanned(final int entryId)
     {
     	Spanned entrySpanned =  entryCache.get(entryId);    	
     	if (entrySpanned == null)
@@ -208,7 +212,7 @@ public class DictionaryDatabase extends SQLiteAssetHelper
      * @param entryId The entryId of which the next entry is sought.
      * @return the next entryId, or the original entryId if this entry is the last.
      */
-    public int getNextEntryId(int entryId) 
+    public int getNextEntryId(final int entryId) 
     {
     	String sqlQuery = "SELECT _id FROM WCED_entry WHERE _id > ? ORDER BY _id LIMIT 1";      
     	String [] selectionArguments = { Integer.toString(entryId) };
@@ -235,7 +239,7 @@ public class DictionaryDatabase extends SQLiteAssetHelper
      * @param entryId The entryId of which the previous entry is sought.
      * @return the previous entryId, or the original entryId if this entry is the first.
      */
-    public int getPreviousEntryId(int entryId)
+    public int getPreviousEntryId(final int entryId)
     {
     	String sqlQuery = "SELECT _id FROM WCED_entry WHERE _id < ? ORDER BY _id DESC LIMIT 1";      
     	String [] selectionArguments = { Integer.toString(entryId) };

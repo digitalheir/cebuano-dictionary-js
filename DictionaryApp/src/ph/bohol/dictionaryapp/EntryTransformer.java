@@ -17,7 +17,7 @@ import javax.xml.transform.stream.StreamSource;
 import android.content.Context;
 import android.util.Log;
 
-public class EntryTransformer
+final public class EntryTransformer
 {
 	public final static String STYLE_COMPACT = "compact";
 	public final static String STYLE_STRUCTURAL = "structural";
@@ -43,16 +43,16 @@ public class EntryTransformer
 	private Context context;
 
 	// Prevent resource leaks by using this only as a singleton, using the getInstance() method.
-	private EntryTransformer(Context context)
+	private EntryTransformer(final Context newContext)
 	{
-		this.context = context;
+		this.context = newContext;
 		this.stylesheets.put(STYLE_COMPACT, XSLT_COMPACT);
 		this.stylesheets.put(STYLE_STRUCTURAL, XSLT_STRUCTURAL);
 		this.stylesheets.put(STYLE_TRADITIONAL, XSLT_TRADITIONAL);
 		this.stylesheets.put(STYLE_DEBUG, XSLT_DEBUG);
 	}
 
-    public static EntryTransformer getInstance(Context context) 
+    public static EntryTransformer getInstance(final Context context) 
     {
         // Use the application context, which will ensure that you do not accidentally leak an Activity's context.
         // See this article for more information: http://bit.ly/6LRzfx
@@ -64,7 +64,7 @@ public class EntryTransformer
         return instance;
     }
 	
-	public String transform(String entry, String presentationStyle)
+	public String transform(final String entry, final String presentationStyle)
 	{
 		try
 		{
@@ -93,7 +93,7 @@ public class EntryTransformer
 		return "";
 	}
 
-	private Transformer getTransformer(String presentationStyle) throws IOException, TransformerException
+	private Transformer getTransformer(final String presentationStyle) throws IOException, TransformerException
 	{
 		Transformer transformer = transformers.get(presentationStyle);
 		if (transformer == null)
@@ -117,7 +117,7 @@ public class EntryTransformer
 		return transformer;
 	}
 
-	private String getXsltFile(String presentationStyle)
+	private String getXsltFile(final String presentationStyle)
 	{
 		String stylesheet = stylesheets.get(presentationStyle);
 		if (stylesheet == null)
@@ -132,9 +132,9 @@ public class EntryTransformer
 		return expandAbbreviations;
 	}
 
-	public void setExpandAbbreviations(boolean expandAbbreviations)
+	public void setExpandAbbreviations(final boolean newExpandAbbreviations)
 	{
-		this.expandAbbreviations = expandAbbreviations;
+		this.expandAbbreviations = newExpandAbbreviations;
 	}
 
 	public boolean isUseMetric()
@@ -142,9 +142,9 @@ public class EntryTransformer
 		return useMetric;
 	}
 
-	public void setUseMetric(boolean useMetric)
+	public void setUseMetric(final boolean newUseMetric)
 	{
-		this.useMetric = useMetric;
+		this.useMetric = newUseMetric;
 	}
 	
 	public int getFontSize()
@@ -152,8 +152,8 @@ public class EntryTransformer
 		return fontSize;
 	}
 
-	public void setFontSize(int fontSize)
+	public void setFontSize(final int newFontSize)
 	{
-		this.fontSize = fontSize;
+		this.fontSize = newFontSize;
 	}
 }

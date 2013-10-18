@@ -9,14 +9,14 @@ public class EntryCache extends LinkedHashMap<Integer, Spanned>
 {	
 	private final int capacity;
 
-	public EntryCache(int capacity)
+	public EntryCache(final int newCapacity)
 	{
-		super(capacity + 1, 1.1f, true);
-		this.capacity = capacity;
+		super(newCapacity + 1, 1.1f, true);
+		this.capacity = newCapacity;
 	}
 
 	@Override
-	protected boolean removeEldestEntry(Entry<Integer, Spanned> eldest)
+	protected boolean removeEldestEntry(final Entry<Integer, Spanned> eldest)
 	{
 		return size() > capacity;
 	}

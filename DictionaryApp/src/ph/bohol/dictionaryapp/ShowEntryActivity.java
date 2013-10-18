@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -46,7 +47,7 @@ public class ShowEntryActivity extends Activity
     
 	
 	@Override
-	protected void onCreate(Bundle savedInstanceState)
+	protected void onCreate(final Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_show_entry);
@@ -61,7 +62,7 @@ public class ShowEntryActivity extends Activity
         gestureDetector = new GestureDetector(this, new MyGestureDetector());
         gestureListener = new View.OnTouchListener() 
         {
-            public boolean onTouch(View v, MotionEvent event) 
+            public boolean onTouch(final View view, final MotionEvent event) 
             {
                 return gestureDetector.onTouchEvent(event);
             }
@@ -84,7 +85,7 @@ public class ShowEntryActivity extends Activity
 	}
 	
     @Override
-    public void onSaveInstanceState(Bundle outState) 
+    public void onSaveInstanceState(final Bundle outState) 
     {
          outState.putInt(ENTRY_ID, entryId);
          super.onSaveInstanceState(outState);
@@ -110,7 +111,7 @@ public class ShowEntryActivity extends Activity
 		    		webView.setWebViewClient(new WebViewClient() 
 		    		{
 		    		    @Override
-		    		    public boolean shouldOverrideUrlLoading(WebView view, String url) 
+		    		    public boolean shouldOverrideUrlLoading(final WebView view, final String url) 
 		    		    {
 		    		        if (url.startsWith("search:")) 
 		    		        {
@@ -143,15 +144,15 @@ public class ShowEntryActivity extends Activity
 		}
 	}
 
-	private String transformEntry(String entry)
+	private String transformEntry(final String entry)
 	{
-		entry = "<dictionary>" + entry + "</dictionary>";
+		String wrappedEntry = "<dictionary>" + entry + "</dictionary>";
 		
 		EntryTransformer entryTransformer = EntryTransformer.getInstance(this);
 		entryTransformer.setExpandAbbreviations(expandAbbreviations);
 		entryTransformer.setFontSize(fontSize);
 		entryTransformer.setUseMetric(useMetric);
-		return entryTransformer.transform(entry, presentationStyle);		 
+		return entryTransformer.transform(wrappedEntry, presentationStyle);		 
 	}
 	
 	private void retrievePreferences()
@@ -174,7 +175,7 @@ public class ShowEntryActivity extends Activity
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu)
+	public boolean onCreateOptionsMenu(final Menu menu)
 	{
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.search_results, menu);
@@ -182,7 +183,7 @@ public class ShowEntryActivity extends Activity
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item)
+	public boolean onOptionsItemSelected(final MenuItem item)
 	{
 		switch (item.getItemId())
 		{
@@ -221,6 +222,12 @@ public class ShowEntryActivity extends Activity
 			startActivityForResult(i, RESULT_SETTINGS);
 			break;
 			
+		case R.id.about:
+			AboutDialog about = new AboutDialog(this);
+			about.requestWindowFeature(Window.FEATURE_NO_TITLE); 
+			about.setTitle(R.string.about_cebuano_dictionary);
+			about.show();
+			break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -251,7 +258,7 @@ public class ShowEntryActivity extends Activity
 
 	// TODO / DONE use OnSharedPreferenceChangeListener to detect preference changes.
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) 
+	protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) 
 	{
 		super.onActivityResult(requestCode, resultCode, data);
 
@@ -273,7 +280,7 @@ public class ShowEntryActivity extends Activity
 	class MyGestureDetector extends SimpleOnGestureListener
 	{
 		@Override
-		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY)
+		public boolean onFling(final MotionEvent e1, final MotionEvent e2, final float velocityX, final float velocityY)
 		{
 			try
 			{
@@ -320,7 +327,7 @@ public class ShowEntryActivity extends Activity
     }
     
 	@Override
-	public void onSharedPreferenceChanged(SharedPreferences preferences, String key)
+	public void onSharedPreferenceChanged(final SharedPreferences preferences, final String key)
 	{		
 	    if (key.equals(DictionaryPreferenceActivity.KEY_EXPAND_ABBREVIATIONS)) 
 	    {  	

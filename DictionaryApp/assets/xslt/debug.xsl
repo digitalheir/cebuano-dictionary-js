@@ -28,43 +28,50 @@
 
                     .entry, .hom, .sense, .eg { margin: 5px; }
 
-                    .entry { margin-left: 10px; border-left: solid 1px black; padding-left: 10px; }
+                    .entry { margin-top: 10px; }
 
-                    .hom { margin-left: 10px; border-left: solid 4px red; padding-left: 10px; }
+                    .entry { margin-left: 10px; padding-left: 10px; }
 
-                    .noun { background-color: #EEFFEE; border-color: green; }
-                    .verb { background-color: #EEFFEE; border-color: #99FF99; }
-                    .adjective { background-color: #EEFFEE; border-color: #66FF66; }
+                    .hom { margin-left: 10px; border-left: solid 4px #FF858B; padding-left: 10px; }
 
-                    .sense { margin-left: 10px; border-left: solid 1px blue; padding-left: 10px; }
+                    .noun { border-color: #8FFC84; }
+                    
+                    .verb { border-color: #8EB4F9; }
+                    
+                    .adjective { border-color: #FFFE86; }
 
-                    .form { font-size: 120%; }
+                    .sense { margin-left: 10px; padding-left: 10px; }
 
-                    .eg { margin-left: 10px; border-left: solid 1px yellow; padding-left: 10px; }
+                    .form { font-size: 110%; }
 
-                    .eg { background-color: #FFDDDD; font-size: 80% }
-                    .eg i {  font-style: italic }
+                    .eg { margin-left: 10px; padding-left: 10px; }
 
-                    .pos { font-size: 120%; }
+                    .eg { color: gray; font-size: 90% }
+                    
+                    .eg i { font-style: italic }
 
-                    .itype { background-color: yellow; }
+                    .pos { font-size: 110%; color: red; }
 
-                    .note { background-color: orange; }
-                    .bio { background-color: #BFFF92; font-style: italic; font-weight: bold; }
-                    .tr { background-color: #CCFFFF; }
-                    .xr { background-color: #FFFFAA; }
-                    .pb { color: red; font-weight: bold; }
-                    .gramGrp { background-color: yellow; }
-                    .exp { color: grey; }
+                    .num { color: blue; }
 
+                    .itype { }
+                    
+                    .bio { font-style: italic; font-weight: bold; }
+                    
+                    .tr { }
+                    
+                    .xr { }
+                                        
+                    .gramGrp { }
+                    
                     .rm { font-style: normal; font-weight: normal; }
                     
-                    .expan { color: gray; }
+                    .tr { background-color: #FFFF99; }
+                                       
+                    .expan { color: #6600CC; }
                     
-                    .search { text-decoration: none; }
+                    .pb { color: green; }
                     
-                    .sc { font-variant:small-caps; }
-
                 </style>
             </head>
             <body>
@@ -225,9 +232,7 @@
     </xsl:template>
 
     <xsl:template match="pb">
-        <span class="pb">
-            <xsl:value-of select="@n"/>
-        </span>
+        <span class="pb">[page <xsl:value-of select="@n"/>]</span>
     </xsl:template>
 
     <xsl:template match="itype">
@@ -261,7 +266,7 @@
     
     <xsl:template match="measure">
         <xsl:apply-templates/>
-        <span class="expan"><xsl:text> ( = </xsl:text><xsl:value-of select="@reg" /><xsl:text>) </xsl:text></span>
+        <span class="expan"><xsl:text> (</xsl:text><xsl:value-of select="@reg" /><xsl:text>) </xsl:text></span>
     </xsl:template>
     
     <!-- Discard unwanted stuff -->

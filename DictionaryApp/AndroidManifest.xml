@@ -25,12 +25,12 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            
-            
+                        
             <meta-data android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
                         
         </activity>
+        
         <activity
             android:name="ph.bohol.dictionaryapp.ShowEntryActivity"
             android:label="@string/title_activity_show_entry"
@@ -39,14 +39,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ph.bohol.dictionaryapp.MainActivity" />
         </activity>
-        <activity
-            android:name="ph.bohol.dictionaryapp.TestActivity"
-            android:label="@string/test_activity"
-            android:parentActivityName="ph.bohol.dictionaryapp.TestActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="ph.bohol.dictionaryapp.MainActivity" />
-        </activity>
+
         <activity
             android:name="ph.bohol.dictionaryapp.DictionaryPreferenceActivity"
             android:label="@string/preference_activity"

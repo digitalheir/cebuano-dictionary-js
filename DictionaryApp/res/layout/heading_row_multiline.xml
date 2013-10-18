@@ -3,17 +3,15 @@
     android:layout_height="?android:attr/listPreferredItemHeight"
     android:padding="6dip" >
 
-    <!-- 
     <ImageView
         android:id="@+id/icon"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:layout_alignParentBottom="true"
         android:layout_alignParentTop="true"
-        android:layout_marginRight="6dip"
-        android:contentDescription="TODO"
-        android:src="@drawable/ic_launcher" />
-    -->
+        android:layout_marginRight="12dip"
+        android:contentDescription="@string/main_entry"
+        android:src="@drawable/ic_main_entry" />
     
     <TextView
         android:id="@+id/details"
@@ -21,6 +19,7 @@
         android:layout_height="26dip"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
+        android:layout_toRightOf="@id/icon"
         android:ellipsize="marquee"
         android:singleLine="true"
         android:text=""
@@ -35,6 +34,7 @@
         android:layout_above="@id/details"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
+        android:layout_toRightOf="@id/icon"
         android:layout_alignWithParentIfMissing="true"
         android:gravity="center_vertical"
         android:text=""

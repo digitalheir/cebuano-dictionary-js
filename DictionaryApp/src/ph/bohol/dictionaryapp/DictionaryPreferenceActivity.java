@@ -19,9 +19,11 @@ public class DictionaryPreferenceActivity extends PreferenceActivity
     public static final String KEY_REVERSE_LOOKUP = "reverse_lookup";
     public static final String KEY_MEASURE_UNITS = "measure_units";
 	public static final String KEY_USE_STEMMING = "use_stemming";
+	public static final String KEY_LAST_SEARCHWORD = "last_searchword";
  
     public static final String VALUE_MEASURE_ORIGINAL = "original";
     public static final String VALUE_MEASURE_METRIC = "metric";
+
       
     private ListPreference searchFontSizeListPreference;
     private ListPreference presentationFontSizeListPreference;
@@ -30,7 +32,7 @@ public class DictionaryPreferenceActivity extends PreferenceActivity
 		
 	@SuppressWarnings("deprecation")
 	@Override
-	protected void onCreate(Bundle savedInstanceState)
+	protected void onCreate(final Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.preferences);
@@ -56,7 +58,7 @@ public class DictionaryPreferenceActivity extends PreferenceActivity
     }
 
 	
-	private String presentationStyleToText(String presentationStyle)
+	private String presentationStyleToText(final String presentationStyle)
 	{
 		if (presentationStyle.equalsIgnoreCase(EntryTransformer.STYLE_STRUCTURAL))
 			return getString(R.string.presentation_structural);		
@@ -67,7 +69,7 @@ public class DictionaryPreferenceActivity extends PreferenceActivity
 		return getString(R.string.presentation_traditional);
 	}
 	
-	private String fontSizeToText(String fontSize)
+	private String fontSizeToText(final String fontSize)
 	{	
 		if (fontSize.equalsIgnoreCase("12"))
 			return getString(R.string.fontsize_tiny);	
@@ -78,7 +80,7 @@ public class DictionaryPreferenceActivity extends PreferenceActivity
 		return getString(R.string.fontsize_medium);
 	}
 	
-	private String measureUnitToText(String measureUnit)
+	private String measureUnitToText(final String measureUnit)
 	{
 		if (measureUnit.equalsIgnoreCase(VALUE_MEASURE_METRIC))
 			return getString(R.string.measure_metric);		
@@ -93,7 +95,7 @@ public class DictionaryPreferenceActivity extends PreferenceActivity
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
     }
 	
-	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) 
+	public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) 
 	{
 	    if (key.equals(KEY_PRESENTATION_STYLE)) 
 	    {  	
