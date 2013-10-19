@@ -4,18 +4,19 @@ import java.util.LinkedHashMap;
 
 @SuppressWarnings("serial")
 public class RootCache extends LinkedHashMap<String, Boolean>
-{	
-	private final int capacity;
+{
+    private static final float LOAD_FACTOR = 1.1f;
+    private final int capacity;
 
-	public RootCache(final int newCapacity)
-	{
-		super(newCapacity + 1, 1.1f, true);
-		this.capacity = newCapacity;
-	}
+    public RootCache(final int newCapacity)
+    {
+        super(newCapacity + 1, LOAD_FACTOR, true);
+        this.capacity = newCapacity;
+    }
 
-	@Override
-	protected boolean removeEldestEntry(final Entry<String, Boolean> eldest)
-	{
-		return size() > capacity;
-	}
+    @Override
+    protected final boolean removeEldestEntry(final Entry<String, Boolean> eldest)
+    {
+        return size() > capacity;
+    }
 }

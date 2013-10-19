@@ -1,12 +1,12 @@
 <stemmer language="ceb">
-    
-	<constant name="letter" value="[a-z]" />
+
+    <constant name="letter" value="[a-z]" />
     <constant name="vowel" value="[aeiou]" />
-    
-	<affix form="maka-" label="FUT.POT">
-		<pattern pattern="maka({letter}+)" root="$1" />
-	</affix>
-    
+
+    <affix form="maka-" label="FUT.POT">
+        <pattern pattern="maka({letter}+)" root="$1" />
+    </affix>
+
     <affix form="naka-" label="PP.POT">
         <pattern pattern="naka({letter}+)" root="$1" />
     </affix>
@@ -14,14 +14,14 @@
     <affix form="ma-" label="FUT.AF">
         <pattern pattern="ma({letter}+)" root="$1" />
     </affix>
-    
+
     <affix form="ka-" label="FUT.POT">
         <pattern pattern="ka({letter}+)" root="$1" />
     </affix>
-    
+
     <affix form="-a" label="SPEC">
         <pattern pattern="({letter}+{vowel})ha" root="$1" />
         <pattern pattern="({letter}+)a" root="$1" />
     </affix>
-    
+
 </stemmer>

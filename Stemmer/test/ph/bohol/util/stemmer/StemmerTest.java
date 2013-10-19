@@ -7,33 +7,29 @@ import java.util.LinkedList;
 
 import org.junit.Test;
 
-import ph.bohol.util.stemmer.Derivation;
-import ph.bohol.util.stemmer.Stemmer;
-import ph.bohol.util.stemmer.StemmerParser;
-
-public class StemmerTest 
+public class StemmerTest
 {
-	@Test
-	public void testLoad() throws FileNotFoundException 
-	{
-		FileInputStream stream = new FileInputStream("src/ph/bohol/util/stemmer/stemmerTest.xml");		
-		StemmerParser parser = new StemmerParser();
-		Stemmer stemmer = parser.parse(stream);
-		
-		stemmer.print();	
-		
-		testDerivations(stemmer, "makasabot");
-		testDerivations(stemmer, "balaya");
-	}
+    @Test
+    public final void testLoad() throws FileNotFoundException
+    {
+        FileInputStream stream = new FileInputStream("src/ph/bohol/util/stemmer/stemmerTest.xml");
+        StemmerParser parser = new StemmerParser();
+        Stemmer stemmer = parser.parse(stream);
 
-	private void testDerivations(Stemmer stemmer, String word) 
-	{
-		LinkedList<Derivation> derivations = stemmer.findDerivations(word);
-		
-		Iterator<Derivation> iterator = derivations.iterator();	
-		while (iterator.hasNext()) 
-		{
-			System.out.println("Potential derivation: " + iterator.next().toString());
-		}
-	}
+        stemmer.print();
+
+        testDerivations(stemmer, "makasabot");
+        testDerivations(stemmer, "balaya");
+    }
+
+    private void testDerivations(final Stemmer stemmer, final String word)
+    {
+        LinkedList<Derivation> derivations = stemmer.findDerivations(word);
+
+        Iterator<Derivation> iterator = derivations.iterator();
+        while (iterator.hasNext())
+        {
+            System.out.println("Potential derivation: " + iterator.next().toString());
+        }
+    }
 }
