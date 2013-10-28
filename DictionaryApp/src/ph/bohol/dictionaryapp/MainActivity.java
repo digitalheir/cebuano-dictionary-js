@@ -27,7 +27,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
 
-
 public class MainActivity extends Activity
 implements SearchView.OnQueryTextListener
 {

@@ -24,29 +24,23 @@ public class ShowEntryActivity extends Activity
 implements OnSharedPreferenceChangeListener
 {
     private static final int DEFAULT_FONT_SIZE = 20;
-
-    private int entryId;
-
-    private int fontSize = DEFAULT_FONT_SIZE;
-    private boolean expandAbbreviations = false;
-    private boolean useMetric = false;
-    private String presentationStyle = EntryTransformer.STYLE_TRADITIONAL;
-    private boolean givenSwipeNextHint = false;
-    private boolean givenSwipePreviousHint = false;
-
     private static final int RESULT_SETTINGS = 1;
-
     private static final int SWIPE_MIN_DISTANCE = 120;
     private static final int SWIPE_MAX_OFF_PATH = 250;
     private static final int SWIPE_THRESHOLD_VELOCITY = 200;
-
     private static final String ENTRY_ID = "ph.bohol.dictionaryapp.ENTRY_ID";
-
     private static final String TAG = "ShowEntryActivity";
+    private static final String SEARCH_URL = "search:";
 
+    private int entryId;
+    private int fontSize = DEFAULT_FONT_SIZE;
+    private boolean expandAbbreviations = false;
+    private boolean useMetric = false;
+    private boolean givenSwipeNextHint = false;
+    private boolean givenSwipePreviousHint = false;
+    private String presentationStyle = EntryTransformer.STYLE_TRADITIONAL;
     private GestureDetector gestureDetector;
     private View.OnTouchListener gestureListener;
-
 
     @Override
     protected final void onCreate(final Bundle savedInstanceState)
@@ -115,11 +109,11 @@ implements OnSharedPreferenceChangeListener
                         @Override
                         public boolean shouldOverrideUrlLoading(final WebView view, final String url)
                         {
-                            if (url.startsWith("search:"))
+                            if (url.startsWith(SEARCH_URL))
                             {
                                 // Send back to main. This way, links clicked in the data do not result in opening lots
                                 // of MainActivity instances.
-                                String searchWord = url.substring(7);
+                                String searchWord = url.substring(SEARCH_URL.length());
                                 Intent resultIntent = new Intent();
                                 resultIntent.putExtra(MainActivity.SEARCH_WORD, searchWord);
                                 setResult(Activity.RESULT_OK, resultIntent);

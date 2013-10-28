@@ -12,7 +12,7 @@ public class StemmerTest
     @Test
     public final void testLoad() throws FileNotFoundException
     {
-        FileInputStream stream = new FileInputStream("src/ph/bohol/util/stemmer/stemmerTest.xml");
+        FileInputStream stream = new FileInputStream("test/ph/bohol/util/stemmer/stemmerTest.xml");
         StemmerParser parser = new StemmerParser();
         Stemmer stemmer = parser.parse(stream);
 

@@ -1,9 +1,11 @@
 package ph.bohol.util.stemmer;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
 
 public class Stemmer
 {
@@ -41,11 +43,19 @@ public class Stemmer
             compile();
         }
 
+        HashSet<String> roots = new HashSet<String>();
+        return innerFindDerivations(word, roots);
+    }
+
+    private LinkedList<Derivation> innerFindDerivations(final String word, final Set<String> roots)
+    {
         LinkedList<Derivation> results = new LinkedList<Derivation>();
 
-        if (isRootWord(word))
+        // The trivial case: the entire word is a root:
+        if (!roots.contains(word) && isRootWord(word))
         {
             results.add(new Derivation(word));
+            roots.add(word);
         }
 
         Iterator<Affix> iterator = affixes.iterator();
@@ -57,7 +67,7 @@ public class Stemmer
                 String root = affix.strip(word);
 
                 // Recursively look for derivations of the current root:
-                LinkedList<Derivation> innerDerivations = findDerivations(root);
+                LinkedList<Derivation> innerDerivations = innerFindDerivations(root, roots);
 
                 // Copy the found derivations to the result list with the current affix as additional affix:
                 Iterator<Derivation> iteratorDerivations = innerDerivations.iterator();

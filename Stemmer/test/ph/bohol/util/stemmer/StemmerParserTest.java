@@ -7,16 +7,14 @@ import org.junit.Test;
 
 public class StemmerParserTest
 {
-
     @Test
     public final void testParse() throws IOException
     {
-        FileInputStream stream = new FileInputStream("src/ph/bohol/util/stemmer/stemmerTest.xml");
+        FileInputStream stream = new FileInputStream("test/ph/bohol/util/stemmer/stemmerTest.xml");
 
         StemmerParser parser = new StemmerParser();
         Stemmer stemmer = parser.parse(stream);
         stream.close();
         stemmer.print();
     }
-
 }
