@@ -44,6 +44,7 @@ public class Stemmer
         }
 
         HashSet<String> roots = new HashSet<String>();
+        roots.add(word);
         return innerFindDerivations(word, roots);
     }
 
@@ -51,14 +52,26 @@ public class Stemmer
     {
         LinkedList<Derivation> results = new LinkedList<Derivation>();
 
-        // The trivial case: the entire word is a root:
-        if (!roots.contains(word) && isRootWord(word))
+        // First iterate over the list to find the derivations with a single affix.
+        Iterator<Affix> iterator = affixes.iterator();
+        while (iterator.hasNext())
         {
-            results.add(new Derivation(word));
-            roots.add(word);
+            Affix affix = iterator.next();
+            if (affix.applies(word))
+            {
+                String root = affix.strip(word);
+                if (!roots.contains(root) && isRootWord(root))
+                {
+                    Derivation derivation = new Derivation(root);
+                    derivation.addAffix(affix);
+                    results.add(derivation);
+                    roots.add(root);
+                }
+            }
         }
 
-        Iterator<Affix> iterator = affixes.iterator();
+        // Then iterate to recursively find the longer derivations.
+        iterator = affixes.iterator();
         while (iterator.hasNext())
         {
             Affix affix = iterator.next();

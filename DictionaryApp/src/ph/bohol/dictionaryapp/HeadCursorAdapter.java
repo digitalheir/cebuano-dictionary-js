@@ -35,6 +35,12 @@ public class HeadCursorAdapter extends CursorAdapter
     {
         String head = cursor.getString(cursor.getColumnIndexOrThrow(DictionaryDatabase.HEAD_HEAD));
 
+        String derivation = cursor.getString(cursor.getColumnIndexOrThrow(DictionaryDatabase.HEAD_DERIVATION));
+        if (derivation != null && !derivation.isEmpty())
+        {
+            head += " (" + derivation + ")";
+        }
+
         TextView textview = (TextView) view.findViewById(R.id.head);
         textview.setText(head);
 
