@@ -312,19 +312,15 @@ implements SearchView.OnQueryTextListener
             headsCursor = database.getHeads(searchWord, reverseLookup, derivations);
 
             // Move the cursor to the first entry, do force the database do some heavy-lifting
-            // on this task's thread before handing it to the UI thread.
+            // on this task's thread before handing it back to the UI thread.
             headsCursor.moveToFirst();
             return headsCursor;
         }
 
         @Override
-        protected void onPostExecute(Cursor result)
+        protected void onPostExecute(final Cursor result)
         {
-            if (isCancelled())
-            {
-                result = null;
-            }
-            else
+            if (!isCancelled())
             {
                 setCursorAdapter(result);
             }

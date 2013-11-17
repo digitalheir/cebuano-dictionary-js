@@ -107,7 +107,8 @@ public final class EntryTransformer
             transformer = factory.newTransformer(xsltSource);
             if (transformer == null)
             {
-                throw new TransformerException(String.format("Loading XSLT transformer from '%s' failed", xsltSourceFileName));
+                throw new TransformerException(String.format("Loading XSLT transformer from '%s' failed",
+                        xsltSourceFileName));
             }
             transformers.put(presentationStyle, transformer);
         }

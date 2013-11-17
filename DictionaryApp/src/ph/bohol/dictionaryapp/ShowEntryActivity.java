@@ -156,10 +156,13 @@ implements OnSharedPreferenceChangeListener
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         expandAbbreviations = preferences.getBoolean(DictionaryPreferenceActivity.KEY_EXPAND_ABBREVIATIONS, false);
-        fontSize = Integer.parseInt(preferences.getString(DictionaryPreferenceActivity.KEY_PRESENTATION_FONT_SIZE, "20"));
-        presentationStyle = preferences.getString(DictionaryPreferenceActivity.KEY_PRESENTATION_STYLE, EntryTransformer.STYLE_TRADITIONAL);
+        fontSize = Integer.parseInt(preferences.getString(
+                DictionaryPreferenceActivity.KEY_PRESENTATION_FONT_SIZE, "20"));
+        presentationStyle = preferences.getString(
+                DictionaryPreferenceActivity.KEY_PRESENTATION_STYLE, EntryTransformer.STYLE_TRADITIONAL);
         useMetric = preferences.getString(DictionaryPreferenceActivity.KEY_MEASURE_UNITS,
-                DictionaryPreferenceActivity.VALUE_MEASURE_ORIGINAL).equals(DictionaryPreferenceActivity.VALUE_MEASURE_METRIC);
+                DictionaryPreferenceActivity.VALUE_MEASURE_ORIGINAL).
+                    equals(DictionaryPreferenceActivity.VALUE_MEASURE_METRIC);
     }
 
     /**
@@ -198,7 +201,8 @@ implements OnSharedPreferenceChangeListener
         case R.id.action_next:
             if (!givenSwipeNextHint)
             {
-                Toast.makeText(this, getResources().getString(R.string.can_swipe_to_move_to_next_entry), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.can_swipe_to_move_to_next_entry),
+                        Toast.LENGTH_SHORT).show();
                 givenSwipeNextHint = true;
             }
             moveToNextEntry();
@@ -207,7 +211,8 @@ implements OnSharedPreferenceChangeListener
         case R.id.action_previous:
             if (!givenSwipePreviousHint)
             {
-                Toast.makeText(this, getResources().getString(R.string.can_swipe_to_move_to_previous_entry), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.can_swipe_to_move_to_previous_entry),
+                        Toast.LENGTH_SHORT).show();
                 givenSwipePreviousHint = true;
             }
             moveToPreviousEntry();
@@ -302,7 +307,7 @@ implements OnSharedPreferenceChangeListener
             }
             catch (Exception e)
             {
-                // nothing
+                Log.d(TAG, "Exception in MyGestureDetector: " + e);
             }
             return false;
         }
@@ -336,16 +341,19 @@ implements OnSharedPreferenceChangeListener
         }
         else if (key.equals(DictionaryPreferenceActivity.KEY_PRESENTATION_FONT_SIZE))
         {
-            fontSize = Integer.parseInt(preferences.getString(DictionaryPreferenceActivity.KEY_PRESENTATION_FONT_SIZE, "20"));
+            fontSize = Integer.parseInt(preferences.getString(DictionaryPreferenceActivity.KEY_PRESENTATION_FONT_SIZE,
+                    "20"));
         }
         else if (key.equals(DictionaryPreferenceActivity.KEY_PRESENTATION_STYLE))
         {
-            presentationStyle = preferences.getString(DictionaryPreferenceActivity.KEY_PRESENTATION_STYLE, EntryTransformer.STYLE_TRADITIONAL);
+            presentationStyle = preferences.getString(DictionaryPreferenceActivity.KEY_PRESENTATION_STYLE,
+                    EntryTransformer.STYLE_TRADITIONAL);
         }
         else if (key.equals(DictionaryPreferenceActivity.KEY_MEASURE_UNITS))
         {
             useMetric = preferences.getString(DictionaryPreferenceActivity.KEY_MEASURE_UNITS,
-                    DictionaryPreferenceActivity.VALUE_MEASURE_ORIGINAL).equals(DictionaryPreferenceActivity.VALUE_MEASURE_METRIC);
+                    DictionaryPreferenceActivity.VALUE_MEASURE_ORIGINAL).equals(
+                            DictionaryPreferenceActivity.VALUE_MEASURE_METRIC);
         }
     }
 }

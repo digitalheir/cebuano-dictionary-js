@@ -6,24 +6,25 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
+import java.util.Vector;
 
 public class Stemmer
 {
     private String language;
     private boolean compiled = false;
     private Map<String, String> constants = new HashMap<String, String>();
-    private LinkedList<Affix> affixes = new LinkedList<Affix>();
+    private Vector<AffixGroup> groups = new Vector<AffixGroup>();
     private RootWordProvider rootWordProvider = null;
 
-    final void addAffix(final Affix pattern)
+    final void addGroup(final AffixGroup group)
     {
-        affixes.addLast(pattern);
+        groups.addElement(group);
         compiled = false;
     }
 
     final void compile()
     {
-        Iterator<Affix> iterator = affixes.iterator();
+        Iterator<AffixGroup> iterator = groups.iterator();
         while (iterator.hasNext())
         {
             iterator.next().compile(constants);
@@ -42,45 +43,51 @@ public class Stemmer
         {
             compile();
         }
-
-        HashSet<String> roots = new HashSet<String>();
-        roots.add(word);
-        return innerFindDerivations(word, roots);
+        Set<String> roots = new HashSet<String>();
+        return innerFindDerivations(word, roots, 0);
     }
 
-    private LinkedList<Derivation> innerFindDerivations(final String word, final Set<String> roots)
-    {
-        LinkedList<Derivation> results = new LinkedList<Derivation>();
 
-        // First iterate over the list to find the derivations with a single affix.
+    private LinkedList<Derivation> innerFindDerivations(final String word, final Set<String> roots, final int level)
+    {
+        LinkedList<Derivation> derivations = null;
+        if (groups.size() <= level)
+        {
+            derivations = new LinkedList<Derivation>();
+            if (!roots.contains(word) && isRootWord(word))
+            {
+                Derivation derivation = new Derivation(word);
+                derivations.add(derivation);
+                roots.add(word);
+            }
+            return derivations;
+        }
+        else
+        {
+            derivations = innerFindDerivations(word, roots, level + 1);
+        }
+
+        AffixGroup group = groups.get(level);
+        LinkedList<Affix> affixes = group.getAffixes();
         Iterator<Affix> iterator = affixes.iterator();
         while (iterator.hasNext())
         {
             Affix affix = iterator.next();
-            if (affix.applies(word))
+            LinkedList<String> rootCandidates = affix.rootCandidates(word);
+            Iterator<String> rootIterator = rootCandidates.iterator();
+            while (rootIterator.hasNext())
             {
-                String root = affix.strip(word);
+                String root = rootIterator.next();
+
                 if (!roots.contains(root) && isRootWord(root))
                 {
                     Derivation derivation = new Derivation(root);
                     derivation.addAffix(affix);
-                    results.add(derivation);
+                    derivations.add(derivation);
                     roots.add(root);
                 }
-            }
-        }
 
-        // Then iterate to recursively find the longer derivations.
-        iterator = affixes.iterator();
-        while (iterator.hasNext())
-        {
-            Affix affix = iterator.next();
-            if (affix.applies(word))
-            {
-                String root = affix.strip(word);
-
-                // Recursively look for derivations of the current root:
-                LinkedList<Derivation> innerDerivations = innerFindDerivations(root, roots);
+                LinkedList<Derivation> innerDerivations = innerFindDerivations(root, roots, level + 1);
 
                 // Copy the found derivations to the result list with the current affix as additional affix:
                 Iterator<Derivation> iteratorDerivations = innerDerivations.iterator();
@@ -88,12 +95,11 @@ public class Stemmer
                 {
                     Derivation derivation = iteratorDerivations.next();
                     derivation.addAffix(affix);
-                    results.add(derivation);
+                    derivations.add(derivation);
                 }
             }
         }
-
-        return results;
+        return derivations;
     }
 
     private boolean isRootWord(final String word)
@@ -111,25 +117,25 @@ public class Stemmer
         this.language = newLanguage;
     }
 
-    public final void print()
+    public final String toString()
     {
-        System.out.println("<stemmer language='" + language + "'>");
+        String result = "<stemmer language='" + language + "'>";
 
         Iterator<String> iteratorConstants = constants.keySet().iterator();
         while (iteratorConstants.hasNext())
         {
             String key = iteratorConstants.next().toString();
             String value = constants.get(key).toString();
-            System.out.println("<constant name='" + key + "' value='" + value + "'/>");
+            result += "\n<constant name='" + key + "' value='" + value + "'/>";
         }
 
-        Iterator<Affix> iteratorAffixes = affixes.iterator();
-        while (iteratorAffixes.hasNext())
+        Iterator<AffixGroup> iteratorGroups = groups.iterator();
+        while (iteratorGroups.hasNext())
         {
-            iteratorAffixes.next().print();
+            result += iteratorGroups.next().toString();
         }
 
-        System.out.println("</stemmer>");
+        return result + "</stemmer>\n";
     }
 
     public final RootWordProvider getRootProvider()

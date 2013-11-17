@@ -38,7 +38,8 @@ implements OnSharedPreferenceChangeListener
         addPreferencesFromResource(R.xml.preferences);
 
         searchFontSizeListPreference = (ListPreference) getPreferenceScreen().findPreference(KEY_SEARCH_FONT_SIZE);
-        presentationFontSizeListPreference = (ListPreference) getPreferenceScreen().findPreference(KEY_PRESENTATION_FONT_SIZE);
+        presentationFontSizeListPreference = (ListPreference) getPreferenceScreen().
+                findPreference(KEY_PRESENTATION_FONT_SIZE);
         presentationStyleListPreference = (ListPreference) getPreferenceScreen().findPreference(KEY_PRESENTATION_STYLE);
         measureUnitListPreference = (ListPreference) getPreferenceScreen().findPreference(KEY_MEASURE_UNITS);
     }
@@ -49,8 +50,10 @@ implements OnSharedPreferenceChangeListener
         super.onResume();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        presentationStyleListPreference.setSummary(presentationStyleToText(sharedPreferences.getString(KEY_PRESENTATION_STYLE, "")));
-        presentationFontSizeListPreference.setSummary(fontSizeToText(sharedPreferences.getString(KEY_PRESENTATION_FONT_SIZE, "")));
+        presentationStyleListPreference.setSummary(
+                presentationStyleToText(sharedPreferences.getString(KEY_PRESENTATION_STYLE, "")));
+        presentationFontSizeListPreference.setSummary(
+                fontSizeToText(sharedPreferences.getString(KEY_PRESENTATION_FONT_SIZE, "")));
         searchFontSizeListPreference.setSummary(fontSizeToText(sharedPreferences.getString(KEY_SEARCH_FONT_SIZE, "")));
         measureUnitListPreference.setSummary(measureUnitToText(sharedPreferences.getString(KEY_MEASURE_UNITS, "")));
 
@@ -113,15 +116,18 @@ implements OnSharedPreferenceChangeListener
     {
         if (key.equals(KEY_PRESENTATION_STYLE))
         {
-            presentationStyleListPreference.setSummary(presentationStyleToText(sharedPreferences.getString(KEY_PRESENTATION_STYLE, "")));
+            presentationStyleListPreference.setSummary(presentationStyleToText(
+                    sharedPreferences.getString(KEY_PRESENTATION_STYLE, "")));
         }
         else if (key.equals(KEY_PRESENTATION_FONT_SIZE))
         {
-            presentationFontSizeListPreference.setSummary(fontSizeToText(sharedPreferences.getString(KEY_PRESENTATION_FONT_SIZE, "")));
+            presentationFontSizeListPreference.setSummary(fontSizeToText(
+                    sharedPreferences.getString(KEY_PRESENTATION_FONT_SIZE, "")));
         }
         else if (key.equals(KEY_SEARCH_FONT_SIZE))
         {
-            searchFontSizeListPreference.setSummary(fontSizeToText(sharedPreferences.getString(KEY_SEARCH_FONT_SIZE, "")));
+            searchFontSizeListPreference.setSummary(fontSizeToText(
+                    sharedPreferences.getString(KEY_SEARCH_FONT_SIZE, "")));
         }
         else if (key.equals(KEY_MEASURE_UNITS))
         {

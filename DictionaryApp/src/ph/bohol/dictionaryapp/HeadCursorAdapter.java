@@ -113,7 +113,6 @@ public class HeadCursorAdapter extends CursorAdapter
             this.detailTextViewReference = new WeakReference<TextView>(detailTextView);
 
             // Are we already working for this TextView? (And the ListView re-used it during scrolling)
-            // TODO: store weak-reference instead.
             if (detailTextView.getTag() instanceof FetchEntryDetailsTask)
             {
                 FetchEntryDetailsTask task = (FetchEntryDetailsTask) detailTextView.getTag();
@@ -131,11 +130,11 @@ public class HeadCursorAdapter extends CursorAdapter
         }
 
         @Override
-        protected void onPostExecute(Spanned result)
+        protected void onPostExecute(final Spanned result)
         {
             if (isCancelled())
             {
-                result = null;
+                return;
             }
 
             if (detailTextViewReference != null)

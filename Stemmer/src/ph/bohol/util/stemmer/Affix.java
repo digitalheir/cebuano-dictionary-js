@@ -9,6 +9,7 @@ public class Affix
 {
     private String form;
     private String label;
+    private String rootType;
     private LinkedList<AffixPattern> patterns = new LinkedList<AffixPattern>();
 
     /**
@@ -77,14 +78,30 @@ public class Affix
         return null;
     }
 
-    public final void print()
+    public final LinkedList<String> rootCandidates(final String word)
     {
-        System.out.println(toString());
+        LinkedList<String> rootCandidates = new LinkedList<String>();
+        Iterator<AffixPattern> iterator = patterns.iterator();
+        while (iterator.hasNext())
+        {
+            AffixPattern pattern = iterator.next();
+            if (pattern.applies(word))
+            {
+                rootCandidates.add(pattern.strip(word));
+            }
+        }
+        return rootCandidates;
     }
 
     public final String toString()
     {
-        String result = "<affix form='" + form + "' label='" + label + "'>\n";
+        String result = "<affix form='" + form + "' label='" + label + "'";
+
+        if (rootType != null && !rootType.isEmpty())
+        {
+            result += "rootType='" + rootType + "'";
+        }
+        result += ">\n";
 
         Iterator<AffixPattern> iterator = patterns.iterator();
         while (iterator.hasNext())
@@ -103,5 +120,15 @@ public class Affix
         {
             iterator.next().compile(constants);
         }
+    }
+
+    public final String getRootType()
+    {
+        return rootType;
+    }
+
+    public final void setRootType(final String newRootType)
+    {
+        this.rootType = newRootType;
     }
 }

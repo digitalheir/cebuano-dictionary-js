@@ -23,7 +23,8 @@ public class AffixTest extends Affix
     {
         Affix a = createTestAffix();
         String test = a.toString();
-        String expected = "<affix form='maka-' label='FUT.POT'>\n<pattern pattern='maka([a-z]+)' root='$1'/>\n</affix>\n";
+        String expected =
+                "<affix form='maka-' label='FUT.POT'>\n<pattern pattern='maka([a-z]+)' root='$1'/>\n</affix>\n";
         assertTrue(test.equals(expected));
     }
 

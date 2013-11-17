@@ -15,6 +15,6 @@ public class StemmerParserTest
         StemmerParser parser = new StemmerParser();
         Stemmer stemmer = parser.parse(stream);
         stream.close();
-        stemmer.print();
+        System.out.print(stemmer.toString());
     }
 }

@@ -15,6 +15,7 @@ public class StemmerParser extends DefaultHandler
 {
     private Stemmer stemmer = null;
     private Affix temporaryAffix = null;
+    private AffixGroup temporaryGroup = null;
 
     public final Stemmer parse(final InputStream stemmerStream)
     {
@@ -30,7 +31,7 @@ public class StemmerParser extends DefaultHandler
         }
         catch (SAXException e)
         {
-            System.out.println("SAXException : xml not well formed");
+            System.out.println("SAXException: xml not well formed");
         }
         catch (IOException e)
         {
@@ -40,7 +41,8 @@ public class StemmerParser extends DefaultHandler
     }
 
     @Override
-    public final void startElement(final String s, final String s1, final String elementName, final Attributes attributes) throws SAXException
+    public final void startElement(final String s, final String s1, final String elementName,
+            final Attributes attributes) throws SAXException
     {
         if (elementName.equals("stemmer"))
         {
@@ -55,11 +57,25 @@ public class StemmerParser extends DefaultHandler
             throw new SAXException();
         }
 
+        if (elementName.equals("group"))
+        {
+            temporaryGroup = new AffixGroup();
+            temporaryGroup.setName(attributes.getValue("name"));
+            return;
+        }
+
         if (elementName.equals("affix"))
         {
+            if (temporaryGroup == null)
+            {
+                // TODO: think of better exception to throw.
+                throw new SAXException();
+            }
+
             temporaryAffix = new Affix();
             temporaryAffix.setForm(attributes.getValue("form"));
             temporaryAffix.setLabel(attributes.getValue("label"));
+            temporaryAffix.setRootType(attributes.getValue("rootType"));
             return;
         }
 
@@ -87,9 +103,15 @@ public class StemmerParser extends DefaultHandler
     @Override
     public final void endElement(final String s, final String s1, final String elementName) throws SAXException
     {
+        if (elementName.equals("group"))
+        {
+            stemmer.addGroup(temporaryGroup);
+            temporaryGroup = null;
+        }
+
         if (elementName.equals("affix"))
         {
-            stemmer.addAffix(temporaryAffix);
+            temporaryGroup.addAffix(temporaryAffix);
             temporaryAffix = null;
         }
 

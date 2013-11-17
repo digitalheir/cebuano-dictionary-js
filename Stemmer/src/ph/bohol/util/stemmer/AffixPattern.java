@@ -59,11 +59,6 @@ public class AffixPattern
         this.root = newRoot;
     }
 
-    public final void print()
-    {
-        System.out.println(toString());
-    }
-
     public final String toString()
     {
         return "<pattern pattern='" + pattern + "' root='" + root + "'/>\n";

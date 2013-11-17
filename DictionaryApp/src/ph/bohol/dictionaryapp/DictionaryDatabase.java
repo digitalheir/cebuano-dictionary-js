@@ -22,6 +22,7 @@ import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 public final class DictionaryDatabase extends SQLiteAssetHelper
 implements RootWordProvider
 {
+    private static final int MIN_ROOT_LENGTH = 3;
     private static final String DATABASE_NAME = "dictionary_database";
     private static final int DATABASE_VERSION = 1;
 
@@ -40,8 +41,6 @@ implements RootWordProvider
 
     private static final int ENTRY_CACHE_SIZE = 100;
     private static final int ROOT_CACHE_SIZE = 1000;
-
-
 
     private static DictionaryDatabase instance = null;
     private static Map<Integer, Spanned> entryCache = Collections.synchronizedMap(new EntryCache(ENTRY_CACHE_SIZE));
@@ -80,6 +79,11 @@ implements RootWordProvider
     @Override
     public boolean isRootWord(final String root)
     {
+        if (root.length() < MIN_ROOT_LENGTH)
+        {
+            return false;
+        }
+
         Boolean isRoot =  rootCache.get(root);
         if (isRoot != null)
         {
@@ -87,7 +91,7 @@ implements RootWordProvider
         }
 
         Log.d(TAG, "Query for root: " + root);
-        String sqlQuery = "SELECT 1 FROM WCED_head WHERE normalized_head = ? LIMIT 1";
+        String sqlQuery = "SELECT 1 FROM WCED_head WHERE normalized_head = ? AND pos != '' LIMIT 1";
         String [] selectionArguments = { root };
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(sqlQuery, selectionArguments);
@@ -103,6 +107,38 @@ implements RootWordProvider
         }
     }
 
+    @Override
+    public boolean isRootWordWithType(final String root, final String type)
+    {
+        if (root.length() < MIN_ROOT_LENGTH)
+        {
+            return false;
+        }
+
+        Boolean isRoot = rootCache.get(root + "." + type);
+        if (isRoot != null)
+        {
+            return isRoot;
+        }
+
+        Log.d(TAG, "Query for root: " + root + " with type: " + type);
+        String sqlQuery = "SELECT 1 FROM WCED_head WHERE normalized_head = ? AND pos LIKE ? LIMIT 1";
+        String [] selectionArguments = { root, "%" + type + "%" };
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(sqlQuery, selectionArguments);
+        try
+        {
+            boolean result = cursor.getCount() > 0;
+            rootCache.put(root + "." + type, result);
+            return result;
+        }
+        finally
+        {
+            cursor.close();
+        }
+    }
+
+
     public Cursor getHeads(final String head, final boolean reverseLookup, final List<Derivation> derivations)
     {
         CebuanoNormalizer n = new CebuanoNormalizer();
@@ -117,7 +153,8 @@ implements RootWordProvider
 
         if (reverseLookup)
         {
-            subQueries.add("SELECT _id, entryid, translation as head, translation as normalized_head, NULL as derivation, 'r' AS type "
+            subQueries.add("SELECT _id, entryid, translation as head, translation as normalized_head, "
+                    + "NULL as derivation, 'r' AS type "
                     + "FROM WCED_translation WHERE translation LIKE ?");
             arguments.add(head + "%");
         }
@@ -125,7 +162,8 @@ implements RootWordProvider
         if (derivations != null)
         {
             final String snippetFormat =
-                    "SELECT _id, entryid, head, normalized_head, '%s' AS derivation, 'd' AS type FROM wced_head WHERE normalized_head = ?";
+                    "SELECT _id, entryid, head, normalized_head, '%s' AS derivation, 'd' AS type FROM wced_head "
+                            + "WHERE normalized_head = ?";
 
             Iterator<Derivation> iterator = derivations.iterator();
             while (iterator.hasNext())
