@@ -9,11 +9,11 @@ public class TestRootWordProvider implements RootWordProvider
     {
         calls++;
         return
-                word.equals("sabut") ||
-                word.equals("balay") ||
-                word.equals("kaun") ||
-                word.equals("bisaya") ||
-                word.equals("abut");
+                word.equals("sabut")
+                || word.equals("balay")
+                || word.equals("kaun")
+                || word.equals("bisaya")
+                || word.equals("abut");
     }
 
     @Override
@@ -22,7 +22,7 @@ public class TestRootWordProvider implements RootWordProvider
         return (word.equals("sabut") && type.equals("v")) || (word.equals("balay") && type.equals("n"));
     }
 
-    int getCalls()
+    final int getCalls()
     {
         return calls;
     }
