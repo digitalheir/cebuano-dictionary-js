@@ -20,11 +20,11 @@
             android:title="@string/show_preview" 
             android:defaultValue="true"/>
         
-        <CheckBoxPreference
+        <!--<CheckBoxPreference
             android:key="use_stemming"
             android:summary="@string/use_stemming_summary"
             android:title="@string/use_stemming" 
-            android:defaultValue="true"/>
+            android:defaultValue="true"/>-->
         
         <CheckBoxPreference
             android:key="reverse_lookup"
