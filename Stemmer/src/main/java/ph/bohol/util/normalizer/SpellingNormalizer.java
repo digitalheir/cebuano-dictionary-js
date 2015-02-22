@@ -1,6 +1,6 @@
 package ph.bohol.util.normalizer;
 
-public interface SpellingNormalizer {
+interface SpellingNormalizer {
     /**
      * Normalizes the orthography of a given word.
      *

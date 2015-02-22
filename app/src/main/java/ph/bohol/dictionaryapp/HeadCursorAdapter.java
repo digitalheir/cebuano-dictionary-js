@@ -15,8 +15,8 @@ import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
 
-public class HeadCursorAdapter extends CursorAdapter {
-    private LayoutInflater layoutInflater;
+class HeadCursorAdapter extends CursorAdapter {
+    private final LayoutInflater layoutInflater;
     private boolean showPreview = false;
 
     @SuppressWarnings("deprecation")
@@ -73,11 +73,9 @@ public class HeadCursorAdapter extends CursorAdapter {
     @Override
     public final View newView(final Context context, final Cursor cursor, final ViewGroup parent) {
         if (showPreview) {
-            View view = layoutInflater.inflate(R.layout.heading_row_multiline, parent, false);
-            return view;
+            return layoutInflater.inflate(R.layout.heading_row_multiline, parent, false);
         } else {
-            View view = layoutInflater.inflate(R.layout.heading_row, parent, false);
-            return view;
+            return layoutInflater.inflate(R.layout.heading_row, parent, false);
         }
     }
 
@@ -105,8 +103,7 @@ public class HeadCursorAdapter extends CursorAdapter {
         @Override
         protected Spanned doInBackground(final Integer... entryId) {
             DictionaryDatabase database = DictionaryDatabase.getInstance(context);
-            Spanned entrySpanned = database.getEntrySpanned(entryId[0]);
-            return entrySpanned;
+            return database.getEntrySpanned(entryId[0]);
         }
 
         @Override

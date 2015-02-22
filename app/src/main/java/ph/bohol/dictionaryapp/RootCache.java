@@ -3,7 +3,7 @@ package ph.bohol.dictionaryapp;
 import java.util.LinkedHashMap;
 
 @SuppressWarnings("serial")
-public class RootCache extends LinkedHashMap<String, Boolean> {
+class RootCache extends LinkedHashMap<String, Boolean> {
     private static final float LOAD_FACTOR = 1.1f;
     private final int capacity;
 

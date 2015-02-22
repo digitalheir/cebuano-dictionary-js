@@ -11,7 +11,7 @@ import android.preference.PreferenceManager;
 
 public class DictionaryPreferenceActivity extends PreferenceActivity
         implements OnSharedPreferenceChangeListener {
-    public static final String KEY_SEARCH_FONT_SIZE = "search_font_size";
+    private static final String KEY_SEARCH_FONT_SIZE = "search_font_size";
     public static final String KEY_PRESENTATION_FONT_SIZE = "font_size";
     public static final String KEY_EXPAND_ABBREVIATIONS = "expand_abbreviations";
     public static final String KEY_PRESENTATION_STYLE = "presentation_style";

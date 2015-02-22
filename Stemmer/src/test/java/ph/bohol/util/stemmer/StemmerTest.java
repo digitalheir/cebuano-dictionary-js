@@ -4,7 +4,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.Iterator;
 import java.util.LinkedList;
 
 import org.junit.Test;
@@ -62,9 +61,8 @@ public class StemmerTest {
     private LinkedList<Derivation> testDerivations(final Stemmer stemmer, final String word) {
         LinkedList<Derivation> derivations = stemmer.findDerivations(word);
 
-        Iterator<Derivation> iterator = derivations.iterator();
-        while (iterator.hasNext()) {
-            System.out.println("Potential derivation: " + iterator.next().toString());
+        for (Derivation derivation : derivations) {
+            System.out.println("Potential derivation: " + derivation.toString());
         }
         return derivations;
     }

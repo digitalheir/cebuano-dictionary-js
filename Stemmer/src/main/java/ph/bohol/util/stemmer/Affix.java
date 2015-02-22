@@ -1,6 +1,5 @@
 package ph.bohol.util.stemmer;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -8,7 +7,7 @@ public class Affix {
     private String form;
     private String label;
     private String rootType;
-    private LinkedList<AffixPattern> patterns = new LinkedList<AffixPattern>();
+    private final LinkedList<AffixPattern> patterns = new LinkedList<AffixPattern>();
 
     /**
      * Add a pattern to the list of patterns for this Affix.
@@ -41,10 +40,9 @@ public class Affix {
      * @param word the word to be tested for the presence of this affix.
      * @return true if the affix is applied to this word, false otherwise.
      */
-    public final boolean applies(final String word) {
-        Iterator<AffixPattern> iterator = patterns.iterator();
-        while (iterator.hasNext()) {
-            if (iterator.next().applies(word)) {
+    final boolean applies(final String word) {
+        for (AffixPattern pattern : patterns) {
+            if (pattern.applies(word)) {
                 return true;
             }
         }
@@ -58,9 +56,7 @@ public class Affix {
      * @return the word with the affix removed, or null if the affix was not present.
      */
     public final String strip(final String word) {
-        Iterator<AffixPattern> iterator = patterns.iterator();
-        while (iterator.hasNext()) {
-            AffixPattern pattern = iterator.next();
+        for (AffixPattern pattern : patterns) {
             if (pattern.applies(word)) {
                 return pattern.strip(word);
             }
@@ -70,9 +66,7 @@ public class Affix {
 
     public final LinkedList<String> rootCandidates(final String word) {
         LinkedList<String> rootCandidates = new LinkedList<String>();
-        Iterator<AffixPattern> iterator = patterns.iterator();
-        while (iterator.hasNext()) {
-            AffixPattern pattern = iterator.next();
+        for (AffixPattern pattern : patterns) {
             if (pattern.applies(word)) {
                 rootCandidates.add(pattern.strip(word));
             }
@@ -88,9 +82,8 @@ public class Affix {
         }
         result += ">\n";
 
-        Iterator<AffixPattern> iterator = patterns.iterator();
-        while (iterator.hasNext()) {
-            result += iterator.next().toString();
+        for (AffixPattern pattern : patterns) {
+            result += pattern.toString();
         }
 
         result += ("</affix>\n");
@@ -98,9 +91,8 @@ public class Affix {
     }
 
     final void compile(final Map<String, String> constants) {
-        Iterator<AffixPattern> iterator = patterns.iterator();
-        while (iterator.hasNext()) {
-            iterator.next().compile(constants);
+        for (AffixPattern pattern : patterns) {
+            pattern.compile(constants);
         }
     }
 

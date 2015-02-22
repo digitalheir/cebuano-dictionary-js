@@ -11,7 +11,6 @@ import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +27,7 @@ public final class DictionaryDatabase extends SQLiteAssetHelper
     public static final String HEAD_ENTRY_ID = "entryid";
     public static final String HEAD_DERIVATION = "derivation";
     public static final String HEAD_TYPE = "type";
-    public static final String ENTRY_ID = "_id";
+    private static final String ENTRY_ID = "_id";
     public static final String ENTRY_ENTRY = "entry";
     public static final String ENTRY_HEAD = "head";
     private static final int MIN_ROOT_LENGTH = 3;
@@ -37,9 +36,9 @@ public final class DictionaryDatabase extends SQLiteAssetHelper
     private static final String TAG = "DictionaryDatabase";
 
     private static final int ENTRY_CACHE_SIZE = 100;
-    private static Map<Integer, Spanned> entryCache = Collections.synchronizedMap(new EntryCache(ENTRY_CACHE_SIZE));
+    private static final Map<Integer, Spanned> entryCache = Collections.synchronizedMap(new EntryCache(ENTRY_CACHE_SIZE));
     private static final int ROOT_CACHE_SIZE = 1000;
-    private static Map<String, Boolean> rootCache = Collections.synchronizedMap(new RootCache(ROOT_CACHE_SIZE));
+    private static final Map<String, Boolean> rootCache = Collections.synchronizedMap(new RootCache(ROOT_CACHE_SIZE));
     private static DictionaryDatabase instance = null;
     private Context context = null;
 
@@ -79,12 +78,11 @@ public final class DictionaryDatabase extends SQLiteAssetHelper
      */
     private static String unionize(final List<String> queries) {
         String result = "";
-        Iterator<String> iterator = queries.iterator();
-        while (iterator.hasNext()) {
+        for (String query : queries) {
             if (!result.isEmpty()) {
                 result += " UNION ";
             }
-            result += iterator.next();
+            result += query;
         }
         return result;
     }
@@ -162,12 +160,8 @@ public final class DictionaryDatabase extends SQLiteAssetHelper
                     "SELECT _id, entryid, head, normalized_head, '%s' AS derivation, 'd' AS type FROM wced_head "
                             + "WHERE normalized_head = ?";
 
-            Iterator<Derivation> iterator = derivations.iterator();
-            while (iterator.hasNext()) {
-                Derivation derivation = iterator.next();
-
+            for (Derivation derivation : derivations) {
                 String snippet = String.format(snippetFormat, derivation.toString().replace("'", "''"));
-
                 subQueries.add(snippet);
                 arguments.add(derivation.getRoot());
             }
@@ -183,8 +177,7 @@ public final class DictionaryDatabase extends SQLiteAssetHelper
         arguments.toArray(selectionArguments);
 
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(query, selectionArguments);
-        return cursor;
+        return db.rawQuery(query, selectionArguments);
     }
 
     public Cursor getEntry(final int entryId) {
@@ -200,8 +193,7 @@ public final class DictionaryDatabase extends SQLiteAssetHelper
         Cursor cursor = getEntry(entryId);
         String entryXml = cursor.getString(cursor.getColumnIndex(DictionaryDatabase.ENTRY_ENTRY));
         cursor.close();
-        String entryHtml = EntryTransformer.getInstance(context).transform(entryXml, EntryTransformer.STYLE_COMPACT);
-        return entryHtml;
+        return EntryTransformer.getInstance(context).transform(entryXml, EntryTransformer.STYLE_COMPACT);
     }
 
     /**

@@ -18,7 +18,7 @@ import java.io.InputStreamReader;
  *
  * @author Jeroen Hellingman.
  */
-public class AboutDialog extends Dialog {
+class AboutDialog extends Dialog {
     private static Context context = null;
 
     /**

@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class AffixPattern {
+class AffixPattern {
     private String pattern;
     private String root;
     private String compiledPattern;
@@ -24,8 +24,7 @@ public class AffixPattern {
 
     public final String strip(final String word) {
         if (word.matches(compiledPattern)) {
-            String result = word.replaceAll(compiledPattern, root);
-            return result;
+            return word.replaceAll(compiledPattern, root);
         } else {
             return null;
         }

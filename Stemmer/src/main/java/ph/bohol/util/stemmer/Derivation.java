@@ -1,11 +1,10 @@
 package ph.bohol.util.stemmer;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 
 public class Derivation {
-    private String root;
-    private LinkedList<Affix> affixes = new LinkedList<Affix>();
+    private final String root;
+    private final LinkedList<Affix> affixes = new LinkedList<Affix>();
 
     Derivation(final String newRoot) {
         this.root = newRoot;
@@ -26,9 +25,8 @@ public class Derivation {
 
     public final String toString() {
         String result = "";
-        Iterator<Affix> iterator = affixes.iterator();
-        while (iterator.hasNext()) {
-            result += iterator.next().getForm() + " + ";
+        for (Affix affix : affixes) {
+            result += affix.getForm() + " + ";
         }
         result += root;
         return result;

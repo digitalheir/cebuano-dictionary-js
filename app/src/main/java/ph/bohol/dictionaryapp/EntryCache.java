@@ -5,7 +5,7 @@ import android.text.Spanned;
 import java.util.LinkedHashMap;
 
 @SuppressWarnings("serial")
-public class EntryCache extends LinkedHashMap<Integer, Spanned> {
+class EntryCache extends LinkedHashMap<Integer, Spanned> {
     private static final float LOAD_FACTOR = 1.1f;
     private final int capacity;
 

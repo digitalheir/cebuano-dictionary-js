@@ -37,7 +37,7 @@ public final class EntryTransformer {
     private boolean expandAbbreviations = false;
     private boolean useMetric = false;
 
-    private Context context;
+    private final Context context;
 
     // Prevent resource leaks by using this only as a singleton, using the getInstance() method.
     private EntryTransformer(final Context newContext) {

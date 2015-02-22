@@ -2,7 +2,6 @@ package ph.bohol.util.stemmer;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
@@ -11,8 +10,8 @@ import java.util.Vector;
 public class Stemmer {
     private String language;
     private boolean compiled = false;
-    private Map<String, String> constants = new HashMap<String, String>();
-    private Vector<AffixGroup> groups = new Vector<AffixGroup>();
+    private final Map<String, String> constants = new HashMap<String, String>();
+    private final Vector<AffixGroup> groups = new Vector<AffixGroup>();
     private RootWordProvider rootWordProvider = null;
 
     final void addGroup(final AffixGroup group) {
@@ -21,9 +20,8 @@ public class Stemmer {
     }
 
     final void compile() {
-        Iterator<AffixGroup> iterator = groups.iterator();
-        while (iterator.hasNext()) {
-            iterator.next().compile(constants);
+        for (AffixGroup group : groups) {
+            group.compile(constants);
         }
         compiled = true;
     }
@@ -57,14 +55,9 @@ public class Stemmer {
 
         AffixGroup group = groups.get(level);
         LinkedList<Affix> affixes = group.getAffixes();
-        Iterator<Affix> iterator = affixes.iterator();
-        while (iterator.hasNext()) {
-            Affix affix = iterator.next();
+        for (Affix affix : affixes) {
             LinkedList<String> rootCandidates = affix.rootCandidates(word);
-            Iterator<String> rootIterator = rootCandidates.iterator();
-            while (rootIterator.hasNext()) {
-                String root = rootIterator.next();
-
+            for (String root : rootCandidates) {
                 if (!roots.contains(root) && isRootWord(root)) {
                     Derivation derivation = new Derivation(root);
                     derivation.addAffix(affix);
@@ -75,9 +68,7 @@ public class Stemmer {
                 LinkedList<Derivation> innerDerivations = innerFindDerivations(root, roots, level + 1);
 
                 // Copy the found derivations to the result list with the current affix as additional affix:
-                Iterator<Derivation> iteratorDerivations = innerDerivations.iterator();
-                while (iteratorDerivations.hasNext()) {
-                    Derivation derivation = iteratorDerivations.next();
+                for (Derivation derivation : innerDerivations) {
                     derivation.addAffix(affix);
                     derivations.add(derivation);
                 }
@@ -101,16 +92,13 @@ public class Stemmer {
     public final String toString() {
         String result = "<stemmer language='" + language + "'>";
 
-        Iterator<String> iteratorConstants = constants.keySet().iterator();
-        while (iteratorConstants.hasNext()) {
-            String key = iteratorConstants.next().toString();
-            String value = constants.get(key).toString();
+        for (String key : constants.keySet()) {
+            String value = constants.get(key);
             result += "\n<constant name='" + key + "' value='" + value + "'/>";
         }
 
-        Iterator<AffixGroup> iteratorGroups = groups.iterator();
-        while (iteratorGroups.hasNext()) {
-            result += iteratorGroups.next().toString();
+        for (AffixGroup group : groups) {
+            result += group.toString();
         }
 
         return result + "</stemmer>\n";
