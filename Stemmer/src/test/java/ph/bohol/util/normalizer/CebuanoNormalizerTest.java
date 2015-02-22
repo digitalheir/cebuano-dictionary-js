@@ -5,11 +5,9 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-public class CebuanoNormalizerTest
-{
+public class CebuanoNormalizerTest {
     @Test
-    public final void test()
-    {
+    public final void test() {
         CebuanoNormalizer n = new CebuanoNormalizer();
 
         // Wolff's spelling
@@ -19,7 +17,7 @@ public class CebuanoNormalizerTest
         assertEquals("makasabut", n.normalize("MAKASABOT"));
 
         // Accents
-        assertEquals("makasabut", n.normalize("Mákàsãböt"));
+        assertEquals("makasabut", n.normalize("Mï¿½kï¿½sï¿½bï¿½t"));
 
         // Old spelling forms
         assertEquals("kinahanglan", n.normalize("Quinahanglan"));

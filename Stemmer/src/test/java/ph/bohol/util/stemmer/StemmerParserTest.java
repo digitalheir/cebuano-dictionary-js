@@ -5,11 +5,9 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-public class StemmerParserTest
-{
+public class StemmerParserTest {
     @Test
-    public final void testParse() throws IOException
-    {
+    public final void testParse() throws IOException {
         FileInputStream stream = new FileInputStream("test/ph/bohol/util/stemmer/stemmerTest.xml");
 
         StemmerParser parser = new StemmerParser();

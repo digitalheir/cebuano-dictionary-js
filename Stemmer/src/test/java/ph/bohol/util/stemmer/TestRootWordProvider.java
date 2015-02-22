@@ -1,29 +1,25 @@
 package ph.bohol.util.stemmer;
 
-public class TestRootWordProvider implements RootWordProvider
-{
+public class TestRootWordProvider implements RootWordProvider {
     private int calls = 0;
 
     @Override
-    public final boolean isRootWord(final String word)
-    {
+    public final boolean isRootWord(final String word) {
         calls++;
         return
                 word.equals("sabut")
-                || word.equals("balay")
-                || word.equals("kaun")
-                || word.equals("bisaya")
-                || word.equals("abut");
+                        || word.equals("balay")
+                        || word.equals("kaun")
+                        || word.equals("bisaya")
+                        || word.equals("abut");
     }
 
     @Override
-    public final boolean isRootWordWithType(final String word, final String type)
-    {
+    public final boolean isRootWordWithType(final String word, final String type) {
         return (word.equals("sabut") && type.equals("v")) || (word.equals("balay") && type.equals("n"));
     }
 
-    final int getCalls()
-    {
+    final int getCalls() {
         return calls;
     }
 }

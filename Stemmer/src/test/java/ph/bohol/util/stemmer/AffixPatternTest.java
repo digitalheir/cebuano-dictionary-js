@@ -7,11 +7,9 @@ import java.util.HashMap;
 
 import org.junit.Test;
 
-public class AffixPatternTest
-{
+public class AffixPatternTest {
     @Test
-    public final void testApply()
-    {
+    public final void testApply() {
         AffixPattern p = new AffixPattern("maka([a-z]+)", "$1");
         p.compile(new HashMap<String, String>());
 
@@ -20,8 +18,7 @@ public class AffixPatternTest
     }
 
     @Test
-    public final void testStrip()
-    {
+    public final void testStrip() {
         AffixPattern p = new AffixPattern("maka([a-z]+)", "$1");
         p.compile(new HashMap<String, String>());
 
@@ -30,8 +27,7 @@ public class AffixPatternTest
     }
 
     @Test
-    public final void testToString()
-    {
+    public final void testToString() {
         AffixPattern p = new AffixPattern("maka([a-z]+)", "$1");
 
         assertTrue(p.toString().equals("<pattern pattern='maka([a-z]+)' root='$1'/>\n"));

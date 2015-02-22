@@ -7,11 +7,9 @@ import java.util.HashMap;
 
 import org.junit.Test;
 
-public class AffixTest extends Affix
-{
+public class AffixTest extends Affix {
     @Test
-    public final void testApply()
-    {
+    public final void testApply() {
         Affix a = createTestAffix();
 
         assertTrue(a.applies("makasabot"));
@@ -19,8 +17,7 @@ public class AffixTest extends Affix
     }
 
     @Test
-    public final void testToString()
-    {
+    public final void testToString() {
         Affix a = createTestAffix();
         String test = a.toString();
         String expected =
@@ -28,8 +25,7 @@ public class AffixTest extends Affix
         assertTrue(test.equals(expected));
     }
 
-    private Affix createTestAffix()
-    {
+    private Affix createTestAffix() {
         Affix a = new Affix();
         a.setForm("maka-");
         a.setLabel("FUT.POT");

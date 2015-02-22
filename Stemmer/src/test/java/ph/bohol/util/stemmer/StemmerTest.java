@@ -9,11 +9,9 @@ import java.util.LinkedList;
 
 import org.junit.Test;
 
-public class StemmerTest
-{
+public class StemmerTest {
     @Test
-    public final void testLoad() throws FileNotFoundException
-    {
+    public final void testLoad() throws FileNotFoundException {
         FileInputStream stream = new FileInputStream("test/ph/bohol/util/stemmer/stemmerTest.xml");
         StemmerParser parser = new StemmerParser();
         Stemmer stemmer = parser.parse(stream);
@@ -36,8 +34,7 @@ public class StemmerTest
     }
 
     @Test
-    public final void testLargeLoad() throws FileNotFoundException
-    {
+    public final void testLargeLoad() throws FileNotFoundException {
         FileInputStream stream = new FileInputStream("test/ph/bohol/util/stemmer/stemmerLargeTest.xml");
         StemmerParser parser = new StemmerParser();
         Stemmer stemmer = parser.parse(stream);
@@ -56,13 +53,11 @@ public class StemmerTest
         System.out.print("Calls to root-word provider: " + provider.getCalls());
     }
 
-    private LinkedList<Derivation> testDerivations(final Stemmer stemmer, final String word)
-    {
+    private LinkedList<Derivation> testDerivations(final Stemmer stemmer, final String word) {
         LinkedList<Derivation> derivations = stemmer.findDerivations(word);
 
         Iterator<Derivation> iterator = derivations.iterator();
-        while (iterator.hasNext())
-        {
+        while (iterator.hasNext()) {
             System.out.println("Potential derivation: " + iterator.next().toString());
         }
         return derivations;
