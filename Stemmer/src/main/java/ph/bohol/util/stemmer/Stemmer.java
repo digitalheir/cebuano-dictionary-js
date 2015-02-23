@@ -40,7 +40,7 @@ public class Stemmer {
 
 
     private LinkedList<Derivation> innerFindDerivations(final String word, final Set<String> roots, final int level) {
-        LinkedList<Derivation> derivations = null;
+        LinkedList<Derivation> derivations;
         if (groups.size() <= level) {
             derivations = new LinkedList<Derivation>();
             if (!roots.contains(word) && isRootWord(word)) {
