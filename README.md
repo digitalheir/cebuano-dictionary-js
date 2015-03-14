@@ -17,7 +17,7 @@ in https://code.google.com/p/phildict/
 
 For rebuilding the dictionary database itself, you'll need to
 
-* Get the dictionary data from https://code.google.com/p/phildict/ (using SVN)
+* Get the dictionary data from https://github.com/jhellingman/phildict (migrated from Google code to git)
 * Get a working perl configuration (on windows, for example: http://strawberryperl.com/)
 * Get sqlite3 (http://www.sqlite.org/)
 * Perl scripts are included there that build the compressed resource included here.
