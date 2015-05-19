@@ -34,7 +34,7 @@ For working effectively with this app, you need to
 * Understand using sqlite3 and SQL queries
 * Understand XML and XSLT transformations (for presenting the dictionary data on screen).
 
-If you have your dictionary data in some form of XML, and wish to publish it as an off-line app for Android, we can work together to massage the data for use with this app, and branch and adjust code where necessary to support the peculiarities of your data and the languages it is in.
+If you have your dictionary data in some form of XML, and wish to publish it as an off-line app for Android, we can work together to massage the data for use with this app, and branch and adjust code where necessary to support the peculiarities of your data and the languages it is in. I will feel happy to contribute my time freely if the dictionary data is significant and open source.
 
 If you can help writing automated UI tests, your help and knowledge will be most appreciated.
 
