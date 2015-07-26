@@ -54,30 +54,30 @@ ADDED from AndroidManifest.xml:26:17
 	android:name
 		ADDED from AndroidManifest.xml:26:27
 meta-data#android.app.searchable
-ADDED from AndroidManifest.xml:29:13
+ADDED from AndroidManifest.xml:28:13
 	android:resource
-		ADDED from AndroidManifest.xml:30:17
+		ADDED from AndroidManifest.xml:29:17
 	android:name
-		ADDED from AndroidManifest.xml:29:24
+		ADDED from AndroidManifest.xml:28:24
 activity#ph.bohol.dictionaryapp.ShowEntryActivity
-ADDED from AndroidManifest.xml:34:9
+ADDED from AndroidManifest.xml:32:9
 	android:label
-		ADDED from AndroidManifest.xml:36:13
+		ADDED from AndroidManifest.xml:34:13
 	android:parentActivityName
-		ADDED from AndroidManifest.xml:37:13
-	android:name
 		ADDED from AndroidManifest.xml:35:13
+	android:name
+		ADDED from AndroidManifest.xml:33:13
 meta-data#android.support.PARENT_ACTIVITY
-ADDED from AndroidManifest.xml:38:13
+ADDED from AndroidManifest.xml:36:13
 	android:name
-		ADDED from AndroidManifest.xml:39:17
+		ADDED from AndroidManifest.xml:37:17
 	android:value
-		ADDED from AndroidManifest.xml:40:17
+		ADDED from AndroidManifest.xml:38:17
 activity#ph.bohol.dictionaryapp.DictionaryPreferenceActivity
-ADDED from AndroidManifest.xml:43:9
+ADDED from AndroidManifest.xml:41:9
 	android:label
-		ADDED from AndroidManifest.xml:45:13
+		ADDED from AndroidManifest.xml:43:13
 	android:parentActivityName
-		ADDED from AndroidManifest.xml:46:13
-	android:name
 		ADDED from AndroidManifest.xml:44:13
+	android:name
+		ADDED from AndroidManifest.xml:42:13
