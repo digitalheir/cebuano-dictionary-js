@@ -17,7 +17,7 @@ on GitHub.
 
 For rebuilding the dictionary database itself, you'll need to
 
-* Get the dictionary data from https://github.com/jhellingman/phildict (migrated from Google code to git)
+* Get the dictionary data from https://github.com/jhellingman/phildict/tree/master/Data/Wolff
 * Get a working perl configuration (on windows, for example: http://strawberryperl.com/)
 * Get sqlite3 (http://www.sqlite.org/)
 * Perl scripts are included there that build the compressed resource included in the dictionary app.
@@ -45,8 +45,7 @@ If you can help writing automated UI tests, your help and knowledge will be most
 ### Open Issues ###
 
 * Automatic stripping of affixes is still under development
-* Data is based on John U. Wolff's Cebuano dictionary, which dates from 1972. This is the most
-recent source freely available.
+* Data is based on John U. Wolff's Cebuano dictionary, which dates from 1972. This is the most recent Cebuano dictionary source freely available.
 
 ### Who do I talk to? ###
 
