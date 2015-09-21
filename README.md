@@ -7,7 +7,7 @@ The dictionary app is an easy to use, fast, off-line UI on a single dictionary. 
 This repository contains the source code for the Cebuano Dictionary app by Jeroen Hellingman.
 
 It contains everything to be able to rebuild the dictionary app, except for the dictionary data itself, which can be found 
-in https://code.google.com/p/phildict/
+on GitHub.
 
 ### How do I get set up? ###
 
