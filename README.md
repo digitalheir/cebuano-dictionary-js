@@ -50,3 +50,7 @@ If you can help writing automated UI tests, your help and knowledge will be most
 ### Who do I talk to? ###
 
 * Repo owner or admin: Jeroen Hellingman, jeroen@bohol.ph
+
+### How this came to be... ###
+
+You can read how this dictionary was converted to the digital domain in this blog entry: http://blog.pgdp.net/2015/03/07/from-paper-to-app-how-distributed-proofreaders-got-a-cebuano-dictionary-on-smartphones/
