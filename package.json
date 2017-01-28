@@ -9,6 +9,8 @@
   "private": true,
   "license": "MIT",
   "dependencies": {
+    "@types/sax": "0.0.28",
+    "sax": "^1.2.1"
   },
   "devDependencies": {
     "@types/chai": "^3.4.34",

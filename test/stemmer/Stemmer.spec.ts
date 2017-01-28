@@ -1,8 +1,13 @@
+import {createReadStream, createWriteStream} from "fs";
+import parseStream from "../../src/stemmer/StemmerParser";
+
 describe("Stemmer", () => {
-    it("should load", () => {
-        // FIXME: Work around https://code.google.com/p/android/issues/detail?id=64887 using an absolute path.
-        // FileInputStream stream = new FileInputStream("D:/Users/Jeroen/AndroidstudioProjects/DictionaryApp/stemmer/src/test/resources/ph/bohol/util/stemmer/stemmerTest.xml");
-        //
+    it("should load", (done) => {
+        createReadStream("test/stemmerTest.xml")
+            .pipe(parseStream)
+            .pipe(createWriteStream("file-copy.xml"))
+            .on("close", () => done());
+
         // StemmerParser parser = new StemmerParser();
         // Stemmer stemmer = parser.parse(stream);
         //
@@ -29,7 +34,7 @@ describe("Stemmer", () => {
     // public final void testLargeLoad() throws FileNotFoundException {
     //
     //     // FIXME: Work around https://code.google.com/p/android/issues/detail?id=64887 using an absolute path.
-    //     FileInputStream stream = new FileInputStream("D:/Users/Jeroen/AndroidstudioProjects/DictionaryApp/stemmer/src/test/resources/ph/bohol/util/stemmer/stemmerLargeTest.xml");
+    //     FileInputStream stream = new FileInputStream("stemmerLargeTest.xml");
     //
     //     StemmerParser parser = new StemmerParser();
     //     Stemmer stemmer = parser.parse(stream);
