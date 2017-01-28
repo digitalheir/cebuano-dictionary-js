@@ -1,33 +1,35 @@
+import {expect} from "chai";
 import {createReadStream, createWriteStream} from "fs";
 import parseStream from "../../src/stemmer/StemmerParser";
+import Stemmer from "../../src/stemmer/Stemmer";
+import {Derivation, toString} from "../../src/stemmer/Derivation";
+import TestRootWordProvider from "./testRootWordProvider";
+import {toXml} from "../../src/stemmer/AffixGroup";
 
 describe("Stemmer", () => {
     it("should load", (done) => {
-        createReadStream("test/stemmerTest.xml")
-            .pipe(parseStream)
-            .pipe(createWriteStream("file-copy.xml"))
-            .on("close", () => done());
+        parseStream(createReadStream("test/stemmerTest.xml"))
+            .then((stemmer: Stemmer) => {
+                expect(stemmer.compiled).to.be.true;
+                let results: Derivation[] = testDerivations(stemmer, "makasabut");
+                expect(results.length).to.equal(3);
 
-        // StemmerParser parser = new StemmerParser();
-        // Stemmer stemmer = parser.parse(stream);
-        //
+                results = testDerivations(stemmer, "balaya");
+                expect(results.length).to.equal(2);
+
+                stemmer.rootWordProvider = new TestRootWordProvider();
+
+                results = testDerivations(stemmer, "makasabut");
+                expect(results.length).to.equal(1);
+
+                results = testDerivations(stemmer, "balaya");
+                expect(results.length).to.equal(1);
+
+                done();
+            })
+            .catch(done);
         // System.out.print(stemmer.toString());
         //
-        // LinkedList<Derivation> results = testDerivations(stemmer, "makasabut");
-        // assertTrue(results.size() == 3);
-        //
-        // results = testDerivations(stemmer, "balaya");
-        // assertTrue(results.size() == 2);
-        //
-        // stemmer.setRootProvider(new TestRootWordProvider());
-        //
-        // results = testDerivations(stemmer, "makasabut");
-        // assertTrue(results.size() == 1);
-        //
-        // results = testDerivations(stemmer, "balaya");
-        // assertTrue(results.size() == 1);
-
-        // expect(p.applies("nakasabot")).to.be.false;
     });
 
     // @Test
@@ -53,12 +55,10 @@ describe("Stemmer", () => {
     //     System.out.print("Calls to root-word provider: " + provider.getCalls());
     // }
     //
-    // private LinkedList<Derivation> testDerivations(final Stemmer stemmer, final String word) {
-    //     LinkedList<Derivation> derivations = stemmer.findDerivations(word);
-    //
-    //     for (Derivation derivation : derivations) {
-    //         System.out.println("Potential derivation: " + derivation.toString());
-    //     }
-    //     return derivations;
-    // }
+    function testDerivations(stemmer: Stemmer, word: string): Derivation[] {
+        const derivations: Derivation[] = stemmer.findDerivations(word);
+        for (const derivation of derivations)
+            console.log("Potential derivation: " + toString(derivation));
+        return derivations;
+    }
 });

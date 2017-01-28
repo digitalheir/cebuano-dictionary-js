@@ -1,12 +1,12 @@
 import {AffixGroup, compile, toXml as groupToXml} from "./AffixGroup";
 import {Derivation} from "./Derivation";
-import {Affix, rootCandidates} from "./Affix";
+import {Affix, rootCandidates, toXml} from "./Affix";
 import {RootWordProvider} from "./RootWordProvider";
 export default class Stemmer {
     language: string;
     compiled = false;
-    constants: {[x: string]: string};
-    groups: AffixGroup[];
+    constants: {[x: string]: string} = {};
+    groups: AffixGroup[] = [];
     rootWordProvider: RootWordProvider;
 
     addGroup(group: AffixGroup): void {
@@ -43,7 +43,7 @@ export default class Stemmer {
                 handledRoots[word] = true;
             }
             return derivations;
-        } else  derivations = this.innerFindDerivations(word, handledRoots, level + 1);
+        } else derivations = this.innerFindDerivations(word, handledRoots, level + 1);
 
         const group: AffixGroup = this.groups[level];
         const affixes: Affix[] = group.affixes;
@@ -73,7 +73,6 @@ export default class Stemmer {
     isRootWord(word: string): boolean {
         return (!this.rootWordProvider || this.rootWordProvider.isRootWord(word));
     }
-
 
     toString(): string {
         const result = ["<stemmer language='" + this.language + "'>"];

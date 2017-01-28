@@ -4,7 +4,7 @@ const CONSTANT_WITHIN_BRACES = /\{(\w+)}/g;
 export default class AffixPattern {
     readonly pattern: string;
     readonly root: string;
-    compiledPattern: RegExp;
+    private compiledPattern: string;
 
     constructor(newPattern: string, newRoot: string) {
         this.pattern = newPattern;
@@ -18,12 +18,15 @@ export default class AffixPattern {
 
     strip(word: string): string {
         if (!this.compiledPattern) throw new Error("Pattern was not compiled");
-        if (this.applies(word)) return word.replace(this.compiledPattern, this.root);
-        else return undefined;
+        if (this.applies(word))
+            return word.replace(new RegExp(this.compiledPattern, "g"), this.root);
+        else
+            return undefined;
+            // throw new Error("Affix " + this.compiledPattern + " does not apply to " + word + ", so why would you ask to strip? ");
     }
 
     applies(word: string): boolean {
-        return this.compiledPattern.test(word);
+        return new RegExp(this.compiledPattern, "g").test(word);
     }
 
     compile(constants: {[s: string]: string}): void {
@@ -31,7 +34,7 @@ export default class AffixPattern {
 
         // Replace constants given as "...{key}..." in pattern.
         let position = 0;
-        const compiledRegex = [];
+        const compiledRegex = ["^"];
 
         let match = CONSTANT_WITHIN_BRACES.exec(this.pattern);
         while (!!match) {
@@ -45,9 +48,9 @@ export default class AffixPattern {
 
             match = CONSTANT_WITHIN_BRACES.exec(this.pattern);
         }
-        compiledRegex.push(this.pattern.substring(position));
+        compiledRegex.push(this.pattern.substring(position) + "$");
 
-        this.compiledPattern = new RegExp(compiledRegex.join(""), "g");
+        this.compiledPattern = compiledRegex.join("");
     }
 }
 

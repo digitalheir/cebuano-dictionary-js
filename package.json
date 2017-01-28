@@ -7,7 +7,7 @@
   "repository": "git@github.com:digitalheir/cebuano-stemmer-js.git",
   "author": "Maarten Trompper",
   "private": true,
-  "license": "MIT",
+  "license": "GPL-3.0",
   "dependencies": {
     "@types/sax": "0.0.28",
     "sax": "^1.2.1"

@@ -10,7 +10,7 @@ export function compile(group: AffixGroup, constants: {[s: string]: string}): vo
 }
 
 export function toXml(group: AffixGroup): string {
-    const result = ["\n<group name='" + name + "'>\n"];
+    const result = ["\n<group name='" + group.name + "'>\n"];
     group.affixes.forEach(affix => result.push(toXmlAffix(affix)));
     result.push("</group>\n");
     return result.join("");

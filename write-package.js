@@ -13,8 +13,11 @@ const p = {
     "types": "index.d.ts",
     "repository": "git@github.com:digitalheir/cebuano-stemmer-js.git",
     "author": "Maarten Trompper",
-    "license": "MIT",
-    "dependencies": {}
+    "license": "GPL-3.0",
+    "dependencies": {
+        "@types/sax": "0.0.28",
+        "sax": "^1.2.1"
+    }
 };
 
 function writePackageFileInDist() {

@@ -41,7 +41,11 @@ export function strip(word: string, patterns: AffixPattern[]): string {
 
 export function rootCandidates(word: string, patterns: AffixPattern[]): string[] {
     const rootCandidates = [];
-    for (const pattern of patterns) if (pattern.applies(word)) rootCandidates.push(pattern.strip(word));
+    for (const pattern of patterns)
+        if (pattern.applies(word)) {
+            const stripped = pattern.strip(word);
+            rootCandidates.push(stripped);
+        }
     return rootCandidates;
 }
 
@@ -49,7 +53,7 @@ export function toXml(affix: Affix): string {
     const result = ["<affix form='" + affix.form + "' label='" + affix.label + "'"];
 
     if (!!affix.rootType && affix.rootType !== "") {
-        result.push("rootType='" + affix.rootType + "'");
+        result.push(" rootType='" + affix.rootType + "'");
     }
     result.push(">\n");
 
