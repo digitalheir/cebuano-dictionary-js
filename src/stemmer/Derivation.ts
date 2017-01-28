@@ -4,7 +4,7 @@ export interface Derivation {
     affixes: Affix[];
 }
 
-export function toString(derivation: Derivation): string {
+export function toStringDervation(derivation: Derivation): string {
     const result: string[] = [];
     for (const affix of derivation.affixes)
         result.push(affix.form + " + ");

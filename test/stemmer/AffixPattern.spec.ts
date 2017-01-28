@@ -18,7 +18,7 @@ describe("AffixPattern", () => {
         expect(!!p.strip("nakasabot")).to.be.false;
     });
 
-    it("should toXml", () => {
+    it("should toXmlGroup", () => {
         const p: AffixPattern = new AffixPattern("maka([a-z]+)", "$1");
         p.compile({}); //noinspection HtmlUnknownAttribute
         expect(p.toString()).to.equal("<pattern pattern='maka([a-z]+)' root='$1'/>\n");

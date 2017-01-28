@@ -1,4 +1,4 @@
-import {AffixGroup, compile, toXml as groupToXml} from "./AffixGroup";
+import {AffixGroup, compileGroup, toXmlGroup as groupToXml} from "./AffixGroup";
 import {Derivation} from "./Derivation";
 import {Affix, rootCandidates, toXml} from "./Affix";
 import {RootWordProvider} from "./RootWordProvider";
@@ -15,7 +15,7 @@ export default class Stemmer {
     }
 
     compile() {
-        for (const group of this.groups) compile(group, this.constants);
+        for (const group of this.groups) compileGroup(group, this.constants);
         this.compiled = true;
     }
 

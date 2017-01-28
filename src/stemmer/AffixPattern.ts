@@ -54,10 +54,10 @@ export default class AffixPattern {
     }
 }
 
-export function compile(affixes: AffixPattern[], constants: {[s: string]: string}): void {
+export function compilePattern(affixes: AffixPattern[], constants: {[s: string]: string}): void {
     affixes.forEach(a => a.compile(constants));
 }
 
-export function toString(affix: AffixPattern): string {
+export function toStringAffix(affix: AffixPattern): string {
     return affix.toString();
 }

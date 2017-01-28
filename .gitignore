@@ -3,4 +3,4 @@ node_modules/
 *.tgz
 dist/
 npm-debug.log
-/semiring.*.min.*
+/cebuano-stemmer.*.min.*

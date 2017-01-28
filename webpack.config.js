@@ -2,7 +2,7 @@ var webpack = require('webpack'),
     path = require('path'),
     yargs = require('yargs');
 var VERSION = require('./version').default;
-var libraryName = 'semiring',
+var libraryName = 'cebuano-stemmer',
     plugins = [
         new webpack.LoaderOptionsPlugin({
             options: {
@@ -44,7 +44,7 @@ var config = {
             },
             {
                 test: /\.tsx?$/,
-                loader: 'awesome-typescript-loader',
+                loader: ['babel-loader', 'awesome-typescript-loader'],
                 exclude: /node_modules/
             }
         ]

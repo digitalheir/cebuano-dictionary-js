@@ -2,9 +2,9 @@ import {expect} from "chai";
 import {createReadStream, createWriteStream} from "fs";
 import parseStream from "../../src/stemmer/StemmerParser";
 import Stemmer from "../../src/stemmer/Stemmer";
-import {Derivation, toString} from "../../src/stemmer/Derivation";
+import {Derivation, toStringDervation} from "../../src/stemmer/Derivation";
 import TestRootWordProvider from "./testRootWordProvider";
-import {toXml} from "../../src/stemmer/AffixGroup";
+import {toXmlGroup} from "../../src/stemmer/AffixGroup";
 
 describe("Stemmer", () => {
     it("should load", (done) => {
@@ -28,7 +28,7 @@ describe("Stemmer", () => {
                 done();
             })
             .catch(done);
-        // System.out.print(stemmer.toString());
+        // System.out.print(stemmer.toStringAffix());
         //
     });
 
@@ -41,7 +41,7 @@ describe("Stemmer", () => {
     //     StemmerParser parser = new StemmerParser();
     //     Stemmer stemmer = parser.parse(stream);
     //
-    //     System.out.print(stemmer.toString());
+    //     System.out.print(stemmer.toStringAffix());
     //
     //     TestRootWordProvider provider = new TestRootWordProvider();
     //     stemmer.setRootProvider(provider);
@@ -58,7 +58,7 @@ describe("Stemmer", () => {
     function testDerivations(stemmer: Stemmer, word: string): Derivation[] {
         const derivations: Derivation[] = stemmer.findDerivations(word);
         for (const derivation of derivations)
-            console.log("Potential derivation: " + toString(derivation));
+            console.log("Potential derivation: " + toStringDervation(derivation));
         return derivations;
     }
 });

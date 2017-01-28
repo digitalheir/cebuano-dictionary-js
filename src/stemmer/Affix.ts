@@ -1,4 +1,4 @@
-import AffixPattern, {compile as c} from "./AffixPattern";
+import AffixPattern, {compilePattern as c} from "./AffixPattern";
 
 export interface Affix {
     form: string;
@@ -7,7 +7,7 @@ export interface Affix {
     patterns: AffixPattern[];
 }
 
-export function compile(affixes: Affix, constants: {[s: string]: string}): void {
+export function compileAffix(affixes: Affix, constants: {[s: string]: string}): void {
     c(affixes.patterns, constants);
 }
 
@@ -27,6 +27,7 @@ export function appliesToAny(word: string, patterns: AffixPattern[]): boolean {
     return false;
 }
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * Remove this affix from a given word.
  *
@@ -60,5 +61,5 @@ export function toXml(affix: Affix): string {
     for (const pattern of affix.patterns) result.push(pattern.toString());
 
     result.push("</affix>\n");
-    return result.join('');
+    return result.join("");
 }

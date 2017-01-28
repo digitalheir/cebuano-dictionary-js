@@ -5,7 +5,7 @@
 
 A stemmer for the Cebuano language spoken in the Philippines.
 
-Written in TypeScript, compiled to ES5 CommonJS module (for use in Node.js) and a single-file ES5 UMD module (for use in the browser).
+Written in TypeScript, compiled to [ES6 CommonJS module](https://www.npmjs.com/package/cebuano-stemmer) (for use in Node.js) and a [single-file ES5 UMD module](https://github.com/digitalheir/cebuano-stemmer-js/releases) (for use in the browser).
 
 Based on [J. Hellingman's Cebuano stemmer for Java](https://bitbucket.org/jhellingman/cebuano-dictionary-app).
 

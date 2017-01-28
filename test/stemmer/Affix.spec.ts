@@ -1,6 +1,6 @@
 import {expect} from "chai";
 import AffixPattern from "../../src/stemmer/AffixPattern";
-import {Affix, compile, applies, toXml} from "../../src/stemmer/Affix";
+import {Affix, compileAffix, applies, toXml} from "../../src/stemmer/Affix";
 
 describe("Affix", () => {
     const a = createTestAffix();
@@ -10,7 +10,7 @@ describe("Affix", () => {
         expect(applies("nakasabot", a)).to.be.false;
     });
 
-    it("should toXml", () => {
+    it("should toXmlGroup", () => {
         const test = toXml(a); //noinspection HtmlUnknownAttribute
         const expected =
             "<affix form='maka-' label='FUT.POT'>\n<pattern pattern='maka([a-z]+)' root='$1'/>\n</affix>\n";
@@ -25,7 +25,7 @@ describe("Affix", () => {
             patterns: [new AffixPattern("maka([a-z]+)", "$1")],
         };
 
-        compile(a, {});
+        compileAffix(a, {});
         return a;
     }
 });
