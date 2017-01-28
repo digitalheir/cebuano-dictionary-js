@@ -1,0 +1,36 @@
+{
+  "name": "cebuano-stemmer",
+  "version": "0.0.0",
+  "description": "A stemmer for the Cebuano language spoken in the Philippines",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "repository": "git@github.com:digitalheir/cebuano-stemmer-js.git",
+  "author": "Maarten Trompper",
+  "private": true,
+  "license": "MIT",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "@types/chai": "^3.4.34",
+    "@types/mocha": "^2.2.33",
+    "awesome-typescript-loader": "^3.0.0-beta.17",
+    "chai": "^3.5.0",
+    "copyfiles": "^1.0.0",
+    "mocha": "^3.2.0",
+    "rimraf": "^2.5.4",
+    "ts-node": "^1.7.2",
+    "tslint": "^4.3.1",
+    "tslint-loader": "^3.3.0",
+    "typescript": "^2.1.4",
+    "webpack": "^2.2.0-rc.3",
+    "yargs": "latest"
+  },
+  "scripts": {
+    "build": "npm run clean && npm run build:ts && npm run build:cp && node write-package.js && npm run build:min",
+    "build:min": "webpack -p",
+    "build:ts": "tsc",
+    "clean": "rimraf dist",
+    "build:cp": "copyfiles .npmignore readme.md dist/",
+    "test": "mocha  -r ts-node/register --ui bdd -R spec test/**/*.spec.ts "
+  }
+}

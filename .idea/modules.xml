@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/DictionaryApp.iml" filepath="$PROJECT_DIR$/DictionaryApp.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/stemmer/stemmer.iml" filepath="$PROJECT_DIR$/stemmer/stemmer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/cebuano-stemmer.iml" filepath="$PROJECT_DIR$/.idea/cebuano-stemmer.iml" />
     </modules>
   </component>
 </project>
-

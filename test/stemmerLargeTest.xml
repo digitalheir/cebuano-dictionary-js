@@ -1,0 +1,690 @@
+<stemmer language="ceb">
+
+    <constant name="letter" value="[a-z]"/>
+    <constant name="vowel" value="[aeiou]"/>
+    <constant name="consonant" value="[bcdfghjklmnpqrstvwxyz]"/>
+
+    <!--
+
+        Affix
+            @form       canonical representation of affix
+            @label
+            @wordType   type of word with affix
+                            v:  verb
+                            n:  noun
+                            a:  adjective, adverb
+                            =:  same as @rootType
+            @rootType   type of root
+                            v:  verb
+                            n:  noun
+                            a:  adjective, adverb
+                            va: verb or adjective
+                            vn: verb or noun
+                            ...
+        Pattern
+            @pattern    regular expression
+            @root       root, as assembled from regular expression matches.
+
+    -->
+
+    <group name="linkers">
+        <affix form="-yng" label="Y NGA">
+            <pattern pattern="({letter}+)yng" root="$1"/>
+        </affix>
+        <affix form="-y" label="Y">
+            <pattern pattern="({letter}+)y" root="$1"/>
+        </affix>
+        <affix form="-ng" label="NGA">
+            <pattern pattern="({letter}+)ng" root="$1"/>
+            <pattern pattern="({letter}+)ng" root="$1n"/>
+        </affix>
+    </group>
+
+    <group name="declensions">
+
+        <affix form="ga-" label="TODO" rootType="v">
+            <pattern pattern="ga({letter}+)" root="$1"/>
+        </affix>
+        <affix form="gi-" label="TODO" rootType="v">
+            <pattern pattern="gi({letter}+)" root="$1"/>
+        </affix>
+        <affix form="iga-" label="REL" rootType="vna">
+            <pattern pattern="iga({letter}+)" root="$1"/>
+        </affix>
+        <affix form="ig-" label="TODO" rootType="vn">
+            <pattern pattern="ig({letter}+)" root="$1"/>
+            <pattern pattern="ig-({vowel}{letter}*)" root="$1"/>
+        </affix>
+        <affix form="i-" label="INST.PAS" rootType="v">
+            <pattern pattern="i({letter}+)" root="$1"/>
+        </affix>
+
+        <affix form="maka-" label="FUT.POT" rootType="v">
+            <pattern pattern="maka({letter}+)" root="$1"/>
+        </affix>
+        <affix form="mag-" label="TODO" rootType="v">
+            <pattern pattern="mag({letter}+)" root="$1"/>
+        </affix>
+        <affix form="ma-" label="FUT.AF" rootType="vna">
+            <pattern pattern="ma({letter}+)" root="$1"/>
+        </affix>
+        <affix form="mi-" label="TODO" rootType="v">
+            <pattern pattern="mi({letter}+)" root="$1"/>
+        </affix>
+        <affix form="mu-" label="TODO" rootType="v">
+            <pattern pattern="mu({letter}+)" root="$1"/>
+        </affix>
+
+        <!--  maN- group: N + d|s|t : n; N + k : ng; N + b : m -->
+        <affix form="maN-" label="PLUR" rootType="v">
+            <pattern pattern="mam({letter}+)" root="b$1"/>
+            <pattern pattern="man({letter}+)" root="d$1"/>
+            <pattern pattern="man({letter}+)" root="s$1"/>
+            <pattern pattern="man({letter}+)" root="t$1"/>
+            <pattern pattern="mang({letter}+)" root="k$1"/>
+            <pattern pattern="mang({letter}+)" root="$1"/>
+        </affix>
+
+        <affix form="naka-" label="PP.POT" rootType="v">
+            <pattern pattern="naka({letter}+)" root="$1"/>
+        </affix>
+        <affix form="nag-" label="TODO" rootType="v">
+            <pattern pattern="nag({letter}+)" root="$1"/>
+        </affix>
+        <affix form="na-" label="PP.AF" rootType="v">
+            <pattern pattern="na({letter}+)" root="$1"/>
+        </affix>
+        <affix form="ni-" label="TODO" rootType="v">
+            <pattern pattern="ni({letter}+)" root="$1"/>
+        </affix>
+
+        <!--  naN- group: N + d|s|t : n; N + k : ng; N + b : m -->
+        <affix form="naN-" label="TODO" rootType="v">
+            <pattern pattern="nam({letter}+)" root="b$1"/>
+            <pattern pattern="nan({letter}+)" root="d$1"/>
+            <pattern pattern="nan({letter}+)" root="s$1"/>
+            <pattern pattern="nan({letter}+)" root="t$1"/>
+            <pattern pattern="nang({letter}+)" root="k$1"/>
+            <pattern pattern="nang({letter}+)" root="$1"/>
+        </affix>
+
+        <affix form="pag-" label="TODO">
+            <pattern pattern="pag({letter}+)" root="$1"/>
+            <pattern pattern="pag-({vowel}{letter}*)" root="$1"/>
+        </affix>
+
+        <affix form="-um-" label="TODO">
+            <pattern pattern="({consonant}?)um({letter}+)" root="$1$2"/>
+        </affix>
+
+        <affix form="-an" label="TODO">
+            <pattern pattern="({letter}+)ran" root="$1d"/>
+            <pattern pattern="({letter}+{vowel})han" root="$1"/>
+            <pattern pattern="({letter}+)an" root="$1"/>
+        </affix>
+        <affix form="-a" label="SPEC">
+            <pattern pattern="({letter}+)ra" root="$1d"/>
+            <pattern pattern="({letter}+{vowel})ha" root="$1"/>
+            <pattern pattern="({letter}+)a" root="$1"/>
+        </affix>
+        <affix form="-i" label="TODO">
+            <pattern pattern="({letter}+)ri" root="$1d"/>
+            <pattern pattern="({letter}+{vowel})hi" root="$1"/>
+            <pattern pattern="({letter}+)i" root="$1"/>
+        </affix>
+        <affix form="-un" label="TODO">
+            <pattern pattern="({letter}+)run" root="$1d"/>
+            <pattern pattern="({letter}+{vowel})hun" root="$1"/>
+            <pattern pattern="({letter}+)un" root="$1"/>
+        </affix>
+    </group>
+    <group name="wordformation">
+
+        <!-- Prefixes -->
+
+        <!-- Based on information given here: https://sites.google.com/site/pinoydictionary/annexes-used-in-cebuano -->
+
+        <!-- G -->
+        <affix form="gai-" label="TODO">
+            <pattern pattern="gai({letter}+)" root="$1"/>
+        </affix>
+        <affix form="gaipa-" label="TODO">
+            <pattern pattern="gaipa({letter}+)" root="$1"/>
+        </affix>
+        <affix form="gaka-" label="TODO">
+            <pattern pattern="gaka({letter}+)" root="$1"/>
+        </affix>
+        <affix form="gapa-" label="TODO">
+            <pattern pattern="gapa({letter}+)" root="$1"/>
+        </affix>
+        <affix form="gapan-" label="TODO">
+            <pattern pattern="gapan({letter}+)" root="$1"/>
+        </affix>
+        <affix form="gapang-" label="TODO">
+            <pattern pattern="gapang({letter}+)" root="$1"/>
+        </affix>
+        <affix form="gihi-" label="TODO">
+            <pattern pattern="gihi({letter}+)" root="$1"/>
+        </affix>
+        <affix form="gika-" label="PAS.PERF" rootType="v">
+            <pattern pattern="gika({letter}+)" root="$1"/>
+        </affix>
+        <affix form="gikahi-" label="PAS.PERF">
+            <pattern pattern="gikahi({letter}+)" root="$1"/>
+        </affix>
+        <affix form="gikapa-" label="PAS.PERF">
+            <pattern pattern="gikapa({letter}+)" root="$1"/>
+        </affix>
+        <affix form="gim-" label="PAS.PERF">
+            <pattern pattern="gim({letter}+)" root="$1"/>
+        </affix>
+        <affix form="gin-" label="PAS.PERF">
+            <pattern pattern="gin({letter}+)" root="$1"/>
+        </affix>
+        <affix form="gina-" label="PAS.PERF" rootType="v">
+            <pattern pattern="gina({letter}+)" root="$1"/>
+        </affix>
+        <affix form="ginapa-" label="PAS.PERF">
+            <pattern pattern="ginapa({letter}+)" root="$1"/>
+        </affix>
+        <affix form="ginapag-" label="PAS.PERF">
+            <pattern pattern="ginapag({letter}+)" root="$1"/>
+        </affix>
+        <affix form="ginapaha-" label="PAS.PERF">
+            <pattern pattern="ginapaha({letter}+)" root="$1"/>
+        </affix>
+        <affix form="ginapaka-" label="PAS.PERF">
+            <pattern pattern="ginapaka({letter}+)" root="$1"/>
+        </affix>
+        <affix form="ginapang-" label="PAS.PERF">
+            <pattern pattern="ginapang({letter}+)" root="$1"/>
+        </affix>
+        <affix form="ginapanghi-" label="PAS.PERF">
+            <pattern pattern="ginapanghi({letter}+)" root="$1"/>
+        </affix>
+        <affix form="ging-" label="PAS.PERF">
+            <pattern pattern="ging({letter}+)" root="$1"/>
+        </affix>
+        <affix form="gipa-" label="PAS.PERF" rootType="v">
+            <pattern pattern="gipa({letter}+)" root="$1"/>
+        </affix>
+        <affix form="gipaha-" label="PAS.PERF">
+            <pattern pattern="gipaha({letter}+)" root="$1"/>
+        </affix>
+        <affix form="gipahi-" label="PAS.PERF">
+            <pattern pattern="gipahi({letter}+)" root="$1"/>
+        </affix>
+        <affix form="gipaka-" label="PAS.PERF">
+            <pattern pattern="gipaka({letter}+)" root="$1"/>
+        </affix>
+        <affix form="gipaki-" label="PAS.PERF">
+            <pattern pattern="gipaki({letter}+)" root="$1"/>
+        </affix>
+        <affix form="gipakig-" label="PAS.PERF">
+            <pattern pattern="gipakig({letter}+)" root="$1"/>
+        </affix>
+        <affix form="gipan-" label="PAS.PERF">
+            <pattern pattern="gipan({letter}+)" root="$1"/>
+        </affix>
+        <affix form="gipanag-" label="PAS.PERF">
+            <pattern pattern="gipanag({letter}+)" root="$1"/>
+        </affix>
+        <affix form="gipang-" label="PAS.PERF">
+            <pattern pattern="gipang({letter}+)" root="$1"/>
+        </affix>
+        <affix form="gipanghi-" label="PAS.PERF">
+            <pattern pattern="gipanghi({letter}+)" root="$1"/>
+        </affix>
+        <affix form="gipanig-" label="PAS.PERF">
+            <pattern pattern="gipanig({letter}+)" root="$1"/>
+        </affix>
+        <affix form="gipatig-" label="PAS.PERF">
+            <pattern pattern="gipatig({letter}+)" root="$1"/>
+        </affix>
+
+        <!-- H -->
+        <affix form="ha-" label="PAS.PERF">
+            <pattern pattern="ha({letter}+)" root="$1"/>
+        </affix>
+        <affix form="hi-" label="PAS.PERF">
+            <pattern pattern="hi({letter}+)" root="$1"/>
+        </affix>
+        <affix form="hika-" label="PAS.PERF">
+            <pattern pattern="hika({letter}+)" root="$1"/>
+        </affix>
+        <affix form="hima-" label="PAS.PERF">
+            <pattern pattern="hima({letter}+)" root="$1"/>
+        </affix>
+        <affix form="hinga-" label="PAS.PERF">
+            <pattern pattern="hinga({letter}+)" root="$1"/>
+        </affix>
+        <affix form="hipang-" label="PAS.PERF">
+            <pattern pattern="hipang({letter}+)" root="$1"/>
+        </affix>
+        <affix form="hingka-" label="PAS.PERF">
+            <pattern pattern="hingka({letter}+)" root="$1"/>
+        </affix>
+
+        <!-- hiN- group: N + d|s|t : n; N + k : ng; N + b : m -->
+        <affix form="hiN-" label="FONDNESS" rootType="vn">
+            <pattern pattern="him({letter}+)" root="b$1"/>
+            <pattern pattern="hin({letter}+)" root="d$1"/>
+            <pattern pattern="hin({letter}+)" root="s$1"/>
+            <pattern pattern="hin({letter}+)" root="t$1"/>
+            <pattern pattern="hing({letter}+)" root="k$1"/>
+            <pattern pattern="hing({letter}+)" root="$1"/>
+        </affix>
+
+        <!-- I -->
+        <affix form="igaha-" label="TODO">
+            <pattern pattern="igaha({letter}+)" root="$1"/>
+        </affix>
+        <affix form="igaka-" label="TODO">
+            <pattern pattern="igaka({letter}+)" root="$1"/>
+        </affix>
+        <affix form="igapa-" label="TODO">
+            <pattern pattern="igapa({letter}+)" root="$1"/>
+        </affix>
+        <affix form="igapaha-" label="TODO">
+            <pattern pattern="igapaha({letter}+)" root="$1"/>
+        </affix>
+        <affix form="igapahi-" label="TODO">
+            <pattern pattern="igapahi({letter}+)" root="$1"/>
+        </affix>
+        <affix form="igapaka-" label="TODO">
+            <pattern pattern="igapaka({letter}+)" root="$1"/>
+        </affix>
+        <affix form="igapang-" label="TODO">
+            <pattern pattern="igapang({letter}+)" root="$1"/>
+        </affix>
+        <affix form="igapasi-" label="TODO">
+            <pattern pattern="igapasi({letter}+)" root="$1"/>
+        </affix>
+        <affix form="igka-" label="TODO">
+            <pattern pattern="igka-({letter}+)" root="$1"/>
+        </affix>
+        <affix form="igkasi-" label="REL">
+            <pattern pattern="igkasi({letter}+)" root="$1"/>
+        </affix>
+        <affix form="igpa-" label="TODO">
+            <pattern pattern="igpa-({letter}+)" root="$1"/>
+        </affix>
+        <affix form="igpang-" label="TODO">
+            <pattern pattern="igpang-({letter}+)" root="$1"/>
+        </affix>
+        <affix form="ihi-" label="TODO">
+            <pattern pattern="ihi({letter}+)" root="$1"/>
+        </affix>
+        <affix form="ika-" label="ORD.NUM" rootType="va">
+            <pattern pattern="ika({letter}+)" root="$1"/>
+        </affix>
+        <affix form="ikag-" label="ORD.NUM" rootType="va">
+            <pattern pattern="ikag({letter}+)" root="$1"/>
+        </affix>
+        <affix form="ikahi-" label="TODO">
+            <pattern pattern="ikahi({letter}+)" root="$1"/>
+        </affix>
+        <affix form="ikapa-" label="TODO">
+            <pattern pattern="ikapa({letter}+)" root="$1"/>
+        </affix>
+        <affix form="ikapakama-" label="TODO">
+            <pattern pattern="ikapakama-({letter}+)" root="$1"/>
+        </affix>
+        <affix form="ikapang-" label="TODO">
+            <pattern pattern="ikapang({letter}+)" root="$1"/>
+        </affix>
+        <affix form="ikapanig-" label="TODO">
+            <pattern pattern="ikapanig({letter}+)" root="$1"/>
+        </affix>
+        <affix form="ikapasig-" label="TODO">
+            <pattern pattern="ikapasig({letter}+)" root="$1"/>
+        </affix>
+        <affix form="ipa-" label="TODO" rootType="v">
+            <pattern pattern="ipa({letter}+)" root="$1"/>
+        </affix>
+        <affix form="ipaha-" label="TODO">
+            <pattern pattern="ipaha({letter}+)" root="$1"/>
+        </affix>
+        <affix form="ipahi-" label="TODO">
+            <pattern pattern="ipahi({letter}+)" root="$1"/>
+        </affix>
+        <affix form="ipaka-" label="TODO">
+            <pattern pattern="ipaka({letter}+)" root="$1"/>
+        </affix>
+        <affix form="ipaki-" label="TODO">
+            <pattern pattern="ipaki({letter}+)" root="$1"/>
+        </affix>
+        <affix form="ipakig-" label="TODO">
+            <pattern pattern="ipakig({letter}+)" root="$1"/>
+        </affix>
+        <affix form="ipam-" label="TODO">
+            <pattern pattern="ipam({letter}+)" root="$1"/>
+        </affix>
+        <affix form="ipampa-" label="TODO">
+            <pattern pattern="ipampa({letter}+)" root="$1"/>
+        </affix>
+        <affix form="ipang-" label="TODO">
+            <pattern pattern="ipang({letter}+)" root="$1"/>
+        </affix>
+        <affix form="ipanghi-" label="TODO">
+            <pattern pattern="ipanghi({letter}+)" root="$1"/>
+        </affix>
+        <affix form="ipanig-" label="TODO">
+            <pattern pattern="ipanig({letter}+)" root="$1"/>
+        </affix>
+        <affix form="ipasig-" label="TODO">
+            <pattern pattern="ipasig({letter}+)" root="$1"/>
+        </affix>
+        <affix form="ipatig-" label="TODO">
+            <pattern pattern="ipatig({letter}+)" root="$1"/>
+        </affix>
+        <affix form="isig-" label="TODO" rootType="v">
+            <pattern pattern="isig({letter}+)" root="$1"/>
+        </affix>
+        <affix form="isigka-" label="TODO" rootType="n">
+            <pattern pattern="isigka({letter}+)" root="$1"/>
+        </affix>
+        <affix form="itag-" label="TODO">
+            <pattern pattern="itag({letter}+)" root="$1"/>
+        </affix>
+        <affix form="inig-" label="TODO" rootType="v">
+            <pattern pattern="inig({letter}+)" root="$1"/>
+        </affix>
+        <affix form="inigka-" label="TODO" rootType="va">
+            <pattern pattern="inigka({letter}+)" root="$1"/>
+        </affix>
+
+        <!-- K -->
+        <affix form="ka-" label="FUT.POT" rootType="nva">
+            <pattern pattern="ka({letter}+)" root="$1"/>
+        </affix>
+        <affix form="katagi-" label="COM.PLACE" rootType="n">
+            <pattern pattern="katagi({letter}+)" root="$1"/>
+        </affix>
+
+        <!-- M -->
+        <affix form="makapa-" label="TODO" rootType="v">
+            <pattern pattern="makapa({letter}+)" root="$1"/>
+        </affix>
+        <affix form="maki-" label="TODO" rootType="vna">
+            <pattern pattern="maki({letter}+)" root="$1"/>
+        </affix>
+        <affix form="makig-" label="TODO" rootType="v">
+            <pattern pattern="makig({letter}+)" root="$1"/>
+        </affix>
+        <affix form="magka-" label="TODO" rootType="av">
+            <pattern pattern="magka({letter}+)" root="$1"/>
+        </affix>
+        <affix form="magpa-" label="TODO" rootType="v">
+            <pattern pattern="magpa({letter}+)" root="$1"/>
+        </affix>
+        <affix form="magpaka-" label="TODO" rootType="n">
+            <pattern pattern="magpaka({letter}+)" root="$1"/>
+        </affix>
+        <affix form="magpaki-" label="TODO" rootType="n">
+            <pattern pattern="magpaki({letter}+)" root="$1"/>
+        </affix>
+        <affix form="maha-" label="TODO" rootType="v">
+            <pattern pattern="maha({letter}+)" root="$1"/>
+        </affix>
+        <affix form="mahi-" label="TODO" rootType="v">
+            <pattern pattern="mahi({letter}+)" root="$1"/>
+        </affix>
+        <affix form="manag-" label="TODO" rootType="v">
+            <pattern pattern="manag({letter}+)" root="$1"/>
+        </affix>
+        <affix form="manga-" label="TODO" rootType="v">
+            <pattern pattern="manga({letter}+)" root="$1"/>
+        </affix>
+        <affix form="mapa-" label="TODO" rootType="n">
+            <pattern pattern="mapa({letter}+)" root="$1"/>
+        </affix>
+        <affix form="masig-" label="TODO" rootType="v">
+            <pattern pattern="masig({letter}+)" root="$1"/>
+        </affix>
+        <affix form="masigka-" label="TODO" rootType="n">
+            <pattern pattern="masigka({letter}+)" root="$1"/>
+        </affix>
+
+        <!--  makipaN- group: N + d|s|t : n; N + k : ng; N + b : m -->
+        <affix form="makipaN-" label="PLUR" rootType="v">
+            <pattern pattern="makipam({letter}+)" root="b$1"/>
+            <pattern pattern="makipan({letter}+)" root="d$1"/>
+            <pattern pattern="makipan({letter}+)" root="s$1"/>
+            <pattern pattern="makipan({letter}+)" root="t$1"/>
+            <pattern pattern="makipang({letter}+)" root="k$1"/>
+            <pattern pattern="makipang({letter}+)" root="$1"/>
+        </affix>
+
+        <!-- N -->
+        <affix form="nakag-" label="TODO" rootType="v">
+            <pattern pattern="nakag({letter}+)" root="$1"/>
+        </affix>
+        <affix form="nakig-" label="TODO" rootType="v">
+            <pattern pattern="nakig({letter}+)" root="$1"/>
+        </affix>
+        <affix form="nakapa-" label="TODO" rootType="v">
+            <pattern pattern="nakapa({letter}+)" root="$1"/>
+        </affix>
+        <affix form="nagka-" label="TODO" rootType="av">
+            <pattern pattern="nagka({letter}+)" root="$1"/>
+        </affix>
+        <affix form="nagpa-" label="TODO" rootType="v">
+            <pattern pattern="nagpa({letter}+)" root="$1"/>
+        </affix>
+        <affix form="nagpaka-" label="TODO" rootType="anv">
+            <pattern pattern="nagpaka({letter}+)" root="$1"/>
+        </affix>
+        <affix form="nagpaki-" label="TODO" rootType="anv">
+            <pattern pattern="nagpaki({letter}+)" root="$1"/>
+        </affix>
+        <affix form="nagpasi-" label="TODO" rootType="anv">
+            <pattern pattern="nagpasi({letter}+)" root="$1"/>
+        </affix>
+        <affix form="naha-" label="TODO" rootType="anv">
+            <pattern pattern="naha({letter}+)" root="$1"/>
+        </affix>
+        <affix form="nahag-" label="TODO" rootType="anv">
+            <pattern pattern="nahag({letter}+)" root="$1"/>
+        </affix>
+        <affix form="nahi-" label="TODO" rootType="anv">
+            <pattern pattern="nahi({letter}+)" root="$1"/>
+        </affix>
+        <affix form="nahig-" label="TODO" rootType="anv">
+            <pattern pattern="nahig({letter}+)" root="$1"/>
+        </affix>
+        <affix form="nanag-" label="TODO" rootType="v">
+            <pattern pattern="nanag({letter}+)" root="$1"/>
+        </affix>
+        <affix form="nanga-" label="TODO" rootType="v">
+            <pattern pattern="nanga({letter}+)" root="$1"/>
+        </affix>
+        <affix form="nasig-" label="TODO" rootType="v">
+            <pattern pattern="nasig({letter}+)" root="$1"/>
+        </affix>
+
+        <!-- P -->
+        <affix form="pa-" label="TODO" rootType="nv">
+            <pattern pattern="pa({letter}+)" root="$1"/>
+        </affix>
+        <affix form="paka-" label="TODO">
+            <pattern pattern="paka({letter}+)" root="$1"/>
+        </affix>
+        <affix form="paki-" label="TODO">
+            <pattern pattern="paki({letter}+)" root="$1"/>
+        </affix>
+        <affix form="pakih-" label="TODO">
+            <pattern pattern="pakig({letter}+)" root="$1"/>
+        </affix>
+        <affix form="pagka-" label="TODO">
+            <pattern pattern="pagka({letter}+)" root="$1"/>
+        </affix>
+        <affix form="pagpa-" label="TODO">
+            <pattern pattern="pagpa({letter}+)" root="$1"/>
+        </affix>
+        <affix form="pagpaka-" label="TODO">
+            <pattern pattern="pagpaka({letter}+)" root="$1"/>
+        </affix>
+        <affix form="pala-" label="TODO">
+            <pattern pattern="pala({letter}+)" root="$1"/>
+        </affix>
+        <affix form="panga-" label="TODO">
+            <pattern pattern="panga({letter}+)" root="$1"/>
+        </affix>
+        <affix form="pasi-" label="TODO">
+            <pattern pattern="pasi({letter}+)" root="$1"/>
+        </affix>
+
+        <!--  paN- group: N + d|s|t : n; N + k : ng; N + b : m -->
+        <affix form="paN-" label="CAUSATIVE">
+            <pattern pattern="pam({letter}+)" root="b$1"/>
+            <pattern pattern="pan({letter}+)" root="d$1"/>
+            <pattern pattern="pan({letter}+)" root="s$1"/>
+            <pattern pattern="pan({letter}+)" root="t$1"/>
+            <pattern pattern="pang({letter}+)" root="k$1"/>
+            <pattern pattern="pang({letter}+)" root="$1"/>
+        </affix>
+
+        <!-- T -->
+        <affix form="tag-" label="TODO">
+            <pattern pattern="tag({letter}+)" root="$1"/>
+        </affix>
+        <affix form="taga-" label="TODO">
+            <pattern pattern="taga({letter}+)" root="$1"/>
+        </affix>
+        <affix form="tagi-" label="TODO">
+            <pattern pattern="tagi({letter}+)" root="$1"/>
+        </affix>
+        <affix form="tali-" label="TODO">
+            <pattern pattern="tali({letter}+)" root="$1"/>
+        </affix>
+        <affix form="tig-" label="TODO">
+            <pattern pattern="tig({letter}+)" root="$1"/>
+        </affix>
+        <affix form="ting-" label="TODO">
+            <pattern pattern="ting({letter}+)" root="$1"/>
+        </affix>
+
+        <!-- U -->
+        <affix form="uma-" label="TODO">
+            <pattern pattern="uma({letter}+)" root="$1"/>
+        </affix>
+
+        <!--  Infixes -->
+
+        <affix form="-in-" label="TODO">
+            <pattern pattern="({consonant}?)in({letter}+)" root="$1$2"/>
+        </affix>
+        <affix form="-il-" label="TODO">
+            <pattern pattern="({consonant}?)il({letter}+)" root="$1$2"/>
+        </affix>
+
+        <!--  Suffixes -->
+
+        <affix form="-anan" label="TODO">
+            <pattern pattern="({letter}+)ranan" root="$1d"/>
+            <pattern pattern="({letter}+{vowel})hanan" root="$1"/>
+            <pattern pattern="({letter}+)anan" root="$1"/>
+        </affix>
+        <affix form="-anang" label="TODO">
+            <pattern pattern="({letter}+)ranang" root="$1d"/>
+            <pattern pattern="({letter}+{vowel})hanang" root="$1"/>
+            <pattern pattern="({letter}+)anang" root="$1"/>
+        </affix>
+        <affix form="-anay" label="TODO">
+            <pattern pattern="({letter}+)ranay" root="$1d"/>
+            <pattern pattern="({letter}+{vowel})hanay" root="$1"/>
+            <pattern pattern="({letter}+)anay" root="$1"/>
+        </affix>
+        <affix form="-anun" label="TODO">
+            <pattern pattern="({letter}+)ranun" root="$1d"/>
+            <pattern pattern="({letter}+{vowel})hanun" root="$1"/>
+            <pattern pattern="({letter}+)anun" root="$1"/>
+        </affix>
+        <affix form="-ay" label="TODO">
+            <pattern pattern="({letter}+)ray" root="$1d"/>
+            <pattern pattern="({letter}+{vowel})hay" root="$1"/>
+            <pattern pattern="({letter}+)ay" root="$1"/>
+        </affix>
+        <affix form="-ayg" label="TODO">
+            <pattern pattern="({letter}+)rayg" root="$1d"/>
+            <pattern pattern="({letter}+{vowel})hayg" root="$1"/>
+            <pattern pattern="({letter}+)ayg" root="$1"/>
+        </affix>
+        <affix form="-du" label="TODO">
+            <pattern pattern="({letter}+)du" root="$1"/>
+        </affix>
+        <affix form="-dur" label="TODO">
+            <pattern pattern="({letter}+)dur" root="$1"/>
+        </affix>
+        <affix form="-g" label="TODO">
+            <pattern pattern="({letter}+)g" root="$1"/>
+        </affix>
+
+        <affix form="-ira" label="TODO">
+            <pattern pattern="({letter}+{vowel})hira" root="$1"/>
+            <pattern pattern="({letter}+)ira" root="$1"/>
+        </affix>
+        <affix form="-iru" label="TODO">
+            <pattern pattern="({letter}+{vowel})hiru" root="$1"/>
+            <pattern pattern="({letter}+)iru" root="$1"/>
+        </affix>
+        <affix form="-nun" label="TODO">
+            <pattern pattern="({letter}+)nun" root="$1"/>
+        </affix>
+
+        <affix form="-unun" label="TODO">
+            <pattern pattern="({letter}+)runun" root="$1d"/>
+            <pattern pattern="({letter}+{vowel})hunun" root="$1"/>
+            <pattern pattern="({letter}+)unun" root="$1"/>
+        </affix>
+
+        <!--  Circumfixes (combining prefix with suffix) -->
+
+        <affix form="ka-an" label="TODO">
+            <pattern pattern="ka({letter}+)ran" root="$1d"/>
+            <pattern pattern="ka({letter}+{vowel})han" root="$1"/>
+            <pattern pattern="ka({letter}+)an" root="$1"/>
+        </affix>
+        <affix form="ka-un" label="TODO">
+            <pattern pattern="ka({letter}+)run" root="$1d"/>
+            <pattern pattern="ka({letter}+{vowel})hun" root="$1"/>
+            <pattern pattern="ka({letter}+)un" root="$1"/>
+        </affix>
+        <affix form="hi-an" label="TODO">
+            <pattern pattern="hi({letter}+)ran" root="$1d"/>
+            <pattern pattern="hi({letter}+{vowel})han" root="$1"/>
+            <pattern pattern="hi({letter}+)an" root="$1"/>
+        </affix>
+        <affix form="hi-un" label="TODO">
+            <pattern pattern="hi({letter}+)run" root="$1d"/>
+            <pattern pattern="hi({letter}+{vowel})hun" root="$1"/>
+            <pattern pattern="hi({letter}+)un" root="$1"/>
+        </affix>
+        <affix form="ma-un" label="TODO">
+            <pattern pattern="ma({letter}+)run" root="$1d"/>
+            <pattern pattern="ma({letter}+{vowel})hun" root="$1"/>
+            <pattern pattern="ma({letter}+)un" root="$1"/>
+        </affix>
+        <affix form="mag-ay" label="TODO">
+            <pattern pattern="mag({letter}+)ray" root="$1d"/>
+            <pattern pattern="mag({letter}+{vowel})hay" root="$1"/>
+            <pattern pattern="mag({letter}+)ay" root="$1"/>
+        </affix>
+        <affix form="pag-a" label="TODO">
+            <pattern pattern="pag({letter}+)ra" root="$1d"/>
+            <pattern pattern="pag({letter}+{vowel})ha" root="$1"/>
+            <pattern pattern="pag({letter}+)a" root="$1"/>
+        </affix>
+        <affix form="paga-an" label="TODO">
+            <pattern pattern="paga({letter}+)ran" root="$1d"/>
+            <pattern pattern="paga({letter}+{vowel})han" root="$1"/>
+            <pattern pattern="paga({letter}+)an" root="$1"/>
+        </affix>
+        <affix form="paga-un" label="TODO">
+            <pattern pattern="paga({letter}+)run" root="$1d"/>
+            <pattern pattern="paga({letter}+{vowel})hun" root="$1"/>
+            <pattern pattern="paga({letter}+)un" root="$1"/>
+        </affix>
+    </group>
+</stemmer>
