@@ -4,7 +4,7 @@ import parseStream from "../../generate-stemmer/StemmerParser";
 import {Stemmer, findDerivations} from "../../src/stemmer/Stemmer";
 import {Derivation, toStringDervation} from "../../src/stemmer/Derivation";
 import TestRootWordProvider from "./testRootWordProvider";
-import {RootWordProvider} from "../../src/stemmer/RootWordProvider";
+import {RootWordProvider} from "../../src/stemmer/root-word-provider/RootWordProvider";
 
 describe("Stemmer", () => {
     it("should load", (done) => {

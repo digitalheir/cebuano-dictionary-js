@@ -1,7 +1,7 @@
 import {AffixGroup, compileGroup, toXmlGroup as groupToXml} from "./AffixGroup";
 import {Derivation} from "./Derivation";
 import {Affix, rootCandidates} from "./Affix";
-import {RootWordProvider, isRootWord} from "./RootWordProvider";
+import {RootWordProvider, isRootWord} from "./root-word-provider/RootWordProvider";
 
 export interface Stemmer {
     language: string;

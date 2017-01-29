@@ -1,4 +1,4 @@
-import {RootWordProvider} from "../../src/stemmer/RootWordProvider";
+import {RootWordProvider} from "../../src/stemmer/root-word-provider/RootWordProvider";
 
 export default class TestRootWordProvider implements RootWordProvider {
     calls = 0;

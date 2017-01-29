@@ -4,3 +4,8 @@ node_modules/
 dist/
 npm-debug.log
 /cebuano-stemmer.*.min.*
+secret.js
+dictionary_data/cebuano_dictionary
+dictionary_data/entries
+dictionary-data/cebuano_dictionary
+dictionary-data/entries
