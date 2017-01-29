@@ -1,4 +1,4 @@
-import {Affix, compileAffix as compileAffix, toXml as toXmlAffix} from "./Affix";
+import {Affix, compileAffix as compileAffix, toXmlAffix as toXmlAffix} from "./Affix";
 
 export interface AffixGroup {
     name: string;

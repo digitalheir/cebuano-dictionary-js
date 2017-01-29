@@ -2,7 +2,8 @@ import {
     AffixPattern,
     compilePatterns as c,
     patternApplies as patternApplies,
-    stripPattern as stripPattern
+    stripPattern as stripPattern,
+    toXmlAffixPattern
 } from "./AffixPattern";
 
 export interface Affix {
@@ -56,7 +57,7 @@ export function rootCandidates(word: string, patterns: AffixPattern[]): string[]
     return rootCandidates;
 }
 
-export function toXml(affix: Affix): string {
+export function toXmlAffix(affix: Affix): string {
     const result = ["<affix form='" + affix.form + "' label='" + affix.label + "'"];
 
     if (!!affix.rootType && affix.rootType !== "") {
@@ -64,7 +65,7 @@ export function toXml(affix: Affix): string {
     }
     result.push(">\n");
 
-    for (const pattern of affix.patterns) result.push(pattern.toString());
+    for (const pattern of affix.patterns) result.push(toXmlAffixPattern(pattern));
 
     result.push("</affix>\n");
     return result.join("");

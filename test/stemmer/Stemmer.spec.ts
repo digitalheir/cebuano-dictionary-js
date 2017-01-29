@@ -1,27 +1,28 @@
 import {expect} from "chai";
 import {createReadStream} from "fs";
 import parseStream from "../../generate-stemmer/StemmerParser";
-import Stemmer from "../../src/stemmer/Stemmer";
+import {Stemmer, findDerivations} from "../../src/stemmer/Stemmer";
 import {Derivation, toStringDervation} from "../../src/stemmer/Derivation";
 import TestRootWordProvider from "./testRootWordProvider";
+import {RootWordProvider} from "../../src/stemmer/RootWordProvider";
 
 describe("Stemmer", () => {
     it("should load", (done) => {
         parseStream(createReadStream("test/stemmerTest.xml"))
             .then((stemmer: Stemmer) => {
                 expect(stemmer.compiled).to.be.true;
-                let results: Derivation[] = testDerivations(stemmer, "makasabut");
+                let results: Derivation[] = testDerivations(undefined, stemmer, "makasabut");
                 expect(results.length).to.equal(3);
 
-                results = testDerivations(stemmer, "balaya");
+                results = testDerivations(undefined, stemmer, "balaya");
                 expect(results.length).to.equal(2);
 
-                stemmer.rootWordProvider = new TestRootWordProvider();
+                const rootWordProvider = new TestRootWordProvider();
 
-                results = testDerivations(stemmer, "makasabut");
+                results = testDerivations(rootWordProvider, stemmer, "makasabut");
                 expect(results.length).to.equal(1);
 
-                results = testDerivations(stemmer, "balaya");
+                results = testDerivations(rootWordProvider, stemmer, "balaya");
                 expect(results.length).to.equal(1);
 
                 done();
@@ -54,8 +55,8 @@ describe("Stemmer", () => {
     //     System.out.print("Calls to root-word provider: " + provider.getCalls());
     // }
     //
-    function testDerivations(stemmer: Stemmer, word: string): Derivation[] {
-        const derivations: Derivation[] = stemmer.findDerivations(word);
+    function testDerivations(rootWordProvider: RootWordProvider, stemmer: Stemmer, word: string): Derivation[] {
+        const derivations: Derivation[] = findDerivations(rootWordProvider, stemmer, word);
         for (const derivation of derivations)
             console.log("Potential derivation: " + toStringDervation(derivation));
         return derivations;

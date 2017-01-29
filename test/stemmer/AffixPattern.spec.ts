@@ -1,26 +1,32 @@
 import {expect} from "chai";
-import AffixPattern from "../../src/stemmer/AffixPattern";
+import {
+    AffixPattern,
+    compilePattern,
+    toXmlAffixPattern,
+    stripPattern,
+    patternApplies
+} from "../../src/stemmer/AffixPattern";
 
 describe("AffixPattern", () => {
     it("should apply", () => {
-        const p: AffixPattern = new AffixPattern("maka([a-z]+)", "$1");
-        p.compileStemmer({});
+        const p: AffixPattern = {pattern: "maka([a-z]+)", root: "$1"};
+        compilePattern({}, p);
 
-        expect(p.patternApplies("makasabot")).to.be.true;
-        expect(p.patternApplies("nakasabot")).to.be.false;
+        expect(patternApplies(p, "makasabot")).to.be.true;
+        expect(patternApplies(p, "nakasabot")).to.be.false;
     });
 
     it("should stripPattern", () => {
-        const p: AffixPattern = new AffixPattern("maka([a-z]+)", "$1");
-        p.compileStemmer({});
+        const p: AffixPattern = {pattern: "maka([a-z]+)", root: "$1"};
+        compilePattern({}, p);
 
-        expect(p.stripPattern("makasabot")).to.equal("sabot");
-        expect(!!p.stripPattern("nakasabot")).to.be.false;
+        expect(stripPattern(p, "makasabot")).to.equal("sabot");
+        expect(!!stripPattern(p, "nakasabot")).to.be.false;
     });
 
     it("should toXmlGroup", () => {
-        const p: AffixPattern = new AffixPattern("maka([a-z]+)", "$1");
-        p.compileStemmer({}); //noinspection HtmlUnknownAttribute
-        expect(p.toString()).to.equal("<pattern pattern='maka([a-z]+)' root='$1'/>\n");
+        const p: AffixPattern = {pattern: "maka([a-z]+)", root: "$1"};
+        compilePattern({}, p); //noinspection HtmlUnknownAttribute
+        expect(toXmlAffixPattern(p)).to.equal("<pattern pattern='maka([a-z]+)' root='$1'/>\n");
     });
 });

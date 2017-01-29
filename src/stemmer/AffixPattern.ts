@@ -3,9 +3,10 @@ const CONSTANT_WITHIN_BRACES = /\{(\w+)}/g;
 // TODO make interface
 export interface AffixPattern {
     pattern: string;
-    root: string;
-    compiledPattern: string;
+    root?: string;
+    compiledPattern?: string;
 }
+
 export function toXmlAffixPattern(pattern: AffixPattern) {
     //noinspection HtmlUnknownAttribute
     return "<pattern pattern='" + pattern.pattern + "' root='" + pattern.root + "'/>\n";
@@ -51,8 +52,4 @@ export function compilePattern(constants: {[s: string]: string}, pattern: AffixP
 
 export function compilePatterns(affixes: AffixPattern[], constants: {[s: string]: string}): void {
     affixes.forEach(compilePattern.bind(undefined, constants));
-}
-
-export function toStringAffix(affix: AffixPattern): string {
-    return affix.toString();
 }
