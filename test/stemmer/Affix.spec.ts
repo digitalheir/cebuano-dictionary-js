@@ -1,13 +1,13 @@
 import {expect} from "chai";
 import AffixPattern from "../../src/stemmer/AffixPattern";
-import {Affix, compileAffix, applies, toXml} from "../../src/stemmer/Affix";
+import {Affix, compileAffix, appliesToAffix, toXml} from "../../src/stemmer/Affix";
 
 describe("Affix", () => {
     const a = createTestAffix();
     it("should apply", () => {
 
-        expect(applies("makasabot", a)).to.be.true;
-        expect(applies("nakasabot", a)).to.be.false;
+        expect(appliesToAffix("makasabot", a)).to.be.true;
+        expect(appliesToAffix("nakasabot", a)).to.be.false;
     });
 
     it("should toXmlGroup", () => {

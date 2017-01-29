@@ -1,10 +1,9 @@
 import {expect} from "chai";
-import {createReadStream, createWriteStream} from "fs";
-import parseStream from "../../src/stemmer/StemmerParser";
+import {createReadStream} from "fs";
+import parseStream from "../../generate-stemmer/StemmerParser";
 import Stemmer from "../../src/stemmer/Stemmer";
 import {Derivation, toStringDervation} from "../../src/stemmer/Derivation";
 import TestRootWordProvider from "./testRootWordProvider";
-import {toXmlGroup} from "../../src/stemmer/AffixGroup";
 
 describe("Stemmer", () => {
     it("should load", (done) => {

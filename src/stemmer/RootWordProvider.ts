@@ -19,3 +19,7 @@ export interface RootWordProvider {
      */
     isRootWordWithType(word: string, type: string): boolean;
 }
+
+export function isRootWord(rootWordProvider: RootWordProvider, word: string): boolean {
+    return (!rootWordProvider || rootWordProvider.isRootWord(word));
+}

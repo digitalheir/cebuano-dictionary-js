@@ -1,8 +1,8 @@
 import {createStream} from "sax";
-import Stemmer from "./Stemmer";
-import {AffixGroup} from "./AffixGroup";
-import {Affix} from "./Affix";
-import AffixPattern from "./AffixPattern";
+import {Stemmer, addGroup, compileStemmer} from "../src/stemmer/Stemmer";
+import {AffixGroup} from "../src/stemmer/AffixGroup";
+import {Affix} from "../src/stemmer/Affix";
+import {AffixPattern} from "../src/stemmer/AffixPattern";
 
 
 const strict = true;
@@ -19,21 +19,25 @@ export default function parse(stream: any) {
 
             parseStream.on("closetag", function (elementName: string) {
                 if (elementName === ("group")) {
-                    stemmer.addGroup(temporaryGroup);
+                    addGroup(stemmer, temporaryGroup);
                     temporaryGroup = undefined;
                 } else if (elementName === ("affix")) {
                     temporaryGroup.affixes.push(temporaryAffix);
                     temporaryAffix = undefined;
                 } else if (elementName === ("stemmer")) {
-                    stemmer.compile();
+                    compileStemmer(stemmer);
                 }
             });
             parseStream.on("opentag", function (tag: any) {
                 if (tag.name === "stemmer") {
-                    stemmer = new Stemmer();
                     const language = tag.attributes.language;
                     if (!language) throw new Error("Expected language to be set on stemmer");
-                    stemmer.language = language;
+                    stemmer = {
+                        language,
+                        compiled: false,
+                        constants: {},
+                        groups: []
+                    };
                 } else {
                     if (!stemmer) throw new Error("Expected stemmer to be set at this point");
                     if (tag.name === "group") {
@@ -48,7 +52,11 @@ export default function parse(stream: any) {
                         };
                     } else if (tag.name === "pattern") {
                         if (!temporaryAffix) throw new Error("Expected temporaryAffix to be set at this point");
-                        const pattern = new AffixPattern(tag.attributes.pattern, tag.attributes.root);
+                        const pattern: AffixPattern = {
+                            pattern: tag.attributes.pattern,
+                            root: tag.attributes.root,
+                            compiledPattern: undefined
+                        };
                         temporaryAffix.patterns.push(pattern);
                     } else if (tag.name === "constant") {
                         const key = tag.attributes.name;

@@ -15,8 +15,6 @@ const p = {
     "author": "Maarten Trompper",
     "license": "GPL-3.0",
     "dependencies": {
-        "@types/sax": "0.0.28",
-        "sax": "^1.2.1"
     }
 };
 

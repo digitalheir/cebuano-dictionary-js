@@ -1,9 +1,14 @@
-import AffixPattern, {compilePattern as c} from "./AffixPattern";
+import {
+    AffixPattern,
+    compilePatterns as c,
+    patternApplies as patternApplies,
+    stripPattern as stripPattern
+} from "./AffixPattern";
 
 export interface Affix {
     form: string;
     label: string;
-    rootType: string;
+    rootType?: string;
     patterns: AffixPattern[];
 }
 
@@ -18,12 +23,12 @@ export function compileAffix(affixes: Affix, constants: {[s: string]: string}): 
  * @param affix
  * @return true if the affix is applied to this word, false otherwise.
  */
-export function applies(word: string, affix: Affix): boolean {
+export function appliesToAffix(word: string, affix: Affix): boolean {
     return appliesToAny(word, affix.patterns);
 }
 
 export function appliesToAny(word: string, patterns: AffixPattern[]): boolean {
-    for (const pattern of patterns) if (pattern.applies(word)) return true;
+    for (const pattern of patterns) if (patternApplies(pattern, word)) return true;
     return false;
 }
 
@@ -35,16 +40,17 @@ export function appliesToAny(word: string, patterns: AffixPattern[]): boolean {
  * @param patterns
  * @return the word with the affix removed, or null if the affix was not present.
  */
-export function strip(word: string, patterns: AffixPattern[]): string {
-    for (const pattern of patterns) if (pattern.applies(word)) return pattern.strip(word);
+export function stripPatterns(word: string, patterns: AffixPattern[]): string {
+    for (const pattern of patterns) if (patternApplies(pattern, word))
+        return stripPattern(pattern, word);
     return undefined;
 }
 
 export function rootCandidates(word: string, patterns: AffixPattern[]): string[] {
     const rootCandidates = [];
     for (const pattern of patterns)
-        if (pattern.applies(word)) {
-            const stripped = pattern.strip(word);
+        if (patternApplies(pattern, word)) {
+            const stripped = stripPattern(pattern, word);
             rootCandidates.push(stripped);
         }
     return rootCandidates;
