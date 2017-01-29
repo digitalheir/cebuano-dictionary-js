@@ -10,22 +10,30 @@ Written in TypeScript, compiled to [ES6 CommonJS module](https://www.npmjs.com/p
 Based on [J. Hellingman's Cebuano stemmer for Java and dictionary for Android](https://bitbucket.org/jhellingman/cebuano-dictionary-app).
 
 ## Dictionary
-The dictionary data is converted from [a SQLite database](https://bitbucket.org/jhellingman/cebuano-dictionary-app/src/a5dd59e660434915e2128557aad8ead3c2339004/app/src/main/assets/databases/?at=master) to a CouchDB instance hosted at Cloudant at url hosted at https://publicdomainreview.cloudant.com/cebuano_dictionary.
+The dictionary data is converted from [a SQLite database](https://bitbucket.org/jhellingman/cebuano-dictionary-app/src/a5dd59e660434915e2128557aad8ead3c2339004/app/src/main/assets/databases/?at=master) to a publicly-readable CouchDB instance hosted at https://publicdomainreview.cloudant.com/cebuano_dictionary.
 
-The primary index for the words is normalized root forms of the Cebuano words.
+The primary index for an entry is the normalize root form of the Cebuano word.
 
 You can use the regular [CouchDB API](http://docs.couchdb.org/en/2.0.0/api/) to query. For instance, to get the first 20 entries starting with "k":
 
 [https://publicdomainreview.cloudant.com/cebuano_dictionary/_all_docs?include_docs=true&limit=20&startkey="k"](https://publicdomainreview.cloudant.com/cebuano_dictionary/_all_docs?include_docs=true&limit=20&startkey=%22k%22)
 
+
+
 ### Search
-The database provides full-text search:
+The database provides full-text search for English and Cebuano. You can query using the [Lucene Query Parser Syntax](http://lucene.apache.org/core/4_3_0/queryparser/org/apache/lucene/queryparser/classic/package-summary.html#Overview).
+
+Examples:
 
 |description|url|
 |---|---|
 |English full text search through entries for "fire"|https://publicdomainreview.cloudant.com/cebuano_dictionary/_design/search/_search/fromEnglish?q=fire|
 |English synonym search for "fire"|https://publicdomainreview.cloudant.com/cebuano_dictionary/_design/search/_search/fromEnglish?q=synonym:fire|
+|Cebuano full text search through entries for "abat"|https://publicdomainreview.cloudant.com/cebuano_dictionary/_design/search/_search/fromCebuano?q=abat|
+|Cebuano synonym search for "abat"|https://publicdomainreview.cloudant.com/cebuano_dictionary/_design/search/_search/fromCebuano?q=synonym:abat|
 
+
+A Cebuano [analyzer](https://docs.cloudant.com/search.html#analyzers) that normalizes text input remains to be implemented. Take care.
 
 ## Stemmer
 

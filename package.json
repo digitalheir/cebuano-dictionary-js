@@ -1,4 +1,23 @@
 {
+  "entry": {
+    "@attributes": {
+      "page": "1141",
+      "id": "21002"
+    },
+    "#text": "\n",
+    "hom": {
+      "#text": "\n",
+      "sense": {
+        "@attributes": {
+          "n": "0"
+        },
+        "trans": {
+          "#text": "Forms marked with a dagger have already been entered in the main portion of the dictionary, and what is listed here should be studied in conjunction with the main entry.\n\n\n"
+        },
+        "#text": "\n"
+      }
+    }
+  },
   "name": "cebuano-stemmer",
   "version": "0.0.0",
   "description": "A stemmer for the Cebuano language spoken in the Philippines",
