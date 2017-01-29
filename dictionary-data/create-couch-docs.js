@@ -1,14 +1,24 @@
 const entries = require('./data/wced_entry.json');
 const heads = require('./data/wced_head.json');
 const translations = require('./data/wced_translation.json');
+const xmlToJson = require('./xml-to-json').default;
+const DOMParser = require('xmldom').DOMParser;
+
 
 console.log("Entries: " + entries.length);
 const entriesById = {};
 entries.forEach((entry) => {
     entry.sqlid = entry._id;
-    entry._id = entry.head.replace(/[^a-z0-9]/ig, "")+"-"+entry.sqlid;
+    entry._id = entry.head.replace(/[^a-z0-9]/ig, "") + "-" + entry.sqlid;
     entry.heads = [];
     entry.translations = [];
+    const doc = new DOMParser().parseFromString(entry.entry);
+    const convertedXml = xmlToJson(doc);
+    if (Object.keys(convertedXml).length != 1 || !convertedXml.entry) {
+        console.warn(convertedXml);
+        throw new Error("Expected only 1 key: entry;");
+    }
+    entry.entry = convertedXml.entry;
     entriesById[entry.sqlid] = entry
 });
 console.log("Heads: " + heads.length);
@@ -43,19 +53,58 @@ translations.forEach(transl => {
 //     path, JSON.stringify(entries[0], undefined, 2)
 // );
 
+// console.log(JSON.stringify(entries[0], undefined, 2));
+
 const PouchDB = require("pouchdb");
 const secret = require("./secret");
 const db = new PouchDB('cebuano_dictionary');
 db.bulkDocs(entries).then(() => {
     console.log("added entries to local database");
-    db.replicate.to(
-        'https://publicdomainreview.cloudant.com/cebuano_dictionary',
-        {
-            auth: secret.auth
-        }
-    ).catch(err => {
-        console.error(err);
-    });
+    // db.replicate.to(
+    //     'https://publicdomainreview.cloudant.com/cebuano_dictionary',
+    //     {
+    //         auth: secret.auth
+    //     }
+    // ).catch(err => {
+    //     console.error(err);
+    // });
 }).catch(err => {
     console.error(err);
 });
+
+
+//
+// function index(){}
+// const tryme = function (doc) {
+//     function getString(xml) {
+//         if (typeof xml === "string") return xml;
+//         const strs = [];
+//
+//         for (let key in xml) if (xml.hasOwnProperty(key) && key !== "@attributes" && key !== "pos" && key !== "form") {
+//             let val = xml[key];
+//             if (key === "#text") {
+//                 if (typeof val === "string") {
+//                     val = val.replace(/\s+/g, " ").trim();
+//                     if (val.length > 0) strs.push(val);
+//                 } else {
+//                     if (val.push)
+//                         for (let i = 0; i < val.length; i++) {
+//                             const str = val[i].replace(/\s+/g, " ").trim();
+//                             if (str.length > 0) strs.push(str);
+//                         }
+//                     else return "VALUE DID NOT HAVE PUSH?!?!";
+//                 }
+//             } else {
+//                 if (typeof val === "object") strs.push(getString(val));
+//                 else return "VALUE WAS NOT OBJECT?!?!?!!";
+//             }
+//         }
+//
+//
+//         return strs.join(' ');
+//     }
+//
+//     if (doc.entry) index("default", getString(doc.entry), {"store": true});
+//     if (doc.translations) index("synonym", doc.translations.join(' '), {"store": true});
+// };
+// entries.forEach(tryme);
