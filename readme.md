@@ -21,7 +21,7 @@ You can use the regular [CouchDB API](http://docs.couchdb.org/en/2.0.0/api/) to 
 
 
 ### Search
-The database provides full-text search for English and Cebuano. You can query using the [Lucene Query Parser Syntax](http://lucene.apache.org/core/4_3_0/queryparser/org/apache/lucene/queryparser/classic/package-summary.html#Overview).
+The database provides full-text search for English and Cebuano. You can query using the [Lucene Query Parser Syntax](https://docs.cloudant.com/search.html#query-syntax).
 
 Examples:
 
