@@ -12,7 +12,7 @@ Based on [J. Hellingman's Cebuano stemmer for Java and dictionary for Android](h
 ## Dictionary
 The dictionary data is converted from [a SQLite database](https://bitbucket.org/jhellingman/cebuano-dictionary-app/src/a5dd59e660434915e2128557aad8ead3c2339004/app/src/main/assets/databases/?at=master) to a publicly-readable CouchDB instance hosted at https://publicdomainreview.cloudant.com/cebuano_dictionary.
 
-The primary index for an entry is the normalize root form of the Cebuano word.
+The primary index for an entry is the normalized root form of the Cebuano word plus an identification number.
 
 You can use the regular [CouchDB API](http://docs.couchdb.org/en/2.0.0/api/) to query. For instance, to get the first 20 entries starting with "k":
 
