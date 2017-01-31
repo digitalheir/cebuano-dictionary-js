@@ -37,3 +37,4 @@ A Cebuano [analyzer](https://docs.cloudant.com/search.html#analyzers) that norma
 
 ## Stemmer
 
+A JSON list of word roots is available at https://publicdomainreview.cloudant.com/cebuano_dictionary/_design/show/_list/keyset/heads?group_level=1
