@@ -37,4 +37,6 @@ A Cebuano [analyzer](https://docs.cloudant.com/search.html#analyzers) that norma
 
 ## Stemmer
 
-A JSON list of word roots is available at https://publicdomainreview.cloudant.com/cebuano_dictionary/_design/show/_list/keyset/heads?group_level=1
+A JSON list of word roots used in the stemmer is available at https://publicdomainreview.cloudant.com/cebuano_dictionary/_design/show/_list/keyset/normalized_heads_where_pos_is_not_empty_string?group_level=1
+
+A JSON list of all heads is available at https://publicdomainreview.cloudant.com/cebuano_dictionary/_design/show/_list/keyset/heads?group_level=1

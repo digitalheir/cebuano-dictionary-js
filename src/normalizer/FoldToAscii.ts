@@ -299,7 +299,8 @@ const replacementList = [
     }
 ];
 
-const diacriticsMap: {[s: string]: string} = {};
+// TODO just initialize map as constant
+const diacriticsMap: { [s: string]: string } = {};
 for (let i = 0; i < replacementList.length; i += 1) {
     const chars: string = replacementList[i].chars;
     for (let j = 0; j < chars.length; j += 1) {

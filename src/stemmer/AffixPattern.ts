@@ -1,4 +1,4 @@
-const CONSTANT_WITHIN_BRACES = /\{(\w+)}/g;
+const CONSTANT_WITHIN_BRACES = /{(\w+)}/g;
 
 // TODO make interface
 export interface AffixPattern {
@@ -12,21 +12,32 @@ export function toXmlAffixPattern(pattern: AffixPattern) {
     return "<pattern pattern='" + pattern.pattern + "' root='" + pattern.root + "'/>\n";
 }
 
-export function stripPattern(pattern: AffixPattern, word: string): string {
-    if (!pattern.compiledPattern) throw new Error("Pattern was not compiled");
-    if (patternApplies(pattern, word))
-        return word.replace(new RegExp(pattern.compiledPattern, "g"), pattern.root);
-    else
-        return undefined;
-    // throw new Error("Affix " + pattern.compiledPattern + " does not apply to " + word + ", so why would you ask to stripPattern? ");
+export function stripPattern(pattern: AffixPattern, word: string): string | undefined {
+    const compiledPattern: string | undefined = pattern.compiledPattern;
+    if (!compiledPattern)
+        throw new Error("Pattern was not compiled");
+    else {
+        if (patternApplies(pattern, word))
+            return word.replace(
+                new RegExp(compiledPattern, "g"),
+                pattern.root || ""
+            );
+        else
+            return undefined;
+        // throw new Error("Affix " + pattern.compiledPattern + " does not apply to " + word + ", so why would you ask to stripPattern? ");
+    }
 }
 
 export function patternApplies(pattern: AffixPattern, word: string): boolean {
-    return new RegExp(pattern.compiledPattern, "g").test(word);
+    const compiledPattern = pattern.compiledPattern;
+    if (!compiledPattern)
+        throw new Error("Pattern was not compiled");
+    else
+        return new RegExp(compiledPattern, "g").test(word);
 }
 
 
-export function compilePattern(constants: {[s: string]: string}, pattern: AffixPattern): void {
+export function compilePattern(constants: { [s: string]: string }, pattern: AffixPattern): void {
     // TODO make more efficient/readable with a helper function
 
     // Replace constants given as "...{key}..." in pattern.
@@ -50,6 +61,6 @@ export function compilePattern(constants: {[s: string]: string}, pattern: AffixP
     pattern.compiledPattern = compiledRegex.join("");
 }
 
-export function compilePatterns(affixes: AffixPattern[], constants: {[s: string]: string}): void {
+export function compilePatterns(affixes: AffixPattern[], constants: { [s: string]: string }): void {
     affixes.forEach(compilePattern.bind(undefined, constants));
 }

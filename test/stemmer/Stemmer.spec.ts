@@ -5,13 +5,18 @@ import {Stemmer, findDerivations} from "../../src/stemmer/Stemmer";
 import {Derivation, toStringDervation} from "../../src/stemmer/Derivation";
 import TestRootWordProvider from "./testRootWordProvider";
 import {RootWordProvider} from "../../src/stemmer/root-word-provider/RootWordProvider";
+import {DictionaryDatabase} from "../../src/dictionary/database";
 
 describe("Stemmer", () => {
     it("should load", (done) => {
         parseStream(createReadStream("test/stemmerTest.xml"))
             .then((stemmer: Stemmer) => {
                 expect(stemmer.compiled).to.be.true;
-                let results: Derivation[] = testDerivations(undefined, stemmer, "makasabut");
+                let results: Derivation[] = testDerivations(
+                    undefined,
+                    stemmer,
+                    "makasabut"
+                );
                 expect(results.length).to.equal(3);
 
                 results = testDerivations(undefined, stemmer, "balaya");
@@ -28,33 +33,56 @@ describe("Stemmer", () => {
                 done();
             })
             .catch(done);
-        // System.out.print(stemmer.toStringAffix());
-        //
+
     });
 
-    // @Test
-    // public final void testLargeLoad() throws FileNotFoundException {
-    //
-    //     // FIXME: Work around https://code.google.com/p/android/issues/detail?id=64887 using an absolute path.
-    //     FileInputStream stream = new FileInputStream("stemmerLargeTest.xml");
-    //
-    //     StemmerParser parser = new StemmerParser();
-    //     Stemmer stemmer = parser.parse(stream);
-    //
-    //     System.out.print(stemmer.toStringAffix());
-    //
-    //     TestRootWordProvider provider = new TestRootWordProvider();
-    //     stemmer.setRootProvider(provider);
-    //
-    //     LinkedList<Derivation> results;
-    //     results = testDerivations(stemmer, "makasabut");
-    //     results = testDerivations(stemmer, "mangaun");
-    //     results = testDerivations(stemmer, "balaya");
-    //     results = testDerivations(stemmer, "pag-abut");
-    //     results = testDerivations(stemmer, "binisaya");
-    //     System.out.print("Calls to root-word provider: " + provider.getCalls());
-    // }
-    //
+    it("should load large file", (done) => {
+        parseStream(createReadStream("test/stemmerLargeTest.xml"))
+            .then((stemmer: Stemmer) => {
+                expect(stemmer.compiled).to.be.true;
+
+                // TODO ?
+                // System.out.print(stemmer.toStringAffix());
+
+                const provider: TestRootWordProvider = new TestRootWordProvider();
+
+                let results: Derivation[];
+                results = testDerivations(provider, stemmer, "makasabut");
+                results = testDerivations(provider, stemmer, "mangaun");
+                results = testDerivations(provider, stemmer, "balaya");
+                results = testDerivations(provider, stemmer, "pag-abut");
+                results = testDerivations(provider, stemmer, "binisaya");
+
+                console.log("Calls to root-word provider: " + provider.calls);
+
+                done();
+            })
+            .catch(done);
+
+    });
+
+    it("should work with actual root provider", (done) => {
+        parseStream(createReadStream("test/stemmerLargeTest.xml"))
+            .then((stemmer: Stemmer) => {
+                expect(stemmer.compiled).to.be.true;
+
+                const provider: RootWordProvider = DictionaryDatabase;
+
+                let results: Derivation[];
+                results = testDerivations(provider, stemmer, "makasabut");
+                results = testDerivations(provider, stemmer, "mangaun");
+                results = testDerivations(provider, stemmer, "balaya");
+                results = testDerivations(provider, stemmer, "pag-abut");
+                results = testDerivations(provider, stemmer, "binisaya");
+
+                // console.log("Calls to root-word provider: " + provider.calls);
+
+                done();
+            })
+            .catch(done);
+
+    });
+
     function testDerivations(rootWordProvider: RootWordProvider, stemmer: Stemmer, word: string): Derivation[] {
         const derivations: Derivation[] = findDerivations(rootWordProvider, stemmer, word);
         for (const derivation of derivations)

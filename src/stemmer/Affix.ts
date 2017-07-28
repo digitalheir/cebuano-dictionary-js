@@ -41,17 +41,18 @@ export function appliesToAny(word: string, patterns: AffixPattern[]): boolean {
  * @param patterns
  * @return the word with the affix removed, or null if the affix was not present.
  */
-export function stripPatterns(word: string, patterns: AffixPattern[]): string {
+export function stripPatterns(word: string, patterns: AffixPattern[]): string | undefined {
     for (const pattern of patterns) if (patternApplies(pattern, word))
         return stripPattern(pattern, word);
     return undefined;
 }
 
 export function rootCandidates(word: string, patterns: AffixPattern[]): string[] {
-    const rootCandidates = [];
+    const rootCandidates: string[] = [];
     for (const pattern of patterns)
         if (patternApplies(pattern, word)) {
             const stripped = stripPattern(pattern, word);
+            if(!!stripped)
             rootCandidates.push(stripped);
         }
     return rootCandidates;

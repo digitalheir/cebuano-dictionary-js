@@ -1,10 +1,13 @@
 import removeDiacritics from "./FoldToAscii";
 
-export default function normalize(word: string): string {
+export function normalize(word: string): string {
     return removeDiacritics(word)
         .toLowerCase() // Go to lower-case
+
+        // NOTE, not possible in JS?
         // .normalize("NFD") // Decompose Unicode (NFD — Normalization Form Canonical Decomposition)
         // .replace(/\p{M}/g, "") // Drop all diacritics
+
         .replace(/z/, "s") // Old orthography stuff
         .replace(/ce/, "si")
         .replace(/ci/, "si")
@@ -20,3 +23,5 @@ export default function normalize(word: string): string {
         .replace(/e/g, "i") // e -> i
         ;
 }
+
+export default normalize;

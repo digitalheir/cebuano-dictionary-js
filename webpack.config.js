@@ -1,28 +1,30 @@
-var webpack = require('webpack'),
+const webpack = require('webpack'),
     path = require('path'),
     yargs = require('yargs');
-var VERSION = require('./version').default;
-var libraryName = 'cebuano-stemmer',
-    plugins = [
-        new webpack.LoaderOptionsPlugin({
-            options: {
-                tslint: {
-                    emitErrors: true,
-                    failOnHint: true
-                }
+const VERSION = require('./version').default;
+const libraryName = 'cebuano-stemmer';
+
+const plugins = [
+    new webpack.LoaderOptionsPlugin({
+        options: {
+            tslint: {
+                emitErrors: true,
+                failOnHint: true
             }
-        })
-    ],
-    outputFile;
+        }
+    })
+];
+
+let outputFile;
 
 if (yargs.argv.p) {
     //plugins.push(new webpack.optimize.UglifyJsPlugin({ minimize: true }));
-    outputFile = libraryName + '.' + VERSION + '.min.js';
+    outputFile = libraryName + /*'.' + VERSION +*/ '.min.js';
 } else {
-    outputFile = libraryName + '.' + VERSION + '.js';
+    outputFile = libraryName /*+ '.' + VERSION*/ + '.js';
 }
 
-var config = {
+const config = {
     entry: [
         __dirname + '/src/index.ts'
     ],
@@ -44,7 +46,11 @@ var config = {
             },
             {
                 test: /\.tsx?$/,
-                loader: ['babel-loader', 'awesome-typescript-loader'],
+                loader: 'awesome-typescript-loader',
+                options: {
+                    configFileName: "tsconfig.webpack.json",
+                    useBabel: true
+                },
                 exclude: /node_modules/
             }
         ]
