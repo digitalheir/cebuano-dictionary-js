@@ -9,6 +9,14 @@ body {
     margin: 24px 48px;
 }
 
+.i {
+    font-style: italic;
+}
+
+.form {
+    font-weight: bold;
+}
+
 .mdc-textfield {
     margin-bottom: 8px;
     max-width: 100%;
@@ -77,15 +85,16 @@ body {
 .TeXComm {
     color: #193a7c;
 }
+
 .TeXComm:before {
     content: "\\";
 }
 
-.OptArg{
+.OptArg {
     color: #ff5d49;
 }
 
-.FixArg{
+.FixArg {
     color: #ff3f72;
 }
 
@@ -96,11 +105,11 @@ body {
 }
 
 /*.TeXRaw:hover {*/
-    /*background-color: #ffd700;*/
+/*background-color: #ffd700;*/
 /*}*/
 
 /*.TeXComm .name:hover {*/
-    /*background-color: #68ffbe;*/
+/*background-color: #68ffbe;*/
 /*}*/
 
 .OptArg:before {

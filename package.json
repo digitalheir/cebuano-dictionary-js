@@ -11,16 +11,27 @@
     "author": "Maarten Trompper",
     "license": "MIT",
     "devDependencies": {
+        "@types/lodash": "^4.14.71",
         "@types/react": "^15.0.27",
         "@types/react-dom": "^15.5.0",
+        "@types/react-redux": "^4.4.47",
+        "@types/redux": "^3.6.0",
+        "@types/redux-logger": "^3.0.0",
+        "@types/redux-thunk": "^2.1.0",
         "awesome-typescript-loader": "^3.1.3",
+        "babel-core": "^6.25.0",
         "copy-webpack-plugin": "^4.0.1",
         "latex-parser": "file:../latex-parser",
+        "lodash": "^4.17.4",
         "material-components-web": "^0.12.1",
         "preact": "^8.1.0",
         "preact-compat": "^3.16.0",
         "react": "^15.5.4",
         "react-dom": "^15.5.4",
+        "react-redux": "^5.0.5",
+        "redux": "^3.7.2",
+        "redux-logger": "^3.0.6",
+        "redux-thunk": "^2.2.0",
         "ts-lint": "^4.5.1",
         "tslint": "^5.4.3",
         "tslint-loader": "^3.5.3",
@@ -28,5 +39,7 @@
         "webpack": "^2.6.1",
         "webpack-dev-server": "^2.4.5"
     },
-    "dependencies": {}
+    "dependencies": {
+        "cebuano-stemmer": "file:../cebuano-dictionary-js"
+    }
 }
