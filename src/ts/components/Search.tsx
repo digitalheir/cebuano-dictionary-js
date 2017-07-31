@@ -49,7 +49,28 @@ export function abortActiveRequest(activeRequest?: XMLHttpRequest) {
         activeRequest.abort();
     }
 }
+/*
+// todo
+        protected Cursor doInBackground(final String... searchWords) {
+            CebuanoNormalizer n = new CebuanoNormalizer();
+            String normalizedSearchWord = n.normalize(searchWord);
 
+            DictionaryDatabase database = DictionaryDatabase.getInstance(context);
+            Cursor headsCursor;
+
+            List<Derivation> derivations = null;
+            if (useStemming) {
+                derivations = stemmer.findDerivations(normalizedSearchWord);
+            }
+
+            headsCursor = database.getHeads(searchWord, reverseLookup, derivations);
+
+            // Move the cursor to the first entry, do force the database do some heavy-lifting
+            // on this task's thread before handing it back to the UI thread.
+            headsCursor.moveToFirst();
+            return headsCursor;
+        }
+*/
 export class SearchPresenter extends PureComponent<SearchPresenterProps, {}> {
 
     propagateInputChange = debounce((value: string) => {
