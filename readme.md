@@ -1,7 +1,7 @@
 # Cebuano dictionary and stemmer
-[![Build Status](https://travis-ci.org/digitalheir/cebuano-stemmer-js.svg?branch=master)](https://travis-ci.org/digitalheir/cebuano-stemmer-js)
+[![Build Status](https://travis-ci.org/digitalheir/cebuano-dictionary-js.svg?branch=master)](https://travis-ci.org/digitalheir/cebuano-dictionary-js)
 [![npm version](https://badge.fury.io/js/cebuano-stemmer.svg)](https://www.npmjs.com/package/cebuano-stemmer)
-[![License](https://img.shields.io/npm/l/cebuano-stemmer.svg)](https://github.com/digitalheir/cebuano-stemmer-js/blob/master/LICENSE)
+[![License](https://img.shields.io/npm/l/cebuano-stemmer.svg)](https://github.com/digitalheir/cebuano-dictionary-js/blob/master/LICENSE)
 
 [Live demo in browser](https://digitalheir.github.io/cebuano-dictionary-js/)
 
