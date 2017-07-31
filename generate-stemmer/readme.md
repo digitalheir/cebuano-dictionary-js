@@ -1,3 +1,3 @@
 # Cebuano stemmer generator
 
-The stemmer is defined in [XML](https://github.com/digitalheir/cebuano-dictionary-js/tree/master/generate-stemmer/xml). TypeScript files parse and enable to use the stemmer.
+The stemmer is defined in [XML](https://github.com/digitalheir/cebuano-dictionary-js/tree/master/generate-stemmer/xml). TypeScript files parse and enable write stemmer source to [src/stemmer/CebuanoStemmer.ts](https://github.com/digitalheir/cebuano-dictionary-js/blob/master/src/stemmer/CebuanoStemmer.ts).
