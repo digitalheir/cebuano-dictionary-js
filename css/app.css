@@ -25,6 +25,14 @@ body {
     font-weight: bold;
 }
 
+.number::after {
+    content: '.';
+}
+
+.sense {
+    display: block;
+}
+
 .mdc-textfield {
     margin-bottom: 8px;
     max-width: 100%;
