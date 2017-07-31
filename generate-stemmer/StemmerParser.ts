@@ -7,7 +7,7 @@ import {AffixPattern} from "../src/stemmer/AffixPattern";
 
 const strict = true;
 
-export default function parse(stream: any) {
+export const parseStream = function parse(stream: any) {
     return new Promise((resolve, reject) => {
             const parseStream = createStream(strict, {});
 
@@ -70,7 +70,10 @@ export default function parse(stream: any) {
             stream.on("close", () => {
                 resolve(stemmer);
             });
+
             stream.pipe(parseStream);
         }
     );
-}
+};
+
+export default parseStream;

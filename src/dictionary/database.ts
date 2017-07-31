@@ -1,5 +1,7 @@
 import {RootWordProvider} from "../stemmer/root-word-provider/RootWordProvider";
 import {roots} from "../stemmer/root-word-provider/roots";
+import {Derivation} from "../stemmer/Derivation";
+import {normalize} from "../normalizer/CebuanoNormalizer";
 
 // const HEAD_ID = "_id";
 // const HEAD_HEAD = "head";
@@ -22,7 +24,7 @@ const MIN_ROOT_LENGTH = 3;
 const rootCache: { [key: string]: boolean } = {};
 
 export const DictionaryDatabase: RootWordProvider = {
-    isRootWord: function(root: string): boolean {
+    isRootWord: function (root: string): boolean {
         if (root.length < MIN_ROOT_LENGTH) {
             return false;
         }
@@ -34,13 +36,13 @@ export const DictionaryDatabase: RootWordProvider = {
 
         // Log.d(TAG, "Query for root: " + root);
 
-        const sqlQuery = "SELECT 1 FROM WCED_head WHERE normalized_head = ? AND pos != '' LIMIT 1";
-        const selectionArguments = {root};
+        // const sqlQuery = "SELECT 1 FROM WCED_head WHERE normalized_head = ? AND pos != '' LIMIT 1";
+        // const selectionArguments = {root};
 
         return roots.has(root);
     },
 
-    isRootWordWithType: function(root: string, type: string): boolean {
+    isRootWordWithType: function (root: string, type: string): boolean {
         if (root.length < MIN_ROOT_LENGTH) {
             return false;
         }
@@ -98,13 +100,12 @@ export const DictionaryDatabase: RootWordProvider = {
 //     return result;
 // }
 //
+
+// export function getHeads(head: string, reverseLookup: boolean, derivations?: Derivation[]): Promise<string[]> {
+//     const normalizedHead = normalize(head);
 //
-// public Cursor getHeads(final String head, final boolean reverseLookup, final List<Derivation> derivations) {
-//     CebuanoNormalizer n = new CebuanoNormalizer();
-//     String normalizedHead = n.normalize(head);
-//
-//     List<String> subQueries = new LinkedList<String>();
-//     List<String> arguments = new ArrayList<String>();
+//     const subQueries: string[] = [];
+//     const arguments: string[] = [];
 //
 //     subQueries.add("SELECT _id, entryid, head, normalized_head, NULL AS derivation, 'n' AS type "
 //         + "FROM WCED_head WHERE normalized_head LIKE ?");
@@ -117,18 +118,19 @@ export const DictionaryDatabase: RootWordProvider = {
 //         arguments.add(head + "%");
 //     }
 //
-//     if (derivations != null) {
-//         final String snippetFormat =
+//     if (!!derivations) {
+//         const snippetFormat: string =
 //             "SELECT _id, entryid, head, normalized_head, '%s' AS derivation, 'd' AS type FROM wced_head "
 //             + "WHERE normalized_head = ?";
 //
-//         for (Derivation derivation : derivations) {
-//             String snippet = String.format(snippetFormat, derivation.toString().replace("'", "''"));
+//         for (const derivation of derivations) {
+//             const snippet = String.format(snippetFormat, derivation.toString().replace("'", "''"));
 //             subQueries.add(snippet);
 //             arguments.add(derivation.getRoot());
 //         }
 //     }
-//
+// }
+
 //     String query = unionize(subQueries);
 //     query += " ORDER BY normalized_head COLLATE NOCASE";
 //
