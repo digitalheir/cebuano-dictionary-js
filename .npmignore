@@ -2,3 +2,5 @@
 /src/
 /node_modules/
 /test/
+/generate-stemmer/
+/dictionary-data/
