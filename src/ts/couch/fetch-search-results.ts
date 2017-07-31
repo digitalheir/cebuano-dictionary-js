@@ -4,7 +4,7 @@ export enum SearchMode {
 
 export interface SearchParams {
     query: string;
-    searchMode?: SearchMode;
+    searchMode: SearchMode;
     // drillDown: {
     //     [key: string]: {
     //         queryValue: string,
@@ -30,16 +30,28 @@ export function makeUrl({
 
     switch (searchMode) {
         case SearchMode.ENGLISH_TO_CEBUANO:
+            return makeUrlFromEnglish(query, params);
         case SearchMode.CEBUANO_TO_ENGLISH:
         default:
             return makeUrlFromCebuano(query, params);
     }
 }
 
+const BASE_URL = "https://publicdomainreview.cloudant.com/cebuano_dictionary/_design/search/_search/";
+
 export function makeUrlFromCebuano(query: string,
-                                   params: string[]
-) {
-    const url = "https://publicdomainreview.cloudant.com/cebuano_dictionary/_design/search/_search/fromCebuano?";
+                                   params: string[]) {
+    const url = `${BASE_URL}fromCebuano?`;
+
+    params.push(
+        "q=" + ((query.trim().length === 0 || query === "*:*") ? "*:*" : query)
+    );
+    return url + params.join("&");
+}
+
+export function makeUrlFromEnglish(query: string,
+                                   params: string[]) {
+    const url = `${BASE_URL}fromEnglish?`;
 
     params.push(
         "q=" + ((query.trim().length === 0 || query === "*:*") ? "*:*" : query)

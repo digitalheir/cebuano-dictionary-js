@@ -17,6 +17,11 @@ body {
     font-weight: bold;
 }
 
+.search-input-wrapper {
+    width: 100%;
+    position: relative;
+}
+
 .pos {
     font-style: italic;
 }
@@ -30,7 +35,7 @@ body {
 }
 
 .sense {
-    display: block;
+    /*display: block;*/
 }
 
 .mdc-textfield {
@@ -41,7 +46,6 @@ body {
 .mdc-textfield__input {
     max-width: 100%;
     width: 600px;
-    font-family: monospace;
 }
 
 .tex-ast {

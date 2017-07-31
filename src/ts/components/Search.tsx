@@ -2,7 +2,7 @@ import * as React from "react";
 
 import {connect} from "react-redux";
 import {CebuanoState} from "../reducers/index";
-import {SearchParams} from "../couch/fetch-search-results";
+import {SearchMode, SearchParams} from "../couch/fetch-search-results";
 import {queryChanged} from "../actions/search";
 import {SearchState} from "../reducers/search";
 import {PureComponent} from "react";
@@ -49,6 +49,7 @@ export function abortActiveRequest(activeRequest?: XMLHttpRequest) {
         activeRequest.abort();
     }
 }
+
 /*
 // todo
         protected Cursor doInBackground(final String... searchWords) {
@@ -70,23 +71,78 @@ export function abortActiveRequest(activeRequest?: XMLHttpRequest) {
             headsCursor.moveToFirst();
             return headsCursor;
         }
-        
+
         <div>You can use the <a href="https://docs.cloudant.com/search.html#query-syntax">Lucene Syntax</a> for advanced search.</div>
 */
+const cebuanoToEnglish = "Cebuano to English";
+const englishToCebuano = "English to Cebuano";
+
+
 export class SearchPresenter extends PureComponent<SearchPresenterProps, {}> {
+
 
     propagateInputChange = debounce((value: string) => {
         console.log(value);
-        abortActiveRequest(this.props.activeRequest);
-        this.props.onChange({
-            query: value
-        });
+        this.onQueryChange(value, this.props.searchMode);
     }, 500, {leading: true, trailing: true});
 
+    onQueryChange(query: string, searchMode: SearchMode) {
+        abortActiveRequest(this.props.activeRequest);
+        this.props.onChange({
+            query,
+            searchMode
+        });
+    }
+
     render() {
-        return <input id="search-input"
-                      onChange={(t) => this.propagateInputChange(t.target.value)}
-        />;
+        return <div className="search-panel">
+            <div className="search-input-wrapper mdc-form-field mdc-form-field--align-end">
+                <div className="mdc-textfield">
+                    <input type="text"
+                           placeholder={
+                               this.props.searchMode === SearchMode.CEBUANO_TO_ENGLISH
+                                   ? "Type Cebuano"
+                                   : "Type English"
+                           }
+                           className="mdc-textfield__input search-input"
+                           onChange={(t) => this.propagateInputChange(t.target.value)}
+                    />
+                </div>
+            </div>
+            <div className="search-mode">
+                <div className="mdc-form-field">
+                    <div className="mdc-radio" data-demo-no-js="">
+                        <input className="mdc-radio__native-control"
+                               type="radio"
+                               id="cebuanoToEnglish"
+                               checked={this.props.searchMode === SearchMode.CEBUANO_TO_ENGLISH}
+                               onChange={(t) => this.onQueryChange(this.props.searchQuery, SearchMode.CEBUANO_TO_ENGLISH)}
+                               name="cebuanoToEnglish"/>
+                        <div className="mdc-radio__background">
+                            <div className="mdc-radio__outer-circle"/>
+                            <div className="mdc-radio__inner-circle"/>
+                        </div>
+                    </div>
+                    <label id="ex1-radio1-label" htmlFor="cebuanoToEnglish">{cebuanoToEnglish}</label>
+                </div>
+                <div className="mdc-form-field">
+                    <div className="mdc-radio" data-demo-no-js="">
+                        <input className="mdc-radio__native-control"
+                               type="radio"
+                               checked={this.props.searchMode === SearchMode.ENGLISH_TO_CEBUANO}
+                               onChange={(t) => this.onQueryChange(this.props.searchQuery, SearchMode.ENGLISH_TO_CEBUANO)}
+                               id="englishToCebuano"
+                               name="englishToCebuano"/>
+                        <div className="mdc-radio__background">
+                            <div className="mdc-radio__outer-circle"/>
+                            <div className="mdc-radio__inner-circle"/>
+                        </div>
+                    </div>
+                    <label id="ex1-radio2-label" htmlFor="englishToCebuano">{englishToCebuano}</label>
+                </div>
+            </div>
+        </div>
+            ;
     }
 }
 
@@ -94,5 +150,3 @@ export const SearchContainer = connect(
     mapStateToProps,
     mapDispatchToProps
 )(SearchPresenter);
-
-export default SearchContainer;

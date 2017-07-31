@@ -1,13 +1,12 @@
 import * as React from "react";
-import {ReactNode, StatelessComponent} from "react";
+import {ReactHTML, ReactNode, StatelessComponent} from "react";
 import {ActiveRequestHaving, ErrorHaving, ResultsHaving} from "../reducers/search";
 import {CebuanoDoc, SearchResultRow} from "../couch/fetch-search-results";
 import {connect} from "react-redux";
 import {CebuanoState} from "../reducers/index";
-import {SearchOwnProps} from "./Search";
 
-function determineTagName(tagName: string): string {
-    switch(tagName) {
+function determineTagName(tagName: string): keyof ReactHTML {
+    switch (tagName) {
         case "sup":
         case "super":
             return "sup";
@@ -17,7 +16,7 @@ function determineTagName(tagName: string): string {
             return "span";
         default:
             return "span";
-       }
+    }
 }
 
 function convertToHtml(xml: any) {
@@ -43,16 +42,18 @@ function convertToHtml(xml: any) {
         // property="term" > The Word
         // property="definition" id="1"> The Definition 1
         // property="definition" id="2"> The Definition 2
-        
+
         // author — author: name, academic title, and other distinguishments;
         // source — source;
         // source-date — date of publication (in the specified source and/or by the specified author, but not on the website where the glossary is published);
 
-        
+
         const children: ReactNode[] = (xml[2] && xml[2].length > 0) ? (xml[2] as any[]).map(a => convertToHtml(a)) : [];
         return React.createElement(
             determineTagName(tagName),
-            {className: classes.join("")},
+            {
+                className: classes.join("")
+            },
             ...children
         );
     } else {
@@ -83,7 +84,7 @@ export const SearchResult: StatelessComponent<{ row: SearchResultRow }> = ({row}
 
 export type SearchResultsProps = ResultsHaving & ErrorHaving & ActiveRequestHaving;
 
-const mapDispatchToProps = (dispatch: any, ignored: SearchResultsProps): {} => {
+const mapDispatchToProps = (ignored1: any, ignored2: {}): {} => {
     return {
         // onChange: (params: SearchParams) => {
         //     dispatch(queryChanged(params));
@@ -95,7 +96,7 @@ const mapDispatchToProps = (dispatch: any, ignored: SearchResultsProps): {} => {
 };
 
 
-const mapStateToProps = (state: CebuanoState, ignored: SearchOwnProps): SearchResultsProps => {
+const mapStateToProps = (state: CebuanoState, ignored: {}): SearchResultsProps => {
     return {
         searchResults: state.search.searchResults,
         error: state.search.error,
