@@ -17,6 +17,10 @@ body {
     font-weight: bold;
 }
 
+.pos {
+    font-style: italic;
+}
+
 .mdc-textfield {
     margin-bottom: 8px;
     max-width: 100%;
