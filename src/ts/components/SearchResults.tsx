@@ -6,6 +6,20 @@ import {connect} from "react-redux";
 import {CebuanoState} from "../reducers/index";
 import {SearchOwnProps} from "./Search";
 
+function determineTagName(tagName: string): string {
+    switch(tagName) {
+        case "sup":
+        case "super":
+            return "sup";
+        case "sub":
+            return "sub";
+        case "sense":
+            return "span";
+        default:
+            return "span";
+       }
+}
+
 function convertToHtml(xml: any) {
     if (typeof xml === "string") {
         return xml;
@@ -23,7 +37,8 @@ function convertToHtml(xml: any) {
         }
 
         const children: ReactNode[] = (xml[2] && xml[2].length > 0) ? (xml[2] as any[]).map(a => convertToHtml(a)) : [];
-        return React.createElement("span",
+        return React.createElement(
+            determineTagName(tagName),
             {className: classes.join("")},
             ...children
         );
