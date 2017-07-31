@@ -36,6 +36,19 @@ function convertToHtml(xml: any) {
             }
         }
 
+        // https://yandex.com/support/webmaster/microdata/term-definition-markup.html#term-definition-markup
+        // vocab="http://webmaster.yandex.ru/vocabularies/"
+        // typeof="term-def.xml"
+
+        // property="term" > The Word
+        // property="definition" id="1"> The Definition 1
+        // property="definition" id="2"> The Definition 2
+        
+        // author — author: name, academic title, and other distinguishments;
+        // source — source;
+        // source-date — date of publication (in the specified source and/or by the specified author, but not on the website where the glossary is published);
+
+        
         const children: ReactNode[] = (xml[2] && xml[2].length > 0) ? (xml[2] as any[]).map(a => convertToHtml(a)) : [];
         return React.createElement(
             determineTagName(tagName),
