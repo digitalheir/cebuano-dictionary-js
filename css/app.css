@@ -21,6 +21,10 @@ body {
     font-style: italic;
 }
 
+.number {
+    font-weight: bold;
+}
+
 .mdc-textfield {
     margin-bottom: 8px;
     max-width: 100%;
