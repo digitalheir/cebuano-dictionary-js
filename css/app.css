@@ -15,8 +15,8 @@ body {
 
 .cebuano-stems {
     list-style: none;
-    margin: 0 40px;
-    padding: 1em 0;
+    margin: 0;
+    padding: 0;
 }
 
 .stem-dl {

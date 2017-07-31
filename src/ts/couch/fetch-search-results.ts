@@ -1,3 +1,5 @@
+import {Derivation} from "cebuano-stemmer";
+
 export enum SearchMode {
     CEBUANO_TO_ENGLISH, ENGLISH_TO_CEBUANO
 }
@@ -5,7 +7,7 @@ export enum SearchMode {
 export interface SearchParams {
     query: string;
     searchMode: SearchMode;
-    roots: { [key: string]: boolean };
+    roots: Derivation[];
     // drillDown: {
     //     [key: string]: {
     //         queryValue: string,
@@ -17,7 +19,8 @@ export interface SearchParams {
 
 export function makeUrl({
                             query,
-                            searchMode
+                            searchMode,
+                            roots
                         }: SearchParams,
                         limit: number,
                         skip: number): string {
@@ -34,7 +37,10 @@ export function makeUrl({
             return makeUrlFromEnglish(query, params);
         case SearchMode.CEBUANO_TO_ENGLISH:
         default:
-            return makeUrlFromCebuano(query, params);
+            return makeUrlFromCebuano(
+                query + roots.map(r => `%20OR%20${r.root}`),
+                params
+            );
     }
 }
 

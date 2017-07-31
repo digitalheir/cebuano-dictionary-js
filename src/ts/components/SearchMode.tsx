@@ -8,7 +8,7 @@ const englishToCebuano = "English to Cebuano";
 
 export const SearchModePresenter: StatelessComponent<{
     searchMode: SearchMode,
-    onQueryChange: (query: string, searchMode: SearchMode) => any
+    onQueryChange: (searchMode: SearchMode) => any
 }>
     = ({searchMode, onQueryChange}) => {
     return <div className="search-mode">
@@ -18,7 +18,7 @@ export const SearchModePresenter: StatelessComponent<{
                        type="radio"
                        id="cebuanoToEnglish"
                        checked={searchMode === SearchMode.CEBUANO_TO_ENGLISH}
-                       onChange={(t) => onQueryChange(this.props.searchQuery, SearchMode.CEBUANO_TO_ENGLISH)}
+                       onChange={(t) => onQueryChange(SearchMode.CEBUANO_TO_ENGLISH)}
                        name="cebuanoToEnglish"/>
                 <div className="mdc-radio__background">
                     <div className="mdc-radio__outer-circle"/>
@@ -32,7 +32,7 @@ export const SearchModePresenter: StatelessComponent<{
                 <input className="mdc-radio__native-control"
                        type="radio"
                        checked={searchMode === SearchMode.ENGLISH_TO_CEBUANO}
-                       onChange={(t) => onQueryChange(this.props.searchQuery, SearchMode.ENGLISH_TO_CEBUANO)}
+                       onChange={(t) => onQueryChange(SearchMode.ENGLISH_TO_CEBUANO)}
                        id="englishToCebuano"
                        name="englishToCebuano"/>
                 <div className="mdc-radio__background">

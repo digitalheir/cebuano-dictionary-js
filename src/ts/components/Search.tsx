@@ -8,6 +8,8 @@ import {SearchState} from "../reducers/search";
 import {PureComponent} from "react";
 import {debounce} from "lodash";
 import {SearchModePresenter} from "./SearchMode";
+import {StemmingDerivationsPresenter} from "./StemmingDerivations";
+import {Derivation, normalize, normalizeAndStem} from "cebuano-stemmer";
 
 export interface SearchOwnProps {
     defaultValue?: string;
@@ -81,16 +83,24 @@ export class SearchPresenter extends PureComponent<SearchPresenterProps, {}> {
 
 
     propagateInputChange = debounce((value: string) => {
-        console.log(value);
-        this.onQueryChange(value, this.props.searchMode);
+        const derivations: Derivation[] =
+            this.props.searchMode === SearchMode.CEBUANO_TO_ENGLISH
+                ? normalizeAndStem(value.trim())
+                : [];
+
+        this.onQueryChange(
+            value,
+            this.props.searchMode,
+            derivations
+        );
     }, 500, {leading: true, trailing: true});
 
-    onQueryChange(query: string, searchMode: SearchMode) {
+    onQueryChange(query: string, searchMode: SearchMode, roots: Derivation[]) {
         abortActiveRequest(this.props.activeRequest);
         this.props.onChange({
             query,
             searchMode,
-            searchRoots: this.props.searchRoots
+            roots
         });
     }
 
@@ -109,7 +119,16 @@ export class SearchPresenter extends PureComponent<SearchPresenterProps, {}> {
                     />
                 </div>
             </div>
-            <SearchModePresenter searchMode={this.props.searchMode} onQueryChange={this.onQueryChange}/>
+            <StemmingDerivationsPresenter searchMode={this.props.searchMode}
+                                          query={this.props.searchQuery}
+                                          roots={this.props.searchRoots}
+            />
+            <SearchModePresenter searchMode={this.props.searchMode}
+                                 onQueryChange={(b) => this.onQueryChange(
+                                     this.props.searchQuery,
+                                     b,
+                                     this.props.searchRoots
+                                 )}/>
         </div>
             ;
     }

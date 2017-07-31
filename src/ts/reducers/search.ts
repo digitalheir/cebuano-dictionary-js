@@ -1,6 +1,7 @@
 import {Action, Reducer} from "redux";
 import {isRequestError, isRequestStarted, isRequestSuccess, isResetSearch} from "../actions/search";
 import {SearchMode, SearchResult} from "../couch/fetch-search-results";
+import {Derivation} from "cebuano-stemmer";
 
 
 export interface ErrorHaving {
@@ -21,7 +22,7 @@ export interface ActiveRequestHaving {
 
 export interface SearchState extends ResultsHaving, ErrorHaving, ActiveRequestHaving, SearchModeHaving {
     searchQuery?: string;
-    searchRoots: { [key: string]: boolean };
+    searchRoots: Derivation[];
 }
 
 const defaultState: SearchState = {
@@ -30,7 +31,7 @@ const defaultState: SearchState = {
     searchMode: SearchMode.CEBUANO_TO_ENGLISH,
     searchQuery: "",
     searchResults: undefined,
-    searchRoots: {}
+    searchRoots: []
 };
 
 

@@ -18,5 +18,3 @@ export const rootReducer = combineReducers<State>({
     // routing: routerReducer,
     // form: formReducer,
 });
-
-export default rootReducer;
