@@ -11,6 +11,7 @@ import {
     Derivation,
     Affix
 } from "cebuano-stemmer";
+import {queryChanged} from "../actions/search";
 
 function convertToHtml(xml: any) {
     if (typeof xml === "string") {
@@ -61,8 +62,12 @@ export const SelabelarchResult: StatelessComponent<{ row: SearchResultRow }> = (
 
 export type StemmingDerivationsProps = SearchParams;
 
-const mapDispatchToProps = (ignored: any, ignored2: StemmingDerivationsProps): {} => {
-    return {};
+const mapDispatchToProps = (dispatch: any, ignored: StemmingDerivationsProps): {} => {
+    return {
+        setRoot: function (root: string, include: boolean) {
+            dispatch(queryChanged(params));
+        }
+    };
 };
 
 
@@ -76,15 +81,19 @@ const mapStateToProps = (state: CebuanoState, ignored: {}): StemmingDerivationsP
 export const AffixPresenter: StatelessComponent<{ affix: Affix }> = ({affix}) => {
     const children = [];
 
+    children.push(<span key="form" className="affix-form">{affix.form}</span>);
+
+    if (affix.rootType) {
+        children.push(" ");
+        children.push(<span key="roottype" className="affix-roottype">{affix.rootType}</span>);
+    }
     if (affix.label) {
         const label = affix.label.trim();
         if (label !== "" && label !== "TODO") {
+            children.push(" ");
             children.push(<span key="label" className="affix-label">{label}</span>);
         }
     }
-    if (affix.rootType)
-        children.push(<span key="roottype" className="affix-roottype">{affix.rootType}</span>);
-    children.push(<span key="form" className="affix-form">{affix.form}</span>);
 
     return <dd className="stem-affix"><span>
         {children}
@@ -92,18 +101,45 @@ export const AffixPresenter: StatelessComponent<{ affix: Affix }> = ({affix}) =>
     </dd>;
 };
 
-export const Stem: StatelessComponent<{ derivation: Derivation }> = ({derivation}) => {
+export const Stem: StatelessComponent<{ derivation: Derivation, setRoot: (root: string, include: boolean) => any}> = ({derivation, setRoot}) => {
+
     const affixes =
         derivation.affixes
-            ? derivation.affixes.map((a, i) => <AffixPresenter key={a.label + i} affix={a}/>)
+            ? derivation.affixes.map((a, i) => <AffixPresenter key={a.label + i} affix={a}/>).reverse()
             : [];
-
-    return <div className="stem">
-        <dl>
-            <dt className="stem-root">{derivation.root}</dt>
+    return <li key={derivation.root} className="stem">
+        <dl className="stem-dl">
+            <dt className="stem-root">
+                <div className="mdc-form-field">
+                    <div className="mdc-checkbox">
+                        <input
+                            onChange={(t) => {
+                                setRoot(derivation.root, t.target.checked);
+                            }
+                            }
+                            type="checkbox"
+                            id={derivation.root}
+                            className="mdc-checkbox__native-control"/>
+                        <div className="mdc-checkbox__background">
+                            <svg className="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+                                <path className="mdc-checkbox__checkmark__path"
+                                      fill="none"
+                                      stroke="white"
+                                      d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
+                            </svg>
+                            <div className="mdc-checkbox__mixedmark"/>
+                        </div>
+                    </div>
+                    <label htmlFor={derivation.root}
+                           id={derivation.root + "-label"}>
+                        {derivation.root}
+                    </label>
+                </div>
+            </dt>
             {affixes}
         </dl>
-    </div>;
+    </li>
+        ;
 };
 
 export const CebuanoStemmingDerivations: StatelessComponent<{ normalizedWord: string }> = ({normalizedWord}) => {
@@ -112,13 +148,13 @@ export const CebuanoStemmingDerivations: StatelessComponent<{ normalizedWord: st
         cebuanoStemmer,
         normalizedWord
     );
-
     return <ul className="cebuano-stems">
-        {derivations.map((d, i) => <Stem key={normalizedWord + i} derivation={d}/>)}
+        {derivations.map((d, i) => <Stem setRoot={setRoot} key={normalizedWord + i} derivation={d}/>)}
     </ul>;
 };
 
-// export const StemmingDerivationsPresenter: StatelessComponent<StemmingDerivationsProps> = ({query, searchMode}) => {
+// export const StemmingDerivationsPresenter: StatelessComponent<StemmingDerivationsProps> =
+// ({query, searchMode}) => {
 //     return searchMode === SearchMode.CEBUANO_TO_ENGLISH
 //         ? <CebuanoStemmingDerivations normalizedWord={normalize(query)}/>
 //         : <div className="english-query"/>
@@ -129,7 +165,7 @@ export class StemmingDerivationsPresenter extends PureComponent<StemmingDerivati
     render() {
         const {searchMode, query} = this.props;
         return searchMode === SearchMode.CEBUANO_TO_ENGLISH
-            ? <CebuanoStemmingDerivations normalizedWord={normalize(query)}/>
+            ? <CebuanoStemmingDerivations normalizedWord={normalize(query.trim())}/>
             : <div className="english-query"/>
             ;
     }

@@ -7,6 +7,7 @@ import {queryChanged} from "../actions/search";
 import {SearchState} from "../reducers/search";
 import {PureComponent} from "react";
 import {debounce} from "lodash";
+import {SearchModePresenter} from "./SearchMode";
 
 export interface SearchOwnProps {
     defaultValue?: string;
@@ -74,8 +75,6 @@ export function abortActiveRequest(activeRequest?: XMLHttpRequest) {
 
         <div>You can use the <a href="https://docs.cloudant.com/search.html#query-syntax">Lucene Syntax</a> for advanced search.</div>
 */
-const cebuanoToEnglish = "Cebuano to English";
-const englishToCebuano = "English to Cebuano";
 
 
 export class SearchPresenter extends PureComponent<SearchPresenterProps, {}> {
@@ -90,7 +89,8 @@ export class SearchPresenter extends PureComponent<SearchPresenterProps, {}> {
         abortActiveRequest(this.props.activeRequest);
         this.props.onChange({
             query,
-            searchMode
+            searchMode,
+            searchRoots: this.props.searchRoots
         });
     }
 
@@ -109,38 +109,7 @@ export class SearchPresenter extends PureComponent<SearchPresenterProps, {}> {
                     />
                 </div>
             </div>
-            <div className="search-mode">
-                <div className="mdc-form-field">
-                    <div className="mdc-radio" data-demo-no-js="">
-                        <input className="mdc-radio__native-control"
-                               type="radio"
-                               id="cebuanoToEnglish"
-                               checked={this.props.searchMode === SearchMode.CEBUANO_TO_ENGLISH}
-                               onChange={(t) => this.onQueryChange(this.props.searchQuery, SearchMode.CEBUANO_TO_ENGLISH)}
-                               name="cebuanoToEnglish"/>
-                        <div className="mdc-radio__background">
-                            <div className="mdc-radio__outer-circle"/>
-                            <div className="mdc-radio__inner-circle"/>
-                        </div>
-                    </div>
-                    <label id="ex1-radio1-label" htmlFor="cebuanoToEnglish">{cebuanoToEnglish}</label>
-                </div>
-                <div className="mdc-form-field">
-                    <div className="mdc-radio" data-demo-no-js="">
-                        <input className="mdc-radio__native-control"
-                               type="radio"
-                               checked={this.props.searchMode === SearchMode.ENGLISH_TO_CEBUANO}
-                               onChange={(t) => this.onQueryChange(this.props.searchQuery, SearchMode.ENGLISH_TO_CEBUANO)}
-                               id="englishToCebuano"
-                               name="englishToCebuano"/>
-                        <div className="mdc-radio__background">
-                            <div className="mdc-radio__outer-circle"/>
-                            <div className="mdc-radio__inner-circle"/>
-                        </div>
-                    </div>
-                    <label id="ex1-radio2-label" htmlFor="englishToCebuano">{englishToCebuano}</label>
-                </div>
-            </div>
+            <SearchModePresenter searchMode={this.props.searchMode} onQueryChange={this.onQueryChange}/>
         </div>
             ;
     }

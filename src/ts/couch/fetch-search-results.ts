@@ -5,6 +5,7 @@ export enum SearchMode {
 export interface SearchParams {
     query: string;
     searchMode: SearchMode;
+    roots: { [key: string]: boolean };
     // drillDown: {
     //     [key: string]: {
     //         queryValue: string,

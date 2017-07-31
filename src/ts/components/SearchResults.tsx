@@ -19,7 +19,7 @@ function determineTagName(tagName: string): keyof ReactHTML {
     }
 }
 
-function convertToHtml(xml: any) {
+function convertToHtml(xml: any, i: number) {
     if (typeof xml === "string") {
         return xml;
     }
@@ -48,10 +48,11 @@ function convertToHtml(xml: any) {
         // source-date — date of publication (in the specified source and/or by the specified author, but not on the website where the glossary is published);
 
 
-        const children: ReactNode[] = (xml[2] && xml[2].length > 0) ? (xml[2] as any[]).map(a => convertToHtml(a)) : [];
+        const children: ReactNode[] = (xml[2] && xml[2].length > 0) ? (xml[2] as any[]).map((a, i) => convertToHtml(a, i)) : [];
         return React.createElement(
             determineTagName(tagName),
             {
+                key: i.toString(),
                 className: classes.join("")
             },
             ...children
@@ -65,7 +66,7 @@ function convertToHtml(xml: any) {
 function toHtmlEntry(doc: CebuanoDoc) {
     const xml = doc.entry;
     if (xml) {
-        return xml.map(xml => convertToHtml(xml));
+        return xml.map((xml, i) => convertToHtml(xml, i));
     } else {
         console.error("COULD NOT HANDLE " + JSON.stringify(xml));
         return doc._id;
@@ -73,7 +74,7 @@ function toHtmlEntry(doc: CebuanoDoc) {
 }
 
 export const SearchResult: StatelessComponent<{ row: SearchResultRow }> = ({row}) => {
-    return <li key={row.id}>
+    return <li key={row.id+Math.random()}>
         {row.doc
             ? toHtmlEntry(row.doc)
             : row.id

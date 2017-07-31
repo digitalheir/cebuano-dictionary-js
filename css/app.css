@@ -9,6 +9,32 @@ body {
     margin: 24px 48px;
 }
 
+.affix-form {
+    font-weight: bold;
+}
+
+.cebuano-stems {
+    list-style: none;
+    margin: 0 40px;
+    padding: 1em 0;
+}
+
+.stem-dl {
+    margin: 0;
+}
+
+.affix-roottype {
+    border-bottom: 1px dotted #333;
+}
+
+.affix-label::before {
+    content: "(";
+}
+
+.affix-label::after {
+    content: ")";
+}
+
 .i {
     font-style: italic;
 }

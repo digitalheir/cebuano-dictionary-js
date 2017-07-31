@@ -21,6 +21,7 @@ export interface ActiveRequestHaving {
 
 export interface SearchState extends ResultsHaving, ErrorHaving, ActiveRequestHaving, SearchModeHaving {
     searchQuery?: string;
+    searchRoots: { [key: string]: boolean };
 }
 
 const defaultState: SearchState = {
@@ -28,7 +29,8 @@ const defaultState: SearchState = {
     error: undefined,
     searchMode: SearchMode.CEBUANO_TO_ENGLISH,
     searchQuery: "",
-    searchResults: undefined
+    searchResults: undefined,
+    searchRoots: {}
 };
 
 
@@ -37,10 +39,10 @@ function isForDifferentRequest(request: XMLHttpRequest, activeRequest?: XMLHttpR
 }
 
 export const searchReducer: Reducer<SearchState> = (state = defaultState, action: Action) => {
-    console.log(state.searchMode);
     if (isRequestStarted(action)) {
         return {
-            searchMode: state.searchMode,
+            searchRoots: action.searchParams.roots,
+            searchMode: action.searchParams.searchMode,
             searchQuery: action.searchParams.query,
             activeRequest: action.request,
             error: undefined
@@ -54,6 +56,7 @@ export const searchReducer: Reducer<SearchState> = (state = defaultState, action
         } else
             return {
                 searchQuery: state.searchQuery,
+                searchRoots: state.searchRoots,
                 searchMode: state.searchMode,
                 activeRequest: undefined,
                 searchResults: action.result,
@@ -64,6 +67,8 @@ export const searchReducer: Reducer<SearchState> = (state = defaultState, action
         return {
             searchMode: action.searchParams.searchMode,
             searchQuery: action.searchParams.query,
+            roots: action.searchParams.roots,
+            searchRoots: state.searchRoots,
             activeRequest: undefined,
             error: undefined,
             searchResults: undefined
