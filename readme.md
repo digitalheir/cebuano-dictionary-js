@@ -9,7 +9,7 @@ A dictionary and stemmer for the Cebuano language spoken in the Philippines.
 
 Written in TypeScript, compiled to [ES6 CommonJS module](https://www.npmjs.com/package/cebuano-stemmer) (for use in Node.js) and a [single-file ES5 UMD module](https://github.com/digitalheir/cebuano-stemmer-js/releases) (for use in the browser).
 
-Based on [J. Hellingman's Cebuano stemmer for Java and dictionary for Android](https://bitbucket.org/jhellingman/cebuano-dictionary-app).
+Based on [J. Hellingman's Cebuano stemmer for Java and dictionary for Android](https://bitbucket.org/jhellingman/cebuano-dictionary-app), which is in turn based on J. Wolff's seminal work [*A Dictionary of Cebuano Visayan*](http://www.gutenberg.org/files/40074/40074-h/40074-h.htm).
 
 ## Dictionary
 The dictionary data is converted from [a SQLite database](https://bitbucket.org/jhellingman/cebuano-dictionary-app/src/a5dd59e660434915e2128557aad8ead3c2339004/app/src/main/assets/databases/?at=master) to a publicly-readable CouchDB instance hosted at https://publicdomainreview.cloudant.com/cebuano_dictionary.
