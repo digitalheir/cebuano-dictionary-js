@@ -70,6 +70,8 @@ export function abortActiveRequest(activeRequest?: XMLHttpRequest) {
             headsCursor.moveToFirst();
             return headsCursor;
         }
+        
+        <div>You can use the <a href="https://docs.cloudant.com/search.html#query-syntax">Lucene Syntax</a> for advanced search.</div>
 */
 export class SearchPresenter extends PureComponent<SearchPresenterProps, {}> {
 
