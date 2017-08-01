@@ -7,6 +7,13 @@ if (typeof document !== "undefined") {
     // Client render code goes here...
     console.log("...");
 }
+]
+
+
+// todo
+
+const map: {[key: string]: CebuanoDoc} = {};
+docs.rows.forEach(doc => map[`words/${doc._id}`] = doc)
 
 function splitPath(path: string): string[] {
     const match = path.match(/\//g);
