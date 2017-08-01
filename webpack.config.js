@@ -10,12 +10,23 @@ const plugins = [
         {
             from: "src/public"
         }
-    ])
+    ]),
+    new StaticSiteGeneratorPlugin({
+        entry: "renderStatic",
+        paths: [
+            '/'
+        ].concat(Objects.keys(words)),
+
+        locals: {
+            words
+        }
+    })
 ];
 
 const config = {
     entry: {
-        app: __dirname + "/src/ts/app.tsx"
+        app: __dirname + "/src/ts/app.tsx",
+        renderStatic: __dirname + "/src/render.tsx"
     },
     devtool: "source-map",
     output: {
