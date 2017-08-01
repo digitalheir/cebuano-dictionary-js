@@ -1,8 +1,4 @@
-function index(a, b, c) {
-    console.log(b)
-}
-
-fromCebuano = function (doc) {
+function (doc) {
     function isElementWithCebLuanguageAttribute(xml) {
         return xml[0] === 1
             && xml.length >= 4
@@ -42,24 +38,35 @@ fromCebuano = function (doc) {
     }
 
     function getCebuanoString(xml) {
-        var strs = [];
-
         if (typeof xml === "object") {
             if (isElementWithCebLuanguageAttribute(xml)) {
-                strs.push(getString(xml));
+                var str1 = (getString(xml));
+                if(!!str1){
+                  var trstr1 = str1.trim();
+                  if(!!trstr1)
+                  index("default", trstr1, {"store": true});
+                }
             } else {
                 for (var key in xml) if (xml.hasOwnProperty(key)) {
                     var str = getCebuanoString(xml[key]);
-                    if (!!str) strs.push(str);
-                }
+                    if (!!str) {
+                      var trstr = str.trim();
+                      if(!!trstr)
+                      index("default", trstr, {"store": true});
+                }}
             }
         }
-
-        return strs.join(" ").replace(/ [a-z] /g, " ");
+        // return strs.join(" ").replace(/ [a-z] /g, " ");
     }
 
-    if (doc.entry) index("default", getCebuanoString(doc.entry), {"store": true});
-    if (doc.head) index("synonym", doc.head, {"store": true});
+    if (!!doc.entry) getCebuanoString(doc.entry);
+    if (!!doc.head) {index("default", doc.head, {"store": true});
+     index("head", doc.head, {"store": true});}
+    if (!!doc.heads && typeof doc.heads.length === "number") {
+      for(var i = 0; i < doc.heads.length; i++) {
+        var normalized_head = doc.heads[i].normalized_head || "";
+        index("head", normalized_head, {"store": true});
+        index("index", normalized_head, {"store": true});
+      }
+    }
 }
-
-exports.default = fromCebuano;
