@@ -1,4 +1,19 @@
 const CopyWebpackPlugin = require("copy-webpack-plugin");
+const StaticSiteGeneratorPlugin = require('static-site-generator-webpack-plugin');
+
+const defs = require("db-dump.json");
+
+function mapDefinitions(defs/*: DbDump*/){
+    const map/*: {[key: string]: CebuanoDoc}*/ = {};
+    defs.rows.forEach(doc => {
+        if(doc._id.indexOf("_design/") !== 0){
+            map[`definitions/${doc._id.charAt(0)}/${doc._id}`] = doc;
+        }
+    });
+    return map;
+}
+
+const definitions/*: {[key: string]: CebuanoDoc}*/ = mapDefinitions(defs);
 
 const plugins = [
     new CopyWebpackPlugin([
@@ -15,10 +30,10 @@ const plugins = [
         entry: "renderStatic",
         paths: [
             '/'
-        ].concat(Objects.keys(words)),
+        ].concat(Object.keys(definitions)),
 
         locals: {
-            words
+            definitions
         }
     })
 ];
