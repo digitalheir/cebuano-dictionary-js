@@ -66,11 +66,6 @@ export function makeUrlFromEnglish(query: string,
     return url + params.join("&");
 }
 
-export interface CebuanoDoc {
-    _id: string;
-    entry: any[]; // TODO...?
-}
-
 export interface SearchResultRow {
     id: string;
     order: number[];
