@@ -35,7 +35,7 @@ Examples:
 |Cebuano synonym search for "abat"|https://publicdomainreview.cloudant.com/cebuano_dictionary/_design/search/_search/fromCebuano?q=synonym:abat|
 
 
-A Cebuano [analyzer](https://docs.cloudant.com/search.html#analyzers) that normalizes text input remains to be implemented. Take care.
+(for more information, add the query parameter `include_docs=true`)
 
 ## Stemmer
 
