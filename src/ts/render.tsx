@@ -12,8 +12,8 @@ if (typeof document !== "undefined") {
 
 // todo
 
-const map: {[key: string]: CebuanoDoc} = {};
-docs.rows.forEach(doc => map[`words/${doc._id}`] = doc)
+// const map: {[key: string]: CebuanoDoc} = {};
+// docs.rows.forEach(doc => map[`words/${doc._id}`] = doc)
 
 function splitPath(path: string): string[] {
     const match = path.match(/\//g);
@@ -21,8 +21,9 @@ function splitPath(path: string): string[] {
     else return match;
 }
 
-function getComponent(path: string, definition?: CebuanoWord) {
+function getComponent(path: string, definitions: {[key: string]: CebuanoDoc}) {
     const relativePath = splitPath(path).slice(1).map(a => "../").join("");
+    const definitions = definitions[path];
     switch (path) {
         case "/":
             return <Html/>;
@@ -36,6 +37,6 @@ function getComponent(path: string, definition?: CebuanoWord) {
 
 export default (locals: any, callback: any) => {
     callback(undefined, "<!DOCTYPE html>\n" + renderToStaticMarkup(
-        getComponent(locals.path, locals.definition)
+        getComponent(locals.path, locals.definitions)
     ).replace("</li>", "</li>\n"));
 };
