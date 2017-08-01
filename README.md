@@ -1,3 +1,3 @@
-# latex-parser demo
+# Cebuano dictionary and stemmer
 
-Visit at https://digitalheir.github.io/latex-parser/
+Visit at https://digitalheir.github.io/cebuano-dictionary-js/
