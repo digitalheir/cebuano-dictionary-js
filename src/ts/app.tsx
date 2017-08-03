@@ -15,9 +15,6 @@ const store = createStore(rootReducer,
         loggerMiddleware // neat middleware that logs actions
     ));
 
-
-
-
 const mountPoint = document.getElementById("mount-point");
 
 if (mountPoint)
@@ -27,3 +24,14 @@ if (mountPoint)
         </Provider>,
         mountPoint
     );
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('js/service-worker.js', {
+    // scope: '/'
+  }).then(function(sw) {
+    console.log("Service worker registered");
+  }).catch(function(e) {
+    console.error("Could not register service worker");
+    console.error(e);
+  });
+}
