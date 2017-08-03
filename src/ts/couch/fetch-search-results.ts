@@ -38,7 +38,7 @@ export function makeUrl({
         case SearchMode.CEBUANO_TO_ENGLISH:
         default:
             return makeUrlFromCebuano(
-                query + roots.map(r => `%20OR%20${r.root}`),
+                query + roots.map(r => `%20OR%20${r.root}%20OR%20head:${r.root}`),
                 params
             );
     }
