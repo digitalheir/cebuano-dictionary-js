@@ -12,6 +12,10 @@ body {
 .affix-form {
     font-weight: bold;
 }
+/*todo class*/
+.search-results li {
+    margin-bottom: 24px;
+}
 
 .cebuano-stems {
     list-style: none;
