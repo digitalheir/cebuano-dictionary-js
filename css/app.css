@@ -1,10 +1,3 @@
-@font-face {
-    font-family: KaTeX_Main;
-    src: url(fonts/KaTeX_Main-Regular.eot);
-    src: url(fonts/KaTeX_Main-Regular.eot#iefix) format('embedded-opentype'), url(fonts/KaTeX_Main-Regular.woff2) format('woff2'), url(fonts/KaTeX_Main-Regular.woff) format('woff'), url(fonts/KaTeX_Main-Regular.ttf) format('truetype');
-    font-style: normal;
-}
-
 body {
     margin: 24px 48px;
 }
