@@ -1,5 +1,5 @@
 import {expect} from "chai";
-import normalize from "../../src/normalizer/CebuanoNormalizer";
+import {normalize} from "../../src/index";
 
 describe("CebuanoNormalizer", () => {
     it("should normalize", () => {

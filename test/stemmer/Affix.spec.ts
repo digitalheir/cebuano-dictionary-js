@@ -1,5 +1,5 @@
 import {expect} from "chai";
-import {Affix, compileAffix, appliesToAffix, toXmlAffix} from "../../src/stemmer/Affix";
+import {Affix, compileAffix, appliesToAffix, toXmlAffix} from "../../src/index";
 
 describe("Affix", () => {
     const a = createTestAffix();

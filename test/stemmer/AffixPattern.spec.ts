@@ -5,7 +5,7 @@ import {
     toXmlAffixPattern,
     stripPattern,
     patternApplies
-} from "../../src/stemmer/AffixPattern";
+} from "../../src/index";
 
 describe("AffixPattern", () => {
     it("should apply", () => {

@@ -1,6 +1,6 @@
-import {RootWordProvider} from "../../src/stemmer/root-word-provider/RootWordProvider";
+import {RootWordProvider} from "../../src/dictionary/RootWordProvider";
 
-export default class TestRootWordProvider implements RootWordProvider {
+export class TestRootWordProvider implements RootWordProvider {
     calls = 0;
 
     isRootWord(word: string): boolean {

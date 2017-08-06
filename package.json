@@ -1,6 +1,6 @@
 {
   "name": "cebuano-stemmer",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A stemmer for the Cebuano language spoken in the Philippines",
   "keywords": [
     "cebuano",
@@ -41,7 +41,6 @@
     "yargs": "latest"
   },
   "scripts": {
-    "build": "npm run clean && npm run build:ts && npm run build:cp && node write-package.js && npm run build:min",
     "build:min": "webpack -p",
     "build:ts": "tsc",
     "clean": "rimraf dist",

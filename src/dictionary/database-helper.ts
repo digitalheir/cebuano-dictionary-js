@@ -1,7 +1,5 @@
-import {RootWordProvider} from "../stemmer/root-word-provider/RootWordProvider";
-import {roots} from "../stemmer/root-word-provider/roots";
-import {Derivation} from "../stemmer/Derivation";
-import {normalize} from "../normalizer/CebuanoNormalizer";
+import {RootWordProvider} from "./RootWordProvider";
+import {roots} from "./roots";
 
 // const HEAD_ID = "_id";
 // const HEAD_HEAD = "head";

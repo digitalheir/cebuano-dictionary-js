@@ -1,6 +1,6 @@
 import {Stemmer} from "./Stemmer";
 
-const stemmer: Stemmer = {
+export const stemmer: Stemmer = {
     "language": "ceb",
     "compiled": true,
     "constants": {
@@ -2394,4 +2394,3 @@ const stemmer: Stemmer = {
         }
     ]
 };
-export default stemmer;

@@ -5,11 +5,11 @@ import {Affix} from "../src/stemmer/Affix";
 import {AffixPattern} from "../src/stemmer/AffixPattern";
 
 
-const strict = true;
+const strictXml = true;
 
 export const parseStream = function parse(stream: any) {
     return new Promise((resolve, reject) => {
-            const parseStream = createStream(strict, {});
+            const parseStream = createStream(strictXml, {});
 
             let stemmer: Stemmer;
             let temporaryAffix: Affix;
@@ -75,5 +75,3 @@ export const parseStream = function parse(stream: any) {
         }
     );
 };
-
-export default parseStream;

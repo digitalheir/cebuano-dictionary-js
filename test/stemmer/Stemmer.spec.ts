@@ -1,11 +1,8 @@
 import {expect} from "chai";
 import {createReadStream} from "fs";
-import parseStream from "../../generate-stemmer/StemmerParser";
-import {Stemmer, findDerivations} from "../../src/stemmer/Stemmer";
-import {Derivation, toStringDervation} from "../../src/stemmer/Derivation";
-import TestRootWordProvider from "./testRootWordProvider";
-import {RootWordProvider} from "../../src/stemmer/root-word-provider/RootWordProvider";
-import {DictionaryDatabase} from "../../src/dictionary/database";
+import {parseStream} from "../../generate-stemmer/StemmerParser";
+import {TestRootWordProvider} from "./testRootWordProvider";
+import {Stemmer, findDerivations,Derivation, toStringDervation, DictionaryDatabase, RootWordProvider} from "../../src/index";
 
 describe("Stemmer", () => {
     it("should load", (done) => {

@@ -1,6 +1,5 @@
 const CONSTANT_WITHIN_BRACES = /{(\w+)}/g;
 
-// TODO make interface
 export interface AffixPattern {
     pattern: string;
     root?: string;
@@ -38,8 +37,6 @@ export function patternApplies(pattern: AffixPattern, word: string): boolean {
 
 
 export function compilePattern(constants: { [s: string]: string }, pattern: AffixPattern): void {
-    // TODO make more efficient/readable with a helper function
-
     // Replace constants given as "...{key}..." in pattern.
     let position = 0;
     const compiledRegex = ["^"];

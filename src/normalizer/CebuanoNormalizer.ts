@@ -1,4 +1,4 @@
-import removeDiacritics from "./FoldToAscii";
+import {removeDiacritics} from "./FoldToAscii";
 
 export function normalize(word: string): string {
     return removeDiacritics(word)
@@ -23,5 +23,3 @@ export function normalize(word: string): string {
         .replace(/e/g, "i") // e -> i
         ;
 }
-
-export default normalize;
