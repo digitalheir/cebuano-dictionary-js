@@ -1,9 +1,10 @@
 import * as React from "react";
 import {ReactHTML, ReactNode, StatelessComponent} from "react";
 import {ActiveRequestHaving, ErrorHaving, ResultsHaving} from "../reducers/search";
-import {CebuanoDoc, SearchResultRow} from "../couch/fetch-search-results";
+import {SearchResultRow} from "../couch/fetch-search-results";
 import {connect} from "react-redux";
 import {CebuanoState} from "../reducers/index";
+import {CebuanoDoc} from "../couch/couch-doc";
 
 function determineTagName(tagName: string): keyof ReactHTML {
     switch (tagName) {

@@ -38,15 +38,12 @@ const mapDispatchToProps = (dispatch: any, ignored: SearchOwnProps): SearchDispa
 };
 
 
-const mapStateToProps = (state: CebuanoState, ignored: SearchOwnProps): SearchState & SearchOwnProps => {
-    return Object.assign({}, state.search, {
-        results: state.search.searchResults
-    });
+const mapStateToProps = (state: CebuanoState, ownProps: SearchOwnProps): SearchState & SearchOwnProps => {
+    return Object.assign({}, state.search, ownProps);
 };
 
 
 export function abortActiveRequest(activeRequest?: XMLHttpRequest) {
-    // console.log("ABORTING ");
     if (activeRequest) {
         console.log("ABORTING " + activeRequest.responseURL);
         activeRequest.abort();
@@ -54,7 +51,6 @@ export function abortActiveRequest(activeRequest?: XMLHttpRequest) {
 }
 
 /*
-// todo
         protected Cursor doInBackground(final String... searchWords) {
             CebuanoNormalizer n = new CebuanoNormalizer();
             String normalizedSearchWord = n.normalize(searchWord);

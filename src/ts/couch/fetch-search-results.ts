@@ -1,4 +1,5 @@
 import {Derivation} from "cebuano-stemmer";
+import {CebuanoDoc} from "./couch-doc";
 
 export enum SearchMode {
     CEBUANO_TO_ENGLISH, ENGLISH_TO_CEBUANO

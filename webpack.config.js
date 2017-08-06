@@ -1,7 +1,7 @@
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const StaticSiteGeneratorPlugin = require('static-site-generator-webpack-plugin');
 
-const defs = require("db-dump.json");
+const Pouch = require("pouchdb");
 
 function mapDefinitions(defs/*: DbDump*/){
     const map/*: {[key: string]: CebuanoDoc}*/ = {};

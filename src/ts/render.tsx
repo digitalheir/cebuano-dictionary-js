@@ -1,6 +1,7 @@
 import * as React from "react";
 import {renderToStaticMarkup} from "react-dom/server";
-import {Html} from "./components/static/Html";
+import {Html} from "./components/Html";
+import {CebuanoDoc} from "./couch/couch-doc";
 
 // Client render (optional):
 if (typeof document !== "undefined") {
@@ -29,7 +30,7 @@ function getComponent(path: string, definitions: {[key: string]: CebuanoDoc}) {
             return <Html/>;
         default:
         if(definition)
-            return <Html word={definition}/>
+            return <Html word={definition}/>;
         else
             throw new Error("Could not make component for path " + path);
     }
