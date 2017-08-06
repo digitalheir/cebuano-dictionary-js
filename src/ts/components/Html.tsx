@@ -15,7 +15,10 @@ export const Html: StatelessComponent<{ word?: string }> = ({word}) => {
 
         <link rel="stylesheet" href="css/normalize.css"/>
         <link rel="stylesheet" href="css/main.css"/>
-        <link rel="stylesheet" href="css/material-components-web.css"/>
+
+    <link rel="stylesheet" href="css/mdc.radio.min.css"/>
+    <link rel="stylesheet" href="css/mdc.textfield.min.css"/>
+
         <link rel="stylesheet" href="css/app.css"/>
     </head>
     <body>
