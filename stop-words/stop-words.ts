@@ -1,4 +1,6 @@
-export const stopwords = new Set([
+export const stopwords = ["ako","kita","amua","ato","ikaw","imong","imo","iyang","kaugalingon","siya","iya","kaniya","kini","mismo","sila","ila","ilang","unsa","nga","kinsa","kana","mga","mahimong","nahimo","pagwato","adunay","buhaton","gayud","gibuhad","usa","ka","ang","ug","apan","kung","o","tungod","ingon","hangtud","samtang","sa","pnaagi","alang","uban","mahitungod","batok","tali","ngadto","pinaagi","panahon","kaniadto","human","ibabaw","ubow","gikan","gawas","lamang","pareho","busa","kay","pud","kaayo"];
+      
+const source = new Set([
 "ako", // i, me, myself
 "kita", // we
 "amua", // our
