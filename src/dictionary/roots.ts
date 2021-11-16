@@ -1,4 +1,8 @@
-/**Modified from https://publicdomainreview.cloudant.com/cebuano_dictionary/_design/show/_list/keyset/normalized_heads_where_pos_is_not_empty_string?group_level=1
+/**
+ *
+ * Hard-coded Cebuano word stems
+ *
+ * Modified from https://publicdomainreview.cloudant.com/cebuano_dictionary/_design/show/_list/keyset/normalized_heads_where_pos_is_not_empty_string?group_level=1
  *
  */
 

@@ -1,4 +1,7 @@
-export const prefixes = ["di", "dili",
+// Contains all known affixes. Extracted from stemmerCebuano.xml
+
+export const prefixes = [
+    "di", "dili",
     "ga", "gai", "gaipa", "gaka", "gapa", "gapan", "gapang",
     "gi", "gihi", "gika", "gikahi", "gikapa", "gina", "ginapa", "ginapaha", "ginapaka", "ginapag", "ginapang", "ginapanghi", "gipa",
     "gipaha", "gipahi", "gipaka", "gipaki", "gipakig", "gipanag", "gipanag", "gipanig", "gipatig", "gipan", "gipang", "gipanghi",
@@ -51,7 +54,13 @@ export const prefixes = ["di", "dili",
 ];
 
 
-export const infixes = ["in", "um", "al", "il", "ul"];
+export const infixes = [
+    "in",
+    "um",
+    "al",
+    "il",
+    "ul"
+];
 
 export const suffixes = [
     "a", "ado", "an", "anan", "anang", "anay", "ang", "anon", "anong", "ay", "ayg", "ayng",

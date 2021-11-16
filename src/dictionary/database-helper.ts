@@ -1,6 +1,8 @@
 import {RootWordProvider} from "./RootWordProvider";
 import {roots} from "./roots";
 
+// Ported from https://github.com/jhellingman/cebuano-dictionary-app/blob/master/app/src/main/java/ph/bohol/dictionaryapp/DictionaryDatabase.java
+
 // const HEAD_ID = "_id";
 // const HEAD_HEAD = "head";
 // const HEAD_NORMALIZED_HEAD = "normalized_head";
@@ -19,6 +21,7 @@ const MIN_ROOT_LENGTH = 3;
 // const final Map<Integer, Spanned> entryCache = Collections.synchronizedMap(new EntryCache(ENTRY_CACHE_SIZE));
 // const final int ROOT_CACHE_SIZE = 1000;
 
+// JS is single-threaded so this is synchronized by default
 const rootCache: { [key: string]: boolean } = {};
 
 export const DictionaryDatabase: RootWordProvider = {
@@ -56,10 +59,11 @@ export const DictionaryDatabase: RootWordProvider = {
 
         // const regexp = new RegExp("^" + root + ".*" + type);
 
-        for (const value of roots)
-            if (value.indexOf(root) === 0 && value.indexOf(type) > (root.length - 1))
+        for (const value of roots) {
+            if (value.indexOf(root) === 0 && value.indexOf(type) > (root.length - 1)) {
                 return true;
-
+            }
+        }
         return false;
     }
 };

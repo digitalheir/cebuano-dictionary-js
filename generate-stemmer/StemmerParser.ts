@@ -4,6 +4,7 @@ import {AffixGroup} from "../src/stemmer/AffixGroup";
 import {Affix} from "../src/stemmer/Affix";
 import {AffixPattern} from "../src/stemmer/AffixPattern";
 
+// Parses `stemmerCebuano.xml`
 
 const strictXml = true;
 

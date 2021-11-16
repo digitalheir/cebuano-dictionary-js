@@ -1,6 +1,7 @@
-const webpack = require('webpack'),
-    path = require('path'),
-    yargs = require('yargs');
+const webpack = require('webpack');
+const path = require('path');
+const yargs = require('yargs');
+
 const VERSION = require('./version').default;
 const libraryName = 'cebuano-stemmer';
 

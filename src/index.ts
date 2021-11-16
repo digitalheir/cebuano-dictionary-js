@@ -1,3 +1,5 @@
+// Pulls in all necessary data for a Javascript Cebuano dictionary
+
 export * from "./dictionary/database-helper";
 
 export * from "./normalizer/CebuanoNormalizer";
