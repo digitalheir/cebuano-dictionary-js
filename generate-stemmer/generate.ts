@@ -14,9 +14,9 @@ parseStream(stream)
         // Write stemmer
         writeFileSync(
             writePath,
-            "import {Stemmer} from \"./Stemmer\";\nconst stemmer: Stemmer = "
+            "import {Stemmer} from \"./Stemmer\";\n\nexport const stemmer: Stemmer = "
             + JSON.stringify(stemmer, undefined, 4)
-            + ";\nexport default stemmer;"
+            + ";"
         );
     })
     .catch((e) => {
